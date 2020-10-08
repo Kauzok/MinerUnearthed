@@ -1,0 +1,7 @@
+ManifestFileVersion: 0
+CRC: 3281271794
+AssetBundleManifest:
+  AssetBundleInfos:
+    Info_0:
+      Name: miner
+      Dependencies: {}

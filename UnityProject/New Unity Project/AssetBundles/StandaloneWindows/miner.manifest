@@ -1,0 +1,146 @@
+ManifestFileVersion: 0
+CRC: 2197221629
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: d1ce86544dbc7565c69a8d6070e5afba
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: e5b1303cc207044a0dfde05e2589a71b
+HashAppended: 0
+ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 4
+  Script: {instanceID: 0}
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 43
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+- Class: 54
+  Script: {instanceID: 0}
+- Class: 74
+  Script: {instanceID: 0}
+- Class: 90
+  Script: {instanceID: 0}
+- Class: 91
+  Script: {instanceID: 0}
+- Class: 95
+  Script: {instanceID: 0}
+- Class: 114
+  Script: {fileID: 11500000, guid: 67079b849227b734694872d8810229b8, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: db294d07add6b364f99a346939dd2a8a, type: 3}
+- Class: 115
+  Script: {instanceID: 0}
+- Class: 135
+  Script: {instanceID: 0}
+- Class: 136
+  Script: {instanceID: 0}
+- Class: 137
+  Script: {instanceID: 0}
+- Class: 144
+  Script: {instanceID: 0}
+- Class: 213
+  Script: {instanceID: 0}
+- Class: 319
+  Script: {instanceID: 0}
+Assets:
+- Assets/Miner/Textures/texMinerEmission.png
+- Assets/Miner/GoldRushIcon.png
+- Assets/Miner/Animations/DrillChargeShort.anim
+- Assets/Miner/CrushIcon.png
+- Assets/Miner/Style/StyleSickSkills.png
+- Assets/Miner/Animations/RunL.anim
+- Assets/Miner/Materials/matMiner.mat
+- Assets/Miner/Animations/Crush.anim
+- Assets/Miner/Animations/animMiner.controller
+- Assets/Miner/Style/StyleSSFill.png
+- Assets/Miner/Textures 1/texMinerPuple.png
+- Assets/Miner/Animations/DrillChargeHoriEnd.anim
+- Assets/Miner/Animations/DrillChargeStart.anim
+- Assets/Miner/Textures/texMinerTundraEmission.png
+- Assets/Miner/Textures/texMinerMolten.png
+- Assets/Miner/Animations/animMinerMenu.controller
+- Assets/Miner/CaveInIcon.png
+- Assets/Miner/TundraMesh.mesh
+- Assets/Miner/Animations/IdleIn.anim
+- Assets/Miner/Textures 1/texMinerMoltenEmission.png
+- Assets/Miner/ToTheStarsIcon.png
+- Assets/Miner/Animations/DrillChargeVertical.anim
+- Assets/Miner/Animations/Ascend.anim
+- Assets/Miner/Materials/matMinerTundra.mat
+- Assets/Miner/Style/StyleCFill.png
+- Assets/Miner/Style/StyleSavage.png
+- Assets/Miner/Animations/ToTheStarsStart.anim
+- Assets/Miner/Style/StyleC.png
+- Assets/Miner/Animations/Jump.anim
+- Assets/Miner/MinerDisplay.prefab
+- Assets/Miner/Animations/DrillChargeVertiEnd.anim
+- Assets/Miner/Style/StyleSSSFill.png
+- Assets/Miner/BackblastIcon.png
+- Assets/Miner/DrillBreakIcon.png
+- Assets/Miner/Style/StyleS.png
+- Assets/Miner/Style/StyleDismal.png
+- Assets/Miner/Textures/texMinerTundra.png
+- Assets/Miner/Animations/AimYaw.anim
+- Assets/Miner/Style/StyleSmokinSexyStyle.png
+- Assets/Miner/Textures/texMinerMoltenEmission.png
+- Assets/Miner/Animations/MenuIdle.anim
+- Assets/Miner/Style/StyleB.png
+- Assets/Miner/Animations/Backblast.anim
+- Assets/Miner/Style/StylePanel.controller
+- Assets/Miner/Textures 1/texMinerTundraEmission.png
+- Assets/Miner/Animations/MenuIdleIn.anim
+- Assets/Miner/Textures 1/texMinerEmission.png
+- Assets/Miner/Animations/BackblastDown.anim
+- Assets/Miner/Textures 1/texMiner.png
+- Assets/Miner/Style/StyleAFill.png
+- Assets/Miner/Style/StyleA.png
+- Assets/Miner/Animations/Idle.anim
+- Assets/Miner/Style/StyleDFill.png
+- Assets/Miner/Animations/ToTheStarsEnd.anim
+- Assets/Miner/Animations/DrillChargeHorizontal.anim
+- Assets/Miner/Animations/Sprint.anim
+- Assets/Miner/Textures 1/texMinerMolten.png
+- Assets/Miner/Style/StyleAppearBad.anim
+- Assets/Miner/Style/StyleBFill.png
+- Assets/Miner/Animations/Flip.anim
+- Assets/Miner/Style/StyleAppearGood.anim
+- Assets/Miner/texMinerIcon.png
+- Assets/Miner/Style/TestCanvas.controller
+- Assets/Miner/Style/StyleCrazy.png
+- Assets/Miner/Style/StyleApocalyptic.png
+- Assets/Miner/Style/StyleSSS.png
+- Assets/Miner/Style/StyleBlank.anim
+- Assets/Miner/Textures 1/texMinerPupleEmission.png
+- Assets/Miner/Animations/animMinerTest.controller
+- Assets/Miner/Animations/YawMask.mask
+- Assets/Miner/Textures 1/texMinerTundra.png
+- Assets/Miner/Animations/GestureMask.mask
+- Assets/Miner/Textures/texMiner 1.png
+- Assets/Miner/Textures/texMinerPupleEmission.png
+- Assets/Miner/Style/StyleReset.anim
+- Assets/Miner/Style/StyleSS.png
+- Assets/Miner/Animations/Descend.anim
+- Assets/Miner/Textures/texMinerPuple.png
+- Assets/Miner/Style/StyleD.png
+- Assets/Miner/Materials/matMinerPuple.mat
+- Assets/Miner/Animations/DrillChargeShortEnd.anim
+- Assets/Miner/Style/StyleOverlay.png
+- Assets/Miner/TimedExplosiveIcon.png
+- Assets/Miner/Animations/BackblastUp.anim
+- Assets/Miner/Animations/RunB.anim
+- Assets/Miner/mdlMiner.prefab
+- Assets/Miner/Style/StyleSFill.png
+- Assets/Miner/Textures/texMiner.png
+- Assets/Miner/Animations/RunF.anim
+- Assets/Miner/Animations/RunR.anim
+- Assets/Miner/DrillChargeIcon.png
+- Assets/Miner/Materials/matMinerMolten.mat
+- Assets/Miner/Style/StyleBadass.png
+Dependencies: []
