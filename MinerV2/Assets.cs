@@ -24,6 +24,9 @@ namespace MinerPlugin
 
         public static Mesh tundraMesh;
 
+        public static GameObject swingFX;
+        public static GameObject hitFX;
+
         public static GameObject styleMeter;
 
         public static Sprite styleD;
@@ -61,6 +64,13 @@ namespace MinerPlugin
                 SoundAPI.SoundBanks.Add(array);
             }
 
+            using (Stream manifestResourceStream2 = Assembly.GetExecutingAssembly().GetManifestResourceStream("MinerV2.MinerV2.bnk"))
+            {
+                byte[] array = new byte[manifestResourceStream2.Length];
+                manifestResourceStream2.Read(array, 0, array.Length);
+                SoundAPI.SoundBanks.Add(array);
+            }
+
             charPortrait = MainAssetBundle.LoadAsset<Sprite>("texMinerIcon").texture;
 
             iconP = MainAssetBundle.LoadAsset<Sprite>("GoldRushIcon");
@@ -73,6 +83,35 @@ namespace MinerPlugin
             icon4B = MainAssetBundle.LoadAsset<Sprite>("TimedExplosiveIcon");
 
             tundraMesh = MainAssetBundle.LoadAsset<Mesh>("TundraMesh");
+
+
+            swingFX = MainAssetBundle.LoadAsset<GameObject>("MinerSwing");
+            hitFX = MainAssetBundle.LoadAsset<GameObject>("ImpactMinerSwing");
+
+            swingFX.AddComponent<DestroyOnTimer>().duration = 5;
+            swingFX.AddComponent<NetworkIdentity>();
+            swingFX.AddComponent<VFXAttributes>().vfxPriority = VFXAttributes.VFXPriority.Always;
+            var effect = swingFX.AddComponent<EffectComponent>();
+            effect.applyScale = false;
+            effect.effectIndex = EffectIndex.Invalid;
+            effect.parentToReferencedTransform = true;
+            effect.positionAtReferencedTransform = true;
+            effect.soundName = "";
+
+            hitFX.AddComponent<DestroyOnTimer>().duration = 5;
+            hitFX.AddComponent<NetworkIdentity>();
+            hitFX.AddComponent<VFXAttributes>().vfxPriority = VFXAttributes.VFXPriority.Always;
+            effect = hitFX.AddComponent<EffectComponent>();
+            effect.applyScale = false;
+            effect.effectIndex = EffectIndex.Invalid;
+            effect.parentToReferencedTransform = true;
+            effect.positionAtReferencedTransform = true;
+            effect.soundName = Sounds.Swing;
+
+            EffectAPI.AddEffect(swingFX);
+            EffectAPI.AddEffect(hitFX);
+
+
 
             styleMeter = MainAssetBundle.LoadAsset<GameObject>("StylePanel");
 

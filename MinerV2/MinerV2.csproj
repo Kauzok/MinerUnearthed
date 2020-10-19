@@ -7,11 +7,13 @@
   <ItemGroup>
     <None Remove="miner" />
     <None Remove="MinerBank.bnk" />
+    <None Remove="MinerV2.bnk" />
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="miner" />
     <EmbeddedResource Include="MinerBank.bnk" />
+    <EmbeddedResource Include="MinerV2.bnk" />
   </ItemGroup>
 
   <ItemGroup>

@@ -3,6 +3,7 @@ using UnityEngine;
 using R2API;
 using RoR2;
 using R2API.Utils;
+using System.Collections.Generic;
 
 namespace MinerPlugin
 {
@@ -24,6 +25,9 @@ namespace MinerPlugin
             LanguageAPI.Add("MINERBODY_MOLTEN_SKIN_NAME", "Molten");
             LanguageAPI.Add("MINERBODY_PUPLE_SKIN_NAME", "Puple");
             LanguageAPI.Add("MINERBODY_TUNDRA_SKIN_NAME", "Tundra");
+            LanguageAPI.Add("MINERBODY_IRON_SKIN_NAME", "Iron");
+            LanguageAPI.Add("MINERBODY_GOLD_SKIN_NAME", "Gold");
+            LanguageAPI.Add("MINERBODY_DIAMOND_SKIN_NAME", "Diamond");
 
             LoadoutAPI.SkinDefInfo skinDefInfo = default(LoadoutAPI.SkinDefInfo);
             skinDefInfo.BaseSkins = Array.Empty<SkinDef>();
@@ -60,7 +64,7 @@ namespace MinerPlugin
                 material.SetColor("_Color", Color.white);
                 material.SetTexture("_MainTex", Assets.MainAssetBundle.LoadAsset<Material>("matMiner").GetTexture("_MainTex"));
                 material.SetColor("_EmColor", Color.white);
-                material.SetFloat("_EmPower", 1);
+                material.SetFloat("_EmPower", 0.4f);
                 material.SetTexture("_EmTex", Assets.MainAssetBundle.LoadAsset<Material>("matMiner").GetTexture("_EmissionMap"));
                 material.SetFloat("_NormalStrength", 0);
                 //material.SetTexture("_NormalTex", Assets.MainAssetBundle.LoadAsset<Material>("matMiner").GetTexture("_BumpMap"));
@@ -103,7 +107,7 @@ namespace MinerPlugin
                 material = UnityEngine.Object.Instantiate<Material>(material);
                 material.SetTexture("_MainTex", Assets.MainAssetBundle.LoadAsset<Material>("matMinerMolten").GetTexture("_MainTex"));
                 material.SetColor("_EmColor", Color.white);
-                material.SetFloat("_EmPower", 1);
+                material.SetFloat("_EmPower", 5);
                 material.SetTexture("_EmTex", Assets.MainAssetBundle.LoadAsset<Material>("matMinerMolten").GetTexture("_EmissionMap"));
 
                 array[0].defaultMaterial = material;
@@ -195,13 +199,145 @@ namespace MinerPlugin
 
             SkinDef tundraSkin = LoadoutAPI.CreateNewSkinDef(tundraSkinDefInfo);
 
+            //minecraft-
+            LoadoutAPI.SkinDefInfo ironSkinDefInfo = default(LoadoutAPI.SkinDefInfo);
+            ironSkinDefInfo.BaseSkins = Array.Empty<SkinDef>();
+            ironSkinDefInfo.MinionSkinReplacements = new SkinDef.MinionSkinReplacement[0];
+            ironSkinDefInfo.ProjectileGhostReplacements = new SkinDef.ProjectileGhostReplacement[0];
+            ironSkinDefInfo.GameObjectActivations = new SkinDef.GameObjectActivation[0];
+            ironSkinDefInfo.Icon = LoadoutAPI.CreateSkinIcon(new Color(0.43f, 0.1f, 0.1f), Color.grey, new Color(0.31f, 0.04f, 0.07f), Color.black);
+            ironSkinDefInfo.MeshReplacements = new SkinDef.MeshReplacement[]
+            {
+                new SkinDef.MeshReplacement
+                {
+                    renderer = mainRenderer,
+                    mesh = mainRenderer.sharedMesh
+                }
+            };
+            ironSkinDefInfo.Name = "MINERBODY_IRON_SKIN_NAME";
+            ironSkinDefInfo.NameToken = "MINERBODY_IRON_SKIN_NAME";
+            ironSkinDefInfo.RendererInfos = characterModel.baseRendererInfos;
+            ironSkinDefInfo.RootObject = model;
+            ironSkinDefInfo.UnlockableName = "";
 
-            skinController.skins = new SkinDef[]
+            rendererInfos = skinDefInfo.RendererInfos;
+            array = new CharacterModel.RendererInfo[rendererInfos.Length];
+            rendererInfos.CopyTo(array, 0);
+
+            material = array[0].defaultMaterial;
+
+            if (material)
+            {
+                material = UnityEngine.Object.Instantiate<Material>(material);
+                material.SetTexture("_MainTex", Assets.MainAssetBundle.LoadAsset<Material>("matMinerIron").GetTexture("_MainTex"));
+                material.SetColor("_EmColor", Color.white);
+                material.SetFloat("_EmPower", 0);
+
+                array[0].defaultMaterial = material;
+            }
+
+            ironSkinDefInfo.RendererInfos = array;
+
+            SkinDef ironSkin = LoadoutAPI.CreateNewSkinDef(ironSkinDefInfo);
+
+            LoadoutAPI.SkinDefInfo goldSkinDefInfo = default(LoadoutAPI.SkinDefInfo);
+            goldSkinDefInfo.BaseSkins = Array.Empty<SkinDef>();
+            goldSkinDefInfo.MinionSkinReplacements = new SkinDef.MinionSkinReplacement[0];
+            goldSkinDefInfo.ProjectileGhostReplacements = new SkinDef.ProjectileGhostReplacement[0];
+            goldSkinDefInfo.GameObjectActivations = new SkinDef.GameObjectActivation[0];
+            goldSkinDefInfo.Icon = LoadoutAPI.CreateSkinIcon(new Color(0.43f, 0.1f, 0.1f), Color.yellow, new Color(0.31f, 0.04f, 0.07f), Color.black);
+            goldSkinDefInfo.MeshReplacements = new SkinDef.MeshReplacement[]
+            {
+                new SkinDef.MeshReplacement
+                {
+                    renderer = mainRenderer,
+                    mesh = mainRenderer.sharedMesh
+                }
+            };
+            goldSkinDefInfo.Name = "MINERBODY_GOLD_SKIN_NAME";
+            goldSkinDefInfo.NameToken = "MINERBODY_GOLD_SKIN_NAME";
+            goldSkinDefInfo.RendererInfos = characterModel.baseRendererInfos;
+            goldSkinDefInfo.RootObject = model;
+            goldSkinDefInfo.UnlockableName = "";
+
+            rendererInfos = skinDefInfo.RendererInfos;
+            array = new CharacterModel.RendererInfo[rendererInfos.Length];
+            rendererInfos.CopyTo(array, 0);
+
+            material = array[0].defaultMaterial;
+
+            if (material)
+            {
+                material = UnityEngine.Object.Instantiate<Material>(material);
+                material.SetTexture("_MainTex", Assets.MainAssetBundle.LoadAsset<Material>("matMinerGold").GetTexture("_MainTex"));
+                material.SetColor("_EmColor", Color.white);
+                material.SetFloat("_EmPower", 0f);
+                material.SetTexture("_EmTex", Assets.MainAssetBundle.LoadAsset<Material>("matMinerGold").GetTexture("_EmissionMap"));
+
+                array[0].defaultMaterial = material;
+            }
+
+            goldSkinDefInfo.RendererInfos = array;
+
+            SkinDef goldSkin = LoadoutAPI.CreateNewSkinDef(goldSkinDefInfo);
+
+            LoadoutAPI.SkinDefInfo diamondSkinDefInfo = default(LoadoutAPI.SkinDefInfo);
+            diamondSkinDefInfo.BaseSkins = Array.Empty<SkinDef>();
+            diamondSkinDefInfo.MinionSkinReplacements = new SkinDef.MinionSkinReplacement[0];
+            diamondSkinDefInfo.ProjectileGhostReplacements = new SkinDef.ProjectileGhostReplacement[0];
+            diamondSkinDefInfo.GameObjectActivations = new SkinDef.GameObjectActivation[0];
+            diamondSkinDefInfo.Icon = LoadoutAPI.CreateSkinIcon(new Color(0.43f, 0.1f, 0.1f), Color.blue, new Color(0.31f, 0.04f, 0.07f), Color.black);
+            diamondSkinDefInfo.MeshReplacements = new SkinDef.MeshReplacement[]
+            {
+                new SkinDef.MeshReplacement
+                {
+                    renderer = mainRenderer,
+                    mesh = mainRenderer.sharedMesh
+                }
+            };
+            diamondSkinDefInfo.Name = "MINERBODY_DIAMOND_SKIN_NAME";
+            diamondSkinDefInfo.NameToken = "MINERBODY_DIAMOND_SKIN_NAME";
+            diamondSkinDefInfo.RendererInfos = characterModel.baseRendererInfos;
+            diamondSkinDefInfo.RootObject = model;
+            diamondSkinDefInfo.UnlockableName = "";
+
+            rendererInfos = skinDefInfo.RendererInfos;
+            array = new CharacterModel.RendererInfo[rendererInfos.Length];
+            rendererInfos.CopyTo(array, 0);
+
+            material = array[0].defaultMaterial;
+
+            if (material)
+            {
+                material = UnityEngine.Object.Instantiate<Material>(material);
+                material.SetTexture("_MainTex", Assets.MainAssetBundle.LoadAsset<Material>("matMinerDiamond").GetTexture("_MainTex"));
+                material.SetColor("_EmColor", Color.white);
+                material.SetFloat("_EmPower", 0.75f);
+                material.SetTexture("_EmTex", Assets.MainAssetBundle.LoadAsset<Material>("matMinerDiamond").GetTexture("_EmissionMap"));
+
+                array[0].defaultMaterial = material;
+            }
+
+            diamondSkinDefInfo.RendererInfos = array;
+
+            SkinDef diamondSkin = LoadoutAPI.CreateNewSkinDef(diamondSkinDefInfo);
+
+            var skinDefs = new List<SkinDef>()
             {
                 defaultSkin,
                 moltenSkin,
-                tundraSkin
+                tundraSkin,
             };
+
+            if (MinerPlugin.extraSkins.Value)
+            {
+                skinDefs.Add(pupleSkin);
+                skinDefs.Add(ironSkin);
+                skinDefs.Add(goldSkin);
+                skinDefs.Add(diamondSkin);
+            }
+
+            skinController.skins = skinDefs.ToArray();
         }
     }
 }

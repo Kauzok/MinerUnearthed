@@ -58,7 +58,7 @@ namespace EntityStates.Miner
             base.characterBody.ClearTimedBuffs(MinerPlugin.MinerPlugin.goldRush);
             for (int i = 0; i < currentCount; i++)
             {
-                if (base.characterBody.GetBuffCount(MinerPlugin.MinerPlugin.goldRush) <= 50) base.characterBody.AddTimedBuff(MinerPlugin.MinerPlugin.goldRush, 5);
+                if (base.characterBody.GetBuffCount(MinerPlugin.MinerPlugin.goldRush) <= MinerPlugin.MinerPlugin.adrenalineCap) base.characterBody.AddTimedBuff(MinerPlugin.MinerPlugin.goldRush, 5);
             }
         }
 
@@ -70,7 +70,7 @@ namespace EntityStates.Miner
 
             for (int i = 1; i <= numStacks; i++)
             {
-                if (base.characterBody.GetBuffCount(MinerPlugin.MinerPlugin.goldRush) <= 50) base.characterBody.AddTimedBuff(MinerPlugin.MinerPlugin.goldRush, 5);
+                if (base.characterBody.GetBuffCount(MinerPlugin.MinerPlugin.goldRush) <= MinerPlugin.MinerPlugin.adrenalineCap) base.characterBody.AddTimedBuff(MinerPlugin.MinerPlugin.goldRush, 5);
             }
 
             if (this.styleComponent) this.styleComponent.AddStyle(MinerMain.passiveStyleCoefficient);
@@ -82,7 +82,7 @@ namespace EntityStates.Miner
             {
                 for (int i = 1; i < buffCounter * .5; i++)
                 {
-                    if (base.characterBody.GetBuffCount(MinerPlugin.MinerPlugin.goldRush) <= 50) base.characterBody.AddTimedBuff(MinerPlugin.MinerPlugin.goldRush, 1);
+                    if (base.characterBody.GetBuffCount(MinerPlugin.MinerPlugin.goldRush) <= MinerPlugin.MinerPlugin.adrenalineCap) base.characterBody.AddTimedBuff(MinerPlugin.MinerPlugin.goldRush, 1);
                 }
             }
 

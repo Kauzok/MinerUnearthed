@@ -17,7 +17,7 @@ namespace MinerPlugin
 {
     [BepInDependency("com.bepis.r2api", BepInDependency.DependencyFlags.HardDependency)]
     [NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod, VersionStrictness.EveryoneNeedSameModVersion)]
-    [BepInPlugin(MODUID, "MinerUnearthed", "1.1.0")]
+    [BepInPlugin(MODUID, "MinerUnearthed", "1.2.0")]
     [R2APISubmoduleDependency(new string[]
     {
         "PrefabAPI",
@@ -74,6 +74,12 @@ namespace MinerPlugin
 
         public SkillLocator skillLocator;
 
+        public static float adrenalineCap;
+
+        public static GameObject backblastEffect;
+
+        public static ConfigEntry<float> maxAdrenaline;
+        public static ConfigEntry<bool> extraSkins;
         public static ConfigEntry<bool> styleUI;
 
         public MinerPlugin()
@@ -92,6 +98,7 @@ namespace MinerPlugin
             Skins.RegisterSkins();
             ItemDisplays.RegisterDisplays();
             Unlockables.RegisterUnlockables();
+            RegisterEffects();
             RegisterBuffs();
             CreateDoppelganger();
 
@@ -125,7 +132,23 @@ namespace MinerPlugin
 
         private void ConfigShit()
         {
+            maxAdrenaline = base.Config.Bind<float>(new ConfigDefinition("01 - General Settings", "Adrenaline Cap"), 50, new ConfigDescription("Max Adrenaline stacks allowed", null, Array.Empty<object>()));
+            adrenalineCap = maxAdrenaline.Value - 1;
+            extraSkins = base.Config.Bind<bool>(new ConfigDefinition("01 - General Settings", "Extra Skins"), false, new ConfigDescription("Enables a bunch of extra skins", null, Array.Empty<object>()));
             styleUI = base.Config.Bind<bool>(new ConfigDefinition("01 - General Settings", "Style Rank"), false, new ConfigDescription("Enables a style ranking system taken from Devil May Cry", null, Array.Empty<object>()));
+        }
+
+        private void RegisterEffects()
+        {
+            backblastEffect = PrefabAPI.InstantiateClone(Resources.Load<GameObject>("prefabs/effects/omnieffect/OmniExplosionVFX"), "MinerBackblastEffect", true);
+
+            if (!backblastEffect.GetComponent<EffectComponent>()) backblastEffect.AddComponent<EffectComponent>();
+            if (!backblastEffect.GetComponent<VFXAttributes>()) backblastEffect.AddComponent<VFXAttributes>();
+            if (!backblastEffect.GetComponent<NetworkIdentity>()) backblastEffect.AddComponent<NetworkIdentity>();
+
+            backblastEffect.GetComponent<VFXAttributes>().vfxPriority = VFXAttributes.VFXPriority.Always;
+
+            EffectAPI.AddEffect(backblastEffect);
         }
 
         private void RegisterBuffs()
@@ -534,10 +557,10 @@ namespace MinerPlugin
             HitBoxGroup hitBoxGroup = model.AddComponent<HitBoxGroup>();
 
             GameObject crushHitbox = new GameObject("CrushHitbox");
-            crushHitbox.transform.parent = characterPrefab.transform;
+            crushHitbox.transform.parent = childLocator.FindChild("SwingLeft");
             crushHitbox.transform.localPosition = new Vector3(0f, 0f, 0f);
             crushHitbox.transform.localRotation = Quaternion.identity;
-            crushHitbox.transform.localScale = new Vector3(8f, 8f, 8f);
+            crushHitbox.transform.localScale = Vector3.one * 0.08f;
 
             HitBox hitBox = crushHitbox.AddComponent<HitBox>();
             crushHitbox.layer = LayerIndex.projectile.intVal;
@@ -548,6 +571,24 @@ namespace MinerPlugin
             };
 
             hitBoxGroup.groupName = "Crush";
+
+            HitBoxGroup chargeHitBoxGroup = model.AddComponent<HitBoxGroup>();
+
+            GameObject chargeHitbox = new GameObject("ChargeHitbox");
+            chargeHitbox.transform.parent = childLocator.FindChild("SwingLeft");
+            chargeHitbox.transform.localPosition = new Vector3(0f, 0f, 0f);
+            chargeHitbox.transform.localRotation = Quaternion.identity;
+            chargeHitbox.transform.localScale = Vector3.one * 0.08f;
+
+            HitBox chargeHitBox = chargeHitbox.AddComponent<HitBox>();
+            chargeHitbox.layer = LayerIndex.projectile.intVal;
+
+            chargeHitBoxGroup.hitBoxes = new HitBox[]
+            {
+                chargeHitBox
+            };
+
+            chargeHitBoxGroup.groupName = "Charge";
 
             FootstepHandler footstepHandler = model.AddComponent<FootstepHandler>();
             footstepHandler.baseFootstepString = "Play_player_footstep";
@@ -676,7 +717,7 @@ namespace MinerPlugin
         {
             LoadoutAPI.AddSkill(typeof(Crush));
 
-            string desc = "<style=cIsUtility>Agile.</style> Crush nearby enemies for <style=cIsDamage>" + 100f * Crush.damageCoefficient + "% damage</style>.";
+            string desc = "<style=cIsUtility>Agile.</style> Crush nearby enemies for <style=cIsDamage>" + 100f * Crush.damageCoefficient + "% damage</style>. <style=cIsUtility>Range increases with attack speed</style>.";
 
             LanguageAPI.Add("MINER_PRIMARY_CRUSH_NAME", "Crush");
             LanguageAPI.Add("MINER_PRIMARY_CRUSH_DESCRIPTION", desc);
@@ -721,6 +762,49 @@ namespace MinerPlugin
                 unlockableName = "",
                 viewableNode = new ViewablesCatalog.Node(mySkillDef.skillNameToken, false, null)
             };
+
+
+            LoadoutAPI.AddSkill(typeof(Gouge));
+
+            desc = "<style=cIsUtility>Agile.</style> Wildly swing at nearby enemies for <style=cIsDamage>" + 100f * Gouge.damageCoefficient + "% damage</style>.";
+
+            LanguageAPI.Add("MINER_PRIMARY_GOUGE_NAME", "Gouge");
+            LanguageAPI.Add("MINER_PRIMARY_GOUGE_DESCRIPTION", desc);
+
+            mySkillDef = ScriptableObject.CreateInstance<SkillDef>();
+            mySkillDef.activationState = new SerializableEntityStateType(typeof(Gouge));
+            mySkillDef.activationStateMachineName = "Weapon";
+            mySkillDef.baseMaxStock = 1;
+            mySkillDef.baseRechargeInterval = 0f;
+            mySkillDef.beginSkillCooldownOnSkillEnd = false;
+            mySkillDef.canceledFromSprinting = false;
+            mySkillDef.fullRestockOnAssign = true;
+            mySkillDef.interruptPriority = InterruptPriority.Any;
+            mySkillDef.isBullets = false;
+            mySkillDef.isCombatSkill = true;
+            mySkillDef.mustKeyPress = false;
+            mySkillDef.noSprint = false;
+            mySkillDef.rechargeStock = 1;
+            mySkillDef.requiredStock = 1;
+            mySkillDef.shootDelay = 0.5f;
+            mySkillDef.stockToConsume = 1;
+            mySkillDef.icon = Assets.icon1;
+            mySkillDef.skillDescriptionToken = "MINER_PRIMARY_GOUGE_DESCRIPTION";
+            mySkillDef.skillName = "MINER_PRIMARY_GOUGE_NAME";
+            mySkillDef.skillNameToken = "MINER_PRIMARY_GOUGE_NAME";
+            mySkillDef.keywordTokens = new string[] {
+                "KEYWORD_AGILE"
+            };
+
+            LoadoutAPI.AddSkillDef(mySkillDef);
+
+            Array.Resize(ref skillFamily.variants, skillFamily.variants.Length + 1);
+            skillFamily.variants[skillFamily.variants.Length - 1] = new SkillFamily.Variant
+            {
+                skillDef = mySkillDef,
+                unlockableName = "",
+                viewableNode = new ViewablesCatalog.Node(mySkillDef.skillNameToken, false, null)
+            };
         }
 
         private void SecondarySetup()
@@ -728,7 +812,7 @@ namespace MinerPlugin
             LoadoutAPI.AddSkill(typeof(DrillChargeStart));
             LoadoutAPI.AddSkill(typeof(DrillCharge));
 
-            string desc = "Charge for 1 second. Dash into enemies for up to 12x" + 100f * DrillCharge.damageCoefficient + "% damage</style>. <style=cIsUtility>You cannot be hit during and following the dash.</style>";
+            string desc = "Charge for 1 second. Dash into enemies for up to <style=cIsDamage>12x" + 100f * DrillCharge.damageCoefficient + "% damage</style>. <style=cIsUtility>You cannot be hit during and following the dash.</style>";
 
             LanguageAPI.Add("MINER_SECONDARY_CHARGE_NAME", "Drill Charge");
             LanguageAPI.Add("MINER_SECONDARY_CHARGE_DESCRIPTION", desc);
@@ -771,6 +855,46 @@ namespace MinerPlugin
                 unlockableName = "",
                 viewableNode = new ViewablesCatalog.Node(mySkillDef.skillNameToken, false, null)
             };
+
+            LoadoutAPI.AddSkill(typeof(DrillBreak));
+
+            desc = "Dash forward, exploding for <style=cIsDamage>" + 100f * DrillBreak.damageCoefficient + "% damage</style> on contact with an enemy. <style=cIsUtility>You cannot be hit during and following the dash.</style>";
+
+            LanguageAPI.Add("MINER_SECONDARY_BREAK_NAME", "Crack Hammer");
+            LanguageAPI.Add("MINER_SECONDARY_BREAK_DESCRIPTION", desc);
+
+            mySkillDef = ScriptableObject.CreateInstance<SkillDef>();
+            mySkillDef.activationState = new SerializableEntityStateType(typeof(DrillBreak));
+            mySkillDef.activationStateMachineName = "Weapon";
+            mySkillDef.baseMaxStock = 1;
+            mySkillDef.baseRechargeInterval = 7f;
+            mySkillDef.beginSkillCooldownOnSkillEnd = true;
+            mySkillDef.canceledFromSprinting = false;
+            mySkillDef.fullRestockOnAssign = true;
+            mySkillDef.interruptPriority = InterruptPriority.Skill;
+            mySkillDef.isBullets = false;
+            mySkillDef.isCombatSkill = true;
+            mySkillDef.mustKeyPress = true;
+            mySkillDef.noSprint = false;
+            mySkillDef.forceSprintDuringState = true;
+            mySkillDef.rechargeStock = 1;
+            mySkillDef.requiredStock = 1;
+            mySkillDef.shootDelay = 0f;
+            mySkillDef.stockToConsume = 1;
+            mySkillDef.icon = Assets.icon2B;
+            mySkillDef.skillDescriptionToken = "MINER_SECONDARY_BREAK_DESCRIPTION";
+            mySkillDef.skillName = "MINER_SECONDARY_BREAK_NAME";
+            mySkillDef.skillNameToken = "MINER_SECONDARY_BREAK_NAME";
+
+            LoadoutAPI.AddSkillDef(mySkillDef);
+
+            Array.Resize(ref skillFamily.variants, skillFamily.variants.Length + 1);
+            skillFamily.variants[skillFamily.variants.Length - 1] = new SkillFamily.Variant
+            {
+                skillDef = mySkillDef,
+                unlockableName = "",
+                viewableNode = new ViewablesCatalog.Node(mySkillDef.skillNameToken, false, null)
+            };
         }
 
         private void UtilitySetup()
@@ -778,7 +902,7 @@ namespace MinerPlugin
             LoadoutAPI.AddSkill(typeof(BackBlast));
 
             LanguageAPI.Add("MINER_UTILITY_BACKBLAST_NAME", "Backblast");
-            LanguageAPI.Add("MINER_UTILITY_BACKBLAST_DESCRIPTION", "Blast backwards a variable distance for 500% damage, stunning all enemies in a large radius. You cannot be hit while dashing.");
+            LanguageAPI.Add("MINER_UTILITY_BACKBLAST_DESCRIPTION", "<style=cIsUtility>Stunning.</style> Blast backwards a variable distance, hitting all enemies in a large radius for <style=cIsDamage>" + 100f * BackBlast.damageCoefficient + "% damage</style>. <style=cIsUtility>You cannot be hit while dashing.</style>");
 
             SkillDef mySkillDef = ScriptableObject.CreateInstance<SkillDef>();
             mySkillDef.activationState = new SerializableEntityStateType(typeof(BackBlast));
@@ -801,6 +925,9 @@ namespace MinerPlugin
             mySkillDef.skillDescriptionToken = "MINER_UTILITY_BACKBLAST_DESCRIPTION";
             mySkillDef.skillName = "MINER_UTILITY_BACKBLAST_NAME";
             mySkillDef.skillNameToken = "MINER_UTILITY_BACKBLAST_NAME";
+            mySkillDef.keywordTokens = new string[] {
+                "KEYWORD_STUNNING"
+            };
 
             LoadoutAPI.AddSkillDef(mySkillDef);
 
@@ -817,14 +944,54 @@ namespace MinerPlugin
                 unlockableName = "",
                 viewableNode = new ViewablesCatalog.Node(mySkillDef.skillNameToken, false, null)
             };
+
+            LoadoutAPI.AddSkill(typeof(CaveIn));
+
+            LanguageAPI.Add("MINER_UTILITY_CAVEIN_NAME", "Cave In");
+            LanguageAPI.Add("MINER_UTILITY_CAVEIN_DESCRIPTION", "<style=cIsUtility>Stunning.</style> Blast backwards a short distance, <style=cIsUtility>pulling</style> together all enemies in a large radius. You cannot be hit while dashing.");
+
+            mySkillDef = ScriptableObject.CreateInstance<SkillDef>();
+            mySkillDef.activationState = new SerializableEntityStateType(typeof(CaveIn));
+            mySkillDef.activationStateMachineName = "Weapon";
+            mySkillDef.baseMaxStock = 1;
+            mySkillDef.baseRechargeInterval = 5;
+            mySkillDef.beginSkillCooldownOnSkillEnd = true;
+            mySkillDef.canceledFromSprinting = false;
+            mySkillDef.fullRestockOnAssign = true;
+            mySkillDef.interruptPriority = InterruptPriority.Skill;
+            mySkillDef.isBullets = false;
+            mySkillDef.isCombatSkill = true;
+            mySkillDef.mustKeyPress = false;
+            mySkillDef.noSprint = false;
+            mySkillDef.rechargeStock = 1;
+            mySkillDef.requiredStock = 1;
+            mySkillDef.shootDelay = 0f;
+            mySkillDef.stockToConsume = 1;
+            mySkillDef.icon = Assets.icon3B;
+            mySkillDef.skillDescriptionToken = "MINER_UTILITY_CAVEIN_DESCRIPTION";
+            mySkillDef.skillName = "MINER_UTILITY_CAVEIN_NAME";
+            mySkillDef.skillNameToken = "MINER_UTILITY_CAVEIN_NAME";
+            mySkillDef.keywordTokens = new string[] {
+                "KEYWORD_STUNNING"
+            };
+
+            LoadoutAPI.AddSkillDef(mySkillDef);
+
+            Array.Resize(ref skillFamily.variants, skillFamily.variants.Length + 1);
+            skillFamily.variants[skillFamily.variants.Length - 1] = new SkillFamily.Variant
+            {
+                skillDef = mySkillDef,
+                unlockableName = "",
+                viewableNode = new ViewablesCatalog.Node(mySkillDef.skillNameToken, false, null)
+            };
         }
 
         private void SpecialSetup()
         {
             LoadoutAPI.AddSkill(typeof(ToTheStars));
 
-            LanguageAPI.Add("MINER_SPECIAL_TOTHESTARS_NAME", "To The Stars");
-            LanguageAPI.Add("MINER_SPECIAL_TOTHESTARS_DESCRIPTION", "Jump into the air, shooting a spray of projectiles downwards for 39x100% damage total.");
+            LanguageAPI.Add("MINER_SPECIAL_TOTHESTARS_NAME", "To The Stars!");
+            LanguageAPI.Add("MINER_SPECIAL_TOTHESTARS_DESCRIPTION", "Jump into the air, shooting a wide spray of projectiles downwards for <style=cIsDamage>39x" + 100f * ToTheStars.damageCoefficient + "% damage</style> total.");
 
             SkillDef mySkillDef = ScriptableObject.CreateInstance<SkillDef>();
             mySkillDef.activationState = new SerializableEntityStateType(typeof(ToTheStars));
@@ -868,9 +1035,16 @@ namespace MinerPlugin
 
     public class MenuSound : MonoBehaviour
     {
+        private uint playID;
+
         private void OnEnable()
         {
+            this.playID = Util.PlaySound(Sounds.Select, base.gameObject);
+        }
 
+        private void OnDestroy()
+        {
+            AkSoundEngine.StopPlayingID(this.playID);
         }
     }
 
@@ -881,5 +1055,9 @@ namespace MinerPlugin
         public static readonly string DrillCharge = "DrillCharge";
         public static readonly string Backblast = "Backblast";
         public static readonly string ToTheStars = "ToTheStars";
+
+        public static readonly string Swing = "MinerSwing";
+        public static readonly string Hit = "MinerHit";
+        public static readonly string Select = "MinerSelect";
     }
 }

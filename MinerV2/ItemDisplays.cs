@@ -1990,7 +1990,7 @@ namespace MinerPlugin
                 }
             });
 
-            list.Add(new ItemDisplayRuleSet.NamedRuleGroup
+            /*list.Add(new ItemDisplayRuleSet.NamedRuleGroup
             {
                 name = "LaserTurbine",
                 displayRuleGroup = new DisplayRuleGroup
@@ -2009,7 +2009,7 @@ namespace MinerPlugin
                         }
                     }
                 }
-            });
+            });*/
 
             list.Add(new ItemDisplayRuleSet.NamedRuleGroup
             {
