@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 2427440107
+CRC: 3384272880
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 1f16d3fb7f5e293192ee5ad93107a748
+    Hash: be24c9c89123d3b683fd9c386140d948
   TypeTreeHash:
     serializedVersion: 2
     Hash: 572d321d58e8aba6ff63f386d0d4a992
@@ -67,6 +67,7 @@ Assets:
 - Assets/Miner/Animations/animMiner.controller
 - Assets/Miner/Style/StyleSSFill.png
 - Assets/Miner/Materials/matMinerGold.mat
+- Assets/Miner/Materials/matFireParticle.mat
 - Assets/Miner/Animations/Swing1.anim
 - Assets/Miner/Animations/DrillChargeHoriEnd.anim
 - Assets/Miner/Animations/DrillChargeStart.anim
@@ -103,6 +104,7 @@ Assets:
 - Assets/Miner/Textures/texMinerMoltenEmission.png
 - Assets/Miner/VFX/texMinerImpact.png
 - Assets/Miner/Animations/MenuIdle.anim
+- Assets/Miner/FireParticle.mesh
 - Assets/Miner/Materials/matMinerDiamond.mat
 - Assets/Miner/Style/StyleB.png
 - Assets/Miner/Animations/Backblast.anim

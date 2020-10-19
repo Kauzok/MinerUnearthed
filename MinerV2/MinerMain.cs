@@ -1,4 +1,5 @@
-﻿using RoR2;
+﻿using MinerPlugin;
+using RoR2;
 using RoR2.Skills;
 using System;
 using UnityEngine;
@@ -11,6 +12,7 @@ namespace EntityStates.Miner
         public static float passiveStyleCoefficient = 0.4f;
 
         private StyleSystem.StyleComponent styleComponent;
+        private AdrenalineParticleTimer adrenalineParticles;
         private int moneyTracker;
         private float residue;
         private int buffCounter;
@@ -20,6 +22,7 @@ namespace EntityStates.Miner
             base.OnEnter();
 
             this.styleComponent = base.GetComponent<StyleSystem.StyleComponent>();
+            this.adrenalineParticles = base.GetComponent<AdrenalineParticleTimer>();
         }
 
         public override void Update()
@@ -74,6 +77,10 @@ namespace EntityStates.Miner
             }
 
             if (this.styleComponent) this.styleComponent.AddStyle(MinerMain.passiveStyleCoefficient);
+
+            if (this.adrenalineParticles) {
+                adrenalineParticles.updateAdrenaline(numStacks, true);
+            }
         }
 
         private void HandleStackDecay(int currentCount)
@@ -87,6 +94,10 @@ namespace EntityStates.Miner
             }
 
             this.buffCounter = base.characterBody.GetBuffCount(MinerPlugin.MinerPlugin.goldRush);
+
+            if (this.adrenalineParticles) {
+                adrenalineParticles.updateAdrenaline(buffCounter);
+            }
         }
     }
 }

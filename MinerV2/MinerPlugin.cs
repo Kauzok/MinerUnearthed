@@ -628,6 +628,13 @@ namespace MinerPlugin
             aimAnimator.inputBank = characterPrefab.GetComponent<InputBankTest>();
 
             if (styleUI.Value) characterPrefab.AddComponent<StyleSystem.StyleComponent>();
+
+            GameObject particlesObject = childLocator.FindChild("AdrenalineFire").gameObject;
+            if (particlesObject) {
+                characterPrefab.AddComponent<AdrenalineParticleTimer>().init(particlesObject);
+            } else {
+                Debug.LogWarning("no object found for adrenaline particle system");
+            }
         }
 
         private void RegisterCharacter()
