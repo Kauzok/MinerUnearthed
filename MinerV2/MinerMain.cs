@@ -9,9 +9,14 @@ namespace EntityStates.Miner
 {
     public class MinerMain : GenericCharacterMain
     {
-        public static float passiveStyleCoefficient = 0.4f;
+        //public static float passiveStyleCoefficient = 0.4f;
+        public static float maxEmission = 25f;
+        public static float minEmission = 0f;
 
-        private StyleSystem.StyleComponent styleComponent;
+        private bool isMainSkin;
+        private float adrenalineCap;
+        private Material bodyMat;
+        //private StyleSystem.StyleComponent styleComponent;
         private AdrenalineParticleTimer adrenalineParticles;
         private int moneyTracker;
         private float residue;
@@ -20,8 +25,21 @@ namespace EntityStates.Miner
         public override void OnEnter()
         {
             base.OnEnter();
+            this.isMainSkin = false;
 
-            this.styleComponent = base.GetComponent<StyleSystem.StyleComponent>();
+            if (base.characterBody)
+            {
+                Transform modelTransform = base.GetModelTransform();
+                if (modelTransform)
+                {
+                    this.bodyMat = modelTransform.GetComponent<CharacterModel>().baseRendererInfos[0].defaultMaterial;
+                }
+
+                if (base.characterBody.skinIndex == 0) this.isMainSkin = true;
+            }
+
+            this.adrenalineCap = MinerPlugin.MinerPlugin.adrenalineCap;
+            //this.styleComponent = base.GetComponent<StyleSystem.StyleComponent>();
             this.adrenalineParticles = base.GetComponent<AdrenalineParticleTimer>();
         }
 
@@ -61,7 +79,7 @@ namespace EntityStates.Miner
             base.characterBody.ClearTimedBuffs(MinerPlugin.MinerPlugin.goldRush);
             for (int i = 0; i < currentCount; i++)
             {
-                if (base.characterBody.GetBuffCount(MinerPlugin.MinerPlugin.goldRush) <= MinerPlugin.MinerPlugin.adrenalineCap) base.characterBody.AddTimedBuff(MinerPlugin.MinerPlugin.goldRush, 5);
+                if (base.characterBody.GetBuffCount(MinerPlugin.MinerPlugin.goldRush) <= this.adrenalineCap) base.characterBody.AddTimedBuff(MinerPlugin.MinerPlugin.goldRush, 5);
             }
         }
 
@@ -73,14 +91,17 @@ namespace EntityStates.Miner
 
             for (int i = 1; i <= numStacks; i++)
             {
-                if (base.characterBody.GetBuffCount(MinerPlugin.MinerPlugin.goldRush) <= MinerPlugin.MinerPlugin.adrenalineCap) base.characterBody.AddTimedBuff(MinerPlugin.MinerPlugin.goldRush, 5);
+                if (base.characterBody.GetBuffCount(MinerPlugin.MinerPlugin.goldRush) <= this.adrenalineCap) base.characterBody.AddTimedBuff(MinerPlugin.MinerPlugin.goldRush, 5);
             }
 
-            if (this.styleComponent) this.styleComponent.AddStyle(MinerMain.passiveStyleCoefficient);
+            //if (this.styleComponent) this.styleComponent.AddStyle(MinerMain.passiveStyleCoefficient);
 
-            if (this.adrenalineParticles) {
+            if (this.adrenalineParticles)
+            {
                 adrenalineParticles.updateAdrenaline(numStacks, true);
             }
+
+            this.UpdateEmission();
         }
 
         private void HandleStackDecay(int currentCount)
@@ -89,14 +110,41 @@ namespace EntityStates.Miner
             {
                 for (int i = 1; i < buffCounter * .5; i++)
                 {
-                    if (base.characterBody.GetBuffCount(MinerPlugin.MinerPlugin.goldRush) <= MinerPlugin.MinerPlugin.adrenalineCap) base.characterBody.AddTimedBuff(MinerPlugin.MinerPlugin.goldRush, 1);
+                    if (base.characterBody.GetBuffCount(MinerPlugin.MinerPlugin.goldRush) <= this.adrenalineCap) base.characterBody.AddTimedBuff(MinerPlugin.MinerPlugin.goldRush, 1);
                 }
             }
 
             this.buffCounter = base.characterBody.GetBuffCount(MinerPlugin.MinerPlugin.goldRush);
 
-            if (this.adrenalineParticles) {
+            if (this.adrenalineParticles)
+            {
                 adrenalineParticles.updateAdrenaline(buffCounter);
+            }
+
+            this.UpdateEmission();
+        }
+
+        private void UpdateEmission()
+        {
+            if (this.isMainSkin && this.bodyMat)
+            {
+                float emValue = Util.Remap(this.buffCounter, 0, this.adrenalineCap, MinerMain.minEmission, MinerMain.maxEmission);
+                Color emColor = Color.white;
+
+                if (this.buffCounter <= 0.5f * this.adrenalineCap)
+                {
+                    float colorValue = Util.Remap(this.buffCounter, 0, 0.5f * this.adrenalineCap, 0f, 1f);
+                    emColor = new Color(colorValue, colorValue, colorValue);
+                }
+                else
+                {
+                    float startValue = this.adrenalineCap * 0.5f;
+                    float colorValue = Util.Remap(this.buffCounter, 0, this.adrenalineCap - startValue, 1f, 0f);
+                    emColor = new Color(1, colorValue, colorValue);
+                }
+
+                this.bodyMat.SetFloat("_EmPower", emValue);
+                this.bodyMat.SetColor("_EmColor", emColor);
             }
         }
     }

@@ -7,7 +7,7 @@ namespace EntityStates.Miner
 {
     public class BackBlast : BaseSkillState
     {
-        public static float damageCoefficient = 5f;
+        public static float damageCoefficient = 6f;
         public float baseDuration = 0.35f;
         private float duration;
 

@@ -25,7 +25,7 @@ namespace EntityStates.Miner
         private float stopwatch;
         private Animator animator;
         private BaseState.HitStopCachedState hitStopCachedState;
-        private StyleSystem.StyleComponent styleComponent;
+        //private StyleSystem.StyleComponent styleComponent;
 
         public override void OnEnter()
         {
@@ -33,7 +33,7 @@ namespace EntityStates.Miner
             this.duration = this.baseDuration / this.attackSpeedStat;
             this.hasFired = false;
             this.animator = base.GetModelAnimator();
-            this.styleComponent = base.GetComponent<StyleSystem.StyleComponent>();
+            //this.styleComponent = base.GetComponent<StyleSystem.StyleComponent>();
             base.StartAimMode(0.5f + this.duration, false);
             base.PlayAnimation("Gesture, Override", "Crush", "Crush.playbackRate", this.duration);
 
@@ -88,7 +88,7 @@ namespace EntityStates.Miner
 
                     float speedScale = 0.7f * (Mathf.Sqrt(3.5f * base.attackSpeedStat));
 
-                    float attackRadius = 5f * Mathf.Sqrt(speedScale - 0.31f);
+                    float attackRadius = 1.1f * Mathf.Sqrt(speedScale - 0.31f);
 
                     /*BlastAttack blastAttack = new BlastAttack();
                     blastAttack.radius = attackRadius;
@@ -105,11 +105,11 @@ namespace EntityStates.Miner
                     BlastAttack.Result result = blastAttack.Fire();*/
                     //hitCount = result.hitCount;
 
-                    base.GetModelChildLocator().FindChild("CrushHitbox").transform.localScale = Vector3.one * attackRadius * 0.01f;
+                    base.GetModelChildLocator().FindChild("SwingCenter").transform.localScale = Vector3.one * attackRadius;
 
                     if (this.attack.Fire())
                     {
-                        if (this.styleComponent) this.styleComponent.AddStyle(Crush.styleCoefficient);
+                        //if (this.styleComponent) this.styleComponent.AddStyle(Crush.styleCoefficient);
 
                         if (!this.hasHopped)
                         {

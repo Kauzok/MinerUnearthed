@@ -10,14 +10,14 @@ using UnityEngine;
 using UnityEngine.Networking;
 using KinematicCharacterController;
 using EntityStates.Miner;
-using RoR2.UI;
 using BepInEx.Configuration;
 
 namespace MinerPlugin
 {
     [BepInDependency("com.bepis.r2api", BepInDependency.DependencyFlags.HardDependency)]
+    [BepInDependency("com.rob.Aatrox", BepInDependency.DependencyFlags.SoftDependency)]
     [NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod, VersionStrictness.EveryoneNeedSameModVersion)]
-    [BepInPlugin(MODUID, "MinerUnearthed", "1.2.0")]
+    [BepInPlugin(MODUID, "MinerUnearthed", "1.3.0")]
     [R2APISubmoduleDependency(new string[]
     {
         "PrefabAPI",
@@ -69,6 +69,7 @@ namespace MinerPlugin
         public static event Action start;
 
         public static BuffIndex goldRush;
+        public static BuffIndex cleave;
 
         public static readonly Color characterColor = new Color(0.956862745f, 0.874509803f, 0.603921568f);
 
@@ -77,6 +78,8 @@ namespace MinerPlugin
         public static float adrenalineCap;
 
         public static GameObject backblastEffect;
+
+        public static bool hasAatrox = false;
 
         public static ConfigEntry<float> maxAdrenaline;
         public static ConfigEntry<bool> extraSkins;
@@ -90,8 +93,16 @@ namespace MinerPlugin
 
         private void MinerPlugin_Load()
         {
+            instance = this;
+
             ConfigShit();
             Assets.PopulateAssets();
+
+            if (BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("com.rob.Aatrox"))
+            {
+                hasAatrox = true;
+            }
+
             CreateDisplayPrefab();
             CreatePrefab();
             RegisterCharacter();
@@ -135,7 +146,7 @@ namespace MinerPlugin
             maxAdrenaline = base.Config.Bind<float>(new ConfigDefinition("01 - General Settings", "Adrenaline Cap"), 50, new ConfigDescription("Max Adrenaline stacks allowed", null, Array.Empty<object>()));
             adrenalineCap = maxAdrenaline.Value - 1;
             extraSkins = base.Config.Bind<bool>(new ConfigDefinition("01 - General Settings", "Extra Skins"), false, new ConfigDescription("Enables a bunch of extra skins", null, Array.Empty<object>()));
-            styleUI = base.Config.Bind<bool>(new ConfigDefinition("01 - General Settings", "Style Rank"), false, new ConfigDescription("Enables a style ranking system taken from Devil May Cry", null, Array.Empty<object>()));
+            styleUI = base.Config.Bind<bool>(new ConfigDefinition("01 - General Settings", "Style Rank"), false, new ConfigDescription("Enables a style ranking system taken from Devil May Cry (only if Aatrox is installed as well)", null, Array.Empty<object>()));
         }
 
         private void RegisterEffects()
@@ -157,19 +168,49 @@ namespace MinerPlugin
             {
                 name = "Gold Rush",
                 iconPath = "Textures/BuffIcons/texBuffOnFireIcon",
-                buffColor = Color.yellow,
+                buffColor = characterColor,
                 canStack = true,
                 isDebuff = false,
                 eliteIndex = EliteIndex.None
             };
             CustomBuff goldRush = new CustomBuff(goldRushDef);
             MinerPlugin.goldRush = BuffAPI.Add(goldRush);
+
+            BuffDef cleaveDef = new BuffDef
+            {
+                name = "Cleave",
+                iconPath = "Textures/BuffIcons/texBuffPulverizeIcon",
+                buffColor = characterColor,
+                canStack = true,
+                isDebuff = true,
+                eliteIndex = EliteIndex.None
+            };
+            CustomBuff cleave = new CustomBuff(cleaveDef);
+            MinerPlugin.cleave = BuffAPI.Add(cleave);
         }
 
         private void Hook()
         {
             On.RoR2.CharacterBody.RecalculateStats += CharacterBody_RecalculateStats;
-            if (styleUI.Value) On.RoR2.UI.HUD.OnEnable += HUDAwake;
+            On.RoR2.HealthComponent.TakeDamage += HealthComponent_TakeDamage;
+        }
+
+        private void HealthComponent_TakeDamage(On.RoR2.HealthComponent.orig_TakeDamage orig, HealthComponent self, DamageInfo info)
+        {
+            if (info.attacker)
+            {
+                CharacterBody cb = info.attacker.GetComponent<CharacterBody>();
+                if (cb)
+                {
+                    if (cb.baseNameToken == "MINER_NAME" && info.damageType.HasFlag(DamageType.ApplyMercExpose))
+                    {
+                        info.damageType = DamageType.Generic;
+                        if (self.body) self.body.AddTimedBuff(cleave, 2.5f * info.procCoefficient);
+                    }
+                }
+            }
+
+            orig(self, info);
         }
 
         private void CharacterBody_RecalculateStats(On.RoR2.CharacterBody.orig_RecalculateStats orig, CharacterBody self)
@@ -184,14 +225,13 @@ namespace MinerPlugin
                     Reflection.SetPropertyValue<float>(self, "moveSpeed", self.moveSpeed + (count * 0.15f));
                     Reflection.SetPropertyValue<float>(self, "regen", self.regen + (count * 0.25f));
                 }
+
+                if (self.HasBuff(cleave))
+                {
+                    int count = self.GetBuffCount(cleave);
+                    Reflection.SetPropertyValue<float>(self, "armor", self.armor - (count * 3f));
+                }
             }
-        }
-
-        internal static void HUDAwake(On.RoR2.UI.HUD.orig_OnEnable orig, HUD self)
-        {
-            orig(self);
-
-            if (self.gameObject) self.gameObject.AddComponent<StyleSystem.ExtraHUD>();
         }
 
         private void ILHook()
@@ -275,8 +315,8 @@ namespace MinerPlugin
 
             GameObject model = null;
 
-            if (index == 0) model = Assets.MainAssetBundle.LoadAsset<GameObject>("mdlMiner");
-            else if (index == 1) model = Assets.MainAssetBundle.LoadAsset<GameObject>("MinerDisplay");
+            if (index == 0) model = Assets.mainAssetBundle.LoadAsset<GameObject>("mdlMiner");
+            else if (index == 1) model = Assets.mainAssetBundle.LoadAsset<GameObject>("MinerDisplay");
 
             return model;
         }
@@ -325,6 +365,20 @@ namespace MinerPlugin
                 {
                     defaultMaterial = model.GetComponentInChildren<SkinnedMeshRenderer>().material,
                     renderer = model.GetComponentInChildren<SkinnedMeshRenderer>(),
+                    defaultShadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On,
+                    ignoreOverlays = false
+                },
+                new CharacterModel.RendererInfo
+                {
+                    defaultMaterial = childLocator.FindChild("DiamondPickL").GetComponent<MeshRenderer>().material,
+                    renderer = childLocator.FindChild("DiamondPickL").GetComponent<MeshRenderer>(),
+                    defaultShadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On,
+                    ignoreOverlays = false
+                },
+                new CharacterModel.RendererInfo
+                {
+                    defaultMaterial = childLocator.FindChild("DiamondPickR").GetComponent<MeshRenderer>().material,
+                    renderer = childLocator.FindChild("DiamondPickR").GetComponent<MeshRenderer>(),
                     defaultShadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On,
                     ignoreOverlays = false
                 }
@@ -457,6 +511,20 @@ namespace MinerPlugin
                     renderer = model.GetComponentInChildren<SkinnedMeshRenderer>(),
                     defaultShadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On,
                     ignoreOverlays = false
+                },
+                new CharacterModel.RendererInfo
+                {
+                    defaultMaterial = childLocator.FindChild("DiamondPickL").GetComponent<MeshRenderer>().material,
+                    renderer = childLocator.FindChild("DiamondPickL").GetComponent<MeshRenderer>(),
+                    defaultShadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On,
+                    ignoreOverlays = false
+                },
+                new CharacterModel.RendererInfo
+                {
+                    defaultMaterial = childLocator.FindChild("DiamondPickR").GetComponent<MeshRenderer>().material,
+                    renderer = childLocator.FindChild("DiamondPickR").GetComponent<MeshRenderer>(),
+                    defaultShadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On,
+                    ignoreOverlays = false
                 }
             };
 
@@ -557,7 +625,7 @@ namespace MinerPlugin
             HitBoxGroup hitBoxGroup = model.AddComponent<HitBoxGroup>();
 
             GameObject crushHitbox = new GameObject("CrushHitbox");
-            crushHitbox.transform.parent = childLocator.FindChild("SwingLeft");
+            crushHitbox.transform.parent = childLocator.FindChild("SwingCenter");
             crushHitbox.transform.localPosition = new Vector3(0f, 0f, 0f);
             crushHitbox.transform.localRotation = Quaternion.identity;
             crushHitbox.transform.localScale = Vector3.one * 0.08f;
@@ -575,7 +643,7 @@ namespace MinerPlugin
             HitBoxGroup chargeHitBoxGroup = model.AddComponent<HitBoxGroup>();
 
             GameObject chargeHitbox = new GameObject("ChargeHitbox");
-            chargeHitbox.transform.parent = childLocator.FindChild("SwingLeft");
+            chargeHitbox.transform.parent = childLocator.FindChild("SwingCenter");
             chargeHitbox.transform.localPosition = new Vector3(0f, 0f, 0f);
             chargeHitbox.transform.localRotation = Quaternion.identity;
             chargeHitbox.transform.localScale = Vector3.one * 0.08f;
@@ -627,13 +695,15 @@ namespace MinerPlugin
             aimAnimator.giveupDuration = 3f;
             aimAnimator.inputBank = characterPrefab.GetComponent<InputBankTest>();
 
-            if (styleUI.Value) characterPrefab.AddComponent<StyleSystem.StyleComponent>();
+            /*if (styleUI.Value && hasAatrox)
+            {
+                characterPrefab.AddComponent<Aatrox.GenericStyleController>();
+            }*/
 
             GameObject particlesObject = childLocator.FindChild("AdrenalineFire").gameObject;
-            if (particlesObject) {
+            if (particlesObject)
+            {
                 characterPrefab.AddComponent<AdrenalineParticleTimer>().init(particlesObject);
-            } else {
-                Debug.LogWarning("no object found for adrenaline particle system");
             }
         }
 
@@ -773,7 +843,9 @@ namespace MinerPlugin
 
             LoadoutAPI.AddSkill(typeof(Gouge));
 
-            desc = "<style=cIsUtility>Agile.</style> Wildly swing at nearby enemies for <style=cIsDamage>" + 100f * Gouge.damageCoefficient + "% damage</style>.";
+            LanguageAPI.Add("KEYWORD_CLEAVING", "<style=cKeywordName>Cleaving</style><style=cSub>Applies a stacking debuff that lowers <style=cIsDamage>armor</style> by <style=cIsHealth>3 per stack</style>.</style>");
+
+            desc = "<style=cIsUtility>Agile.</style> Wildly swing at nearby enemies for <style=cIsDamage>" + 100f * Gouge.damageCoefficient + "% damage</style>, <style=cIsHealth>cleaving</style> their armor.";
 
             LanguageAPI.Add("MINER_PRIMARY_GOUGE_NAME", "Gouge");
             LanguageAPI.Add("MINER_PRIMARY_GOUGE_DESCRIPTION", desc);
@@ -800,7 +872,8 @@ namespace MinerPlugin
             mySkillDef.skillName = "MINER_PRIMARY_GOUGE_NAME";
             mySkillDef.skillNameToken = "MINER_PRIMARY_GOUGE_NAME";
             mySkillDef.keywordTokens = new string[] {
-                "KEYWORD_AGILE"
+                "KEYWORD_AGILE",
+                "KEYWORD_CLEAVING"
             };
 
             LoadoutAPI.AddSkillDef(mySkillDef);
@@ -819,7 +892,7 @@ namespace MinerPlugin
             LoadoutAPI.AddSkill(typeof(DrillChargeStart));
             LoadoutAPI.AddSkill(typeof(DrillCharge));
 
-            string desc = "Charge for 1 second. Dash into enemies for up to <style=cIsDamage>12x" + 100f * DrillCharge.damageCoefficient + "% damage</style>. <style=cIsUtility>You cannot be hit during and following the dash.</style>";
+            string desc = "Charge up for 1 second, then dash into enemies for up to <style=cIsDamage>12x" + 100f * DrillCharge.damageCoefficient + "% damage</style>. <style=cIsUtility>You cannot be hit during and following the dash.</style>";
 
             LanguageAPI.Add("MINER_SECONDARY_CHARGE_NAME", "Drill Charge");
             LanguageAPI.Add("MINER_SECONDARY_CHARGE_DESCRIPTION", desc);
@@ -863,18 +936,19 @@ namespace MinerPlugin
                 viewableNode = new ViewablesCatalog.Node(mySkillDef.skillNameToken, false, null)
             };
 
+            LoadoutAPI.AddSkill(typeof(DrillBreakStart));
             LoadoutAPI.AddSkill(typeof(DrillBreak));
 
-            desc = "Dash forward, exploding for <style=cIsDamage>" + 100f * DrillBreak.damageCoefficient + "% damage</style> on contact with an enemy. <style=cIsUtility>You cannot be hit during and following the dash.</style>";
+            desc = "Dash forward, exploding for <style=cIsDamage>2x" + 100f * DrillBreak.damageCoefficient + "% damage</style> on contact with an enemy. <style=cIsUtility>You cannot be hit during and following the dash.</style>";
 
             LanguageAPI.Add("MINER_SECONDARY_BREAK_NAME", "Crack Hammer");
             LanguageAPI.Add("MINER_SECONDARY_BREAK_DESCRIPTION", desc);
 
             mySkillDef = ScriptableObject.CreateInstance<SkillDef>();
-            mySkillDef.activationState = new SerializableEntityStateType(typeof(DrillBreak));
+            mySkillDef.activationState = new SerializableEntityStateType(typeof(DrillBreakStart));
             mySkillDef.activationStateMachineName = "Weapon";
             mySkillDef.baseMaxStock = 1;
-            mySkillDef.baseRechargeInterval = 7f;
+            mySkillDef.baseRechargeInterval = 3f;
             mySkillDef.beginSkillCooldownOnSkillEnd = true;
             mySkillDef.canceledFromSprinting = false;
             mySkillDef.fullRestockOnAssign = true;
@@ -958,7 +1032,7 @@ namespace MinerPlugin
             LanguageAPI.Add("MINER_UTILITY_CAVEIN_DESCRIPTION", "<style=cIsUtility>Stunning.</style> Blast backwards a short distance, <style=cIsUtility>pulling</style> together all enemies in a large radius. You cannot be hit while dashing.");
 
             mySkillDef = ScriptableObject.CreateInstance<SkillDef>();
-            mySkillDef.activationState = new SerializableEntityStateType(typeof(CaveIn));
+            mySkillDef.activationState = new SerializableEntityStateType(typeof(VaultState));
             mySkillDef.activationStateMachineName = "Weapon";
             mySkillDef.baseMaxStock = 1;
             mySkillDef.baseRechargeInterval = 5;
@@ -968,7 +1042,7 @@ namespace MinerPlugin
             mySkillDef.interruptPriority = InterruptPriority.Skill;
             mySkillDef.isBullets = false;
             mySkillDef.isCombatSkill = true;
-            mySkillDef.mustKeyPress = false;
+            mySkillDef.mustKeyPress = true;
             mySkillDef.noSprint = false;
             mySkillDef.rechargeStock = 1;
             mySkillDef.requiredStock = 1;
@@ -998,7 +1072,7 @@ namespace MinerPlugin
             LoadoutAPI.AddSkill(typeof(ToTheStars));
 
             LanguageAPI.Add("MINER_SPECIAL_TOTHESTARS_NAME", "To The Stars!");
-            LanguageAPI.Add("MINER_SPECIAL_TOTHESTARS_DESCRIPTION", "Jump into the air, shooting a wide spray of projectiles downwards for <style=cIsDamage>39x" + 100f * ToTheStars.damageCoefficient + "% damage</style> total.");
+            LanguageAPI.Add("MINER_SPECIAL_TOTHESTARS_DESCRIPTION", "Jump into the air, shooting a wide spray of projectiles downwards for <style=cIsDamage>30x" + 100f * ToTheStars.damageCoefficient + "% damage</style> total.");
 
             SkillDef mySkillDef = ScriptableObject.CreateInstance<SkillDef>();
             mySkillDef.activationState = new SerializableEntityStateType(typeof(ToTheStars));

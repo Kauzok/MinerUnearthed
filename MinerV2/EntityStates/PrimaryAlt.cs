@@ -11,7 +11,7 @@ namespace EntityStates.Miner
         public static float attackRecoil = 0.5f;
         public static float hitHopVelocity = 5f;
         public static float styleCoefficient = 1.2f;
-        public static float attackRadius = 6f;
+        public static float attackRadius = 1.2f;
         public static float baseEarlyExit = 0.4f;
         public int swingIndex;
 
@@ -25,7 +25,7 @@ namespace EntityStates.Miner
         private float stopwatch;
         private Animator animator;
         private BaseState.HitStopCachedState hitStopCachedState;
-        private StyleSystem.StyleComponent styleComponent;
+        //private StyleSystem.StyleComponent styleComponent;
 
         public override void OnEnter()
         {
@@ -34,7 +34,7 @@ namespace EntityStates.Miner
             this.earlyExitDuration = Gouge.baseEarlyExit / this.attackSpeedStat;
             this.hasFired = false;
             this.animator = base.GetModelAnimator();
-            this.styleComponent = base.GetComponent<StyleSystem.StyleComponent>();
+            //this.styleComponent = base.GetComponent<StyleSystem.StyleComponent>();
             base.StartAimMode(0.5f + this.duration, false);
 
             HitBoxGroup hitBoxGroup = null;
@@ -49,6 +49,7 @@ namespace EntityStates.Miner
             else base.PlayAnimation("Pick, Override", "Swing2", "Swing.playbackRate", this.duration);
 
             this.attack = new OverlapAttack();
+            this.attack.damageType = DamageType.ApplyMercExpose;
             this.attack.attacker = base.gameObject;
             this.attack.inflictor = base.gameObject;
             this.attack.teamIndex = base.GetTeam();
@@ -83,12 +84,12 @@ namespace EntityStates.Miner
                 {
                     base.AddRecoil(-1f * Gouge.attackRecoil, -2f * Gouge.attackRecoil, -0.5f * Gouge.attackRecoil, 0.5f * Gouge.attackRecoil);
 
-                    base.GetModelChildLocator().FindChild("CrushHitbox").transform.localScale = Vector3.one * Gouge.attackRadius * 0.01f;
+                    base.GetModelChildLocator().FindChild("SwingCenter").transform.localScale = Vector3.one * Gouge.attackRadius;
 
                     if (this.attack.Fire())
                     {
                         Util.PlaySound(MinerPlugin.Sounds.Hit, base.gameObject);
-                        if (this.styleComponent) this.styleComponent.AddStyle(Gouge.styleCoefficient);
+                        //if (this.styleComponent) this.styleComponent.AddStyle(Gouge.styleCoefficient);
 
                         if (!this.hasHopped)
                         {

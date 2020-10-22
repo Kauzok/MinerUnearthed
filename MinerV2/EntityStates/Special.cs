@@ -30,6 +30,7 @@ namespace EntityStates.Miner
                 base.characterMotor.velocity.y = 25;
 
                 base.gameObject.layer = LayerIndex.fakeActor.intVal;
+                base.characterMotor.Motor.RebuildCollidableLayers();
             }
 
             base.PlayAnimation("FullBody, Override", "ToTheStarsStart", "ToTheStars.playbackRate", 1f);
@@ -52,6 +53,7 @@ namespace EntityStates.Miner
                 {
                     owner = base.gameObject,
                     weapon = base.gameObject,
+                    muzzleName = "Chest",
                     origin = aimRay.origin,
                     aimVector = aimer,
                     minSpread = 0f,
@@ -73,7 +75,7 @@ namespace EntityStates.Miner
 
                 for (int j = 0; j < 3; j++)
                 {
-                    for (int i = 0; i <= 12; i++)
+                    for (int i = 0; i <= 9; i++)
                     {
                         float theta = Random.Range(0.0f, 6.28f);
                         float x = Mathf.Cos(theta);

@@ -101,24 +101,30 @@ namespace EntityStates.Miner
         public int charged;
         private int type;
         private BlastAttack blastAttack;
-        private StyleSystem.StyleComponent styleComponent;
+        //private StyleSystem.StyleComponent styleComponent;
 
         public override void OnEnter()
         {
             base.OnEnter();
             this.duration = this.baseDuration;
             Ray aimRay = base.GetAimRay();
-            this.styleComponent = base.GetComponent<StyleSystem.StyleComponent>();
+            //this.styleComponent = base.GetComponent<StyleSystem.StyleComponent>();
             base.characterMotor.disableAirControlUntilCollision = false;
 
-            bool flag = false;
-            float angle = Vector3.Angle(new Vector3(0, -1, 0), aimRay.direction);
-            if (angle > 120) flag = true;
+            base.GetModelChildLocator().FindChild("DrillChargeEffect").GetComponent<ParticleSystem>().Play();
+
+            //bool flag = false;
+            //float angle = Vector3.Angle(new Vector3(0, -1, 0), aimRay.direction);
+            //if (angle > 120) flag = true;
 
             this.type = 0;
             if (charged > 8)
             {
-                if (flag)
+                this.type = 1;
+                base.GetModelAnimator().SetFloat("DrillCharge.offset", Util.Remap(base.characterMotor.velocity.y, -70, 70, -1, 1));
+                base.PlayAnimation("FullBody, Override", "DrillCharge");
+
+                /*if (flag)
                 {
                     this.type = 1;
                     base.PlayAnimation("FullBody, Override", "DrillChargeVertical", "Spin.playbackRate", 5f);
@@ -127,7 +133,7 @@ namespace EntityStates.Miner
                 {
                     this.type = 2;
                     base.PlayAnimation("FullBody, Override", "DrillChargeHorizontal", "Spin.playbackRate", 5f);
-                }
+                }*/
             }
             else base.PlayAnimation("FullBody, Override", "DrillChargeShort");
 
@@ -142,7 +148,7 @@ namespace EntityStates.Miner
                 attacker = base.gameObject,
                 crit = Util.CheckRoll(base.characterBody.crit, base.characterBody.master),
                 baseDamage = base.characterBody.damage * DrillCharge.damageCoefficient,
-                falloffModel = BlastAttack.FalloffModel.Linear,
+                falloffModel = BlastAttack.FalloffModel.None,
                 baseForce = 3f,
                 damageType = DamageType.Generic,
                 attackerFiltering = AttackerFiltering.NeverHit,
@@ -172,8 +178,13 @@ namespace EntityStates.Miner
             if (!base.characterMotor.disableAirControlUntilCollision) base.characterMotor.velocity *= 0.4f;
 
             if (this.type == 0) base.PlayAnimation("FullBody, Override", "DrillChargeShortEnd");
-            if (this.type == 1) base.PlayAnimation("FullBody, Override", "DrillChargeVertiEnd");
-            if (this.type == 2) base.PlayAnimation("FullBody, Override", "DrillChargeHoriEnd");
+            else
+            {
+                if (!base.isGrounded) base.PlayAnimation("FullBody, Override", "Flip", "Flip.playbackRate", 0.3f);
+                else base.PlayAnimation("FullBody, Override", "BufferEmpty");
+            }
+            //if (this.type == 1) base.PlayAnimation("FullBody, Override", "DrillChargeVertiEnd");
+            //if (this.type == 2) base.PlayAnimation("FullBody, Override", "DrillChargeHoriEnd");
 
             base.OnExit();
         }
@@ -201,7 +212,7 @@ namespace EntityStates.Miner
                 BlastAttack.Result result = blastAttack.Fire();
                 int hitCount = result.hitCount;
 
-                if (this.styleComponent) this.styleComponent.AddStyle(hitCount * DrillCharge.styleCoefficient);
+                //if (this.styleComponent) this.styleComponent.AddStyle(hitCount * DrillCharge.styleCoefficient);
 
                 EffectManager.SpawnEffect(explodePrefab, effectData, false);
             }

@@ -9,7 +9,7 @@ namespace MinerPlugin
 {
     public static class Assets
     {
-        public static AssetBundle MainAssetBundle = null;
+        public static AssetBundle mainAssetBundle = null;
 
         public static Texture charPortrait;
 
@@ -22,37 +22,23 @@ namespace MinerPlugin
         public static Sprite icon4;
         public static Sprite icon4B;
 
+        public static GameObject c4Model;
+
         public static Mesh tundraMesh;
+        public static Mesh steveMesh;
 
         public static GameObject swingFX;
         public static GameObject hitFX;
-
-        public static GameObject styleMeter;
-
-        public static Sprite styleD;
-        public static Sprite styleC;
-        public static Sprite styleB;
-        public static Sprite styleA;
-        public static Sprite styleS;
-        public static Sprite styleSS;
-        public static Sprite styleSSS;
-
-        public static Sprite styleTextD;
-        public static Sprite styleTextC;
-        public static Sprite styleTextB;
-        public static Sprite styleTextA;
-        public static Sprite styleTextS;
-        public static Sprite styleTextSS;
-        public static Sprite styleTextSSS;
+        public static GameObject heavyHitFX;
 
         public static void PopulateAssets()
         {
-            if (MainAssetBundle == null)
+            if (mainAssetBundle == null)
             {
                 using (var assetStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("MinerV2.miner"))
                 {
-                    MainAssetBundle = AssetBundle.LoadFromStream(assetStream);
-                    var provider = new AssetBundleResourcesProvider("@Miner", MainAssetBundle);
+                    mainAssetBundle = AssetBundle.LoadFromStream(assetStream);
+                    var provider = new AssetBundleResourcesProvider("@Miner", mainAssetBundle);
                     ResourcesAPI.AddProvider(provider);
                 }
             }
@@ -71,22 +57,25 @@ namespace MinerPlugin
                 SoundAPI.SoundBanks.Add(array);
             }
 
-            charPortrait = MainAssetBundle.LoadAsset<Sprite>("texMinerIcon").texture;
+            charPortrait = mainAssetBundle.LoadAsset<Sprite>("texMinerIcon").texture;
 
-            iconP = MainAssetBundle.LoadAsset<Sprite>("GoldRushIcon");
-            icon1 = MainAssetBundle.LoadAsset<Sprite>("CrushIcon");
-            icon2 = MainAssetBundle.LoadAsset<Sprite>("DrillChargeIcon");
-            icon2B = MainAssetBundle.LoadAsset<Sprite>("DrillBreakIcon");
-            icon3 = MainAssetBundle.LoadAsset<Sprite>("BackblastIcon");
-            icon3B = MainAssetBundle.LoadAsset<Sprite>("CaveInIcon");
-            icon4 = MainAssetBundle.LoadAsset<Sprite>("ToTheStarsIcon");
-            icon4B = MainAssetBundle.LoadAsset<Sprite>("TimedExplosiveIcon");
+            iconP = mainAssetBundle.LoadAsset<Sprite>("GoldRushIcon");
+            icon1 = mainAssetBundle.LoadAsset<Sprite>("CrushIcon");
+            icon2 = mainAssetBundle.LoadAsset<Sprite>("DrillChargeIcon");
+            icon2B = mainAssetBundle.LoadAsset<Sprite>("DrillBreakIcon");
+            icon3 = mainAssetBundle.LoadAsset<Sprite>("BackblastIcon");
+            icon3B = mainAssetBundle.LoadAsset<Sprite>("CaveInIcon");
+            icon4 = mainAssetBundle.LoadAsset<Sprite>("ToTheStarsIcon");
+            icon4B = mainAssetBundle.LoadAsset<Sprite>("TimedExplosiveIcon");
 
-            tundraMesh = MainAssetBundle.LoadAsset<Mesh>("TundraMesh");
+            c4Model = mainAssetBundle.LoadAsset<GameObject>("MinerC4");
 
+            tundraMesh = mainAssetBundle.LoadAsset<Mesh>("TundraMesh");
+            steveMesh = mainAssetBundle.LoadAsset<Mesh>("SteveMesh");
 
-            swingFX = MainAssetBundle.LoadAsset<GameObject>("MinerSwing");
-            hitFX = MainAssetBundle.LoadAsset<GameObject>("ImpactMinerSwing");
+            swingFX = mainAssetBundle.LoadAsset<GameObject>("MinerSwing");
+            hitFX = mainAssetBundle.LoadAsset<GameObject>("ImpactMinerSwing");
+            heavyHitFX = mainAssetBundle.LoadAsset<GameObject>("ImpactMinerHeavy");
 
             swingFX.AddComponent<DestroyOnTimer>().duration = 5;
             swingFX.AddComponent<NetworkIdentity>();
@@ -108,28 +97,19 @@ namespace MinerPlugin
             effect.positionAtReferencedTransform = true;
             effect.soundName = Sounds.Swing;
 
+            heavyHitFX.AddComponent<DestroyOnTimer>().duration = 5;
+            heavyHitFX.AddComponent<NetworkIdentity>();
+            heavyHitFX.AddComponent<VFXAttributes>().vfxPriority = VFXAttributes.VFXPriority.Always;
+            effect = heavyHitFX.AddComponent<EffectComponent>();
+            effect.applyScale = false;
+            effect.effectIndex = EffectIndex.Invalid;
+            effect.parentToReferencedTransform = true;
+            effect.positionAtReferencedTransform = true;
+            effect.soundName = Sounds.Swing;
+
             EffectAPI.AddEffect(swingFX);
             EffectAPI.AddEffect(hitFX);
-
-
-
-            styleMeter = MainAssetBundle.LoadAsset<GameObject>("StylePanel");
-
-            styleD = MainAssetBundle.LoadAsset<Sprite>("StyleD");
-            styleC = MainAssetBundle.LoadAsset<Sprite>("StyleC");
-            styleB = MainAssetBundle.LoadAsset<Sprite>("StyleB");
-            styleA = MainAssetBundle.LoadAsset<Sprite>("StyleA");
-            styleS = MainAssetBundle.LoadAsset<Sprite>("StyleS");
-            styleSS = MainAssetBundle.LoadAsset<Sprite>("StyleSS");
-            styleSSS = MainAssetBundle.LoadAsset<Sprite>("StyleSSS");
-
-            styleTextD = MainAssetBundle.LoadAsset<Sprite>("StyleDismal");
-            styleTextC = MainAssetBundle.LoadAsset<Sprite>("StyleCrazy");
-            styleTextB = MainAssetBundle.LoadAsset<Sprite>("StyleBadass");
-            styleTextA = MainAssetBundle.LoadAsset<Sprite>("StyleApocalyptic");
-            styleTextS = MainAssetBundle.LoadAsset<Sprite>("StyleSavage");
-            styleTextSS = MainAssetBundle.LoadAsset<Sprite>("StyleSickSkills");
-            styleTextSSS = MainAssetBundle.LoadAsset<Sprite>("StyleSmokinSexyStyle");
+            EffectAPI.AddEffect(heavyHitFX);
         }
     }
 }

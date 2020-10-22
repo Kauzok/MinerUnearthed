@@ -20,6 +20,9 @@
     <Reference Include="0Harmony">
       <HintPath>..\..\MimicMonster\MimicMonster\bin\Debug\netstandard2.0\0Harmony.dll</HintPath>
     </Reference>
+    <Reference Include="Aatrox">
+      <HintPath>..\..\..\ror2mods\Aatrox\Aatrox\Aatrox\bin\Debug\netstandard2.0\Aatrox.dll</HintPath>
+    </Reference>
     <Reference Include="Assembly-CSharp">
       <HintPath>..\..\MimicMonster\MimicMonster\bin\Debug\netstandard2.0\Assembly-CSharp.dll</HintPath>
     </Reference>
