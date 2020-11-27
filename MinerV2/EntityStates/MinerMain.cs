@@ -1,6 +1,5 @@
 ﻿using MinerPlugin;
 using RoR2;
-using RoR2.Skills;
 using System;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -13,21 +12,32 @@ namespace EntityStates.Miner
         public static float maxEmission = 25f;
         public static float minEmission = 0f;
 
+        private float adrenalineGainBuffer;
         private bool isMainSkin;
         private float adrenalineCap;
         private Material bodyMat;
         //private StyleSystem.StyleComponent styleComponent;
         private Animator animator;
         private AdrenalineParticleTimer adrenalineParticles;
+        private float adrenalineSmooth;
         private int moneyTracker;
         private float residue;
         private int buffCounter;
+        private float[] secretTimers = new float[6];
+
+        public static event Action<float> rallypoint;
+        public static event Action<Run> SecretAchieved;
+        public static event Action<bool> JunkieAchieved;
+        private bool gotJunkie;
 
         public override void OnEnter()
         {
             base.OnEnter();
             this.isMainSkin = false;
             this.animator = base.GetModelAnimator();
+            this.adrenalineGainBuffer = 0.3f;
+            this.moneyTracker = (int)base.characterBody.master.money;
+            this.gotJunkie = false;
 
             if (base.characterBody)
             {
@@ -38,11 +48,17 @@ namespace EntityStates.Miner
                 }
 
                 if (base.characterBody.skinIndex == 0) this.isMainSkin = true;
+                else if (base.characterBody.skinIndex == 2) this.isMainSkin = true;
             }
 
             this.adrenalineCap = MinerPlugin.MinerPlugin.adrenalineCap;
             //this.styleComponent = base.GetComponent<StyleSystem.StyleComponent>();
             this.adrenalineParticles = base.GetComponent<AdrenalineParticleTimer>();
+
+            if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "frozenwall")
+            {
+                rallypoint(Run.instance.time);
+            }
         }
 
         public override void Update()
@@ -62,15 +78,37 @@ namespace EntityStates.Miner
                     return;
                 }
             }
+
+            if (base.isAuthority)
+            {
+                this.HandleSecret();
+            }
         }
 
         public override void FixedUpdate()
         {
             base.FixedUpdate();
 
-            if (NetworkServer.active) this.UpdatePassiveBuff();
+            this.adrenalineGainBuffer -= Time.fixedDeltaTime;
+            if (this.adrenalineGainBuffer <= 0 && NetworkServer.active) this.UpdatePassiveBuff();
 
-            this.animator.SetFloat("adrenaline", Util.Remap(base.GetBuffCount(MinerPlugin.MinerPlugin.goldRush), 0, adrenalineCap, 0, 1));
+            if (this.animator)
+            {
+                this.adrenalineSmooth = Mathf.Lerp(this.adrenalineSmooth, this.buffCounter, 1.5f * Time.fixedDeltaTime);
+                this.animator.SetFloat("adrenaline", Util.Remap(this.adrenalineSmooth, 0, this.adrenalineCap, 0, 1));
+            }
+
+            if (!this.gotJunkie)
+            {
+                if (this.buffCounter >= this.adrenalineCap)
+                {
+                    if (JunkieAchieved != null)
+                    {
+                        this.gotJunkie = true;
+                        JunkieAchieved(true);
+                    }
+                }
+            }
         }
 
         public override void OnExit()
@@ -163,6 +201,30 @@ namespace EntityStates.Miner
 
                 this.bodyMat.SetFloat("_EmPower", emValue);
                 this.bodyMat.SetColor("_EmColor", emColor);
+            }
+        }
+
+        private void HandleSecret()
+        {
+            if (Input.GetKeyDown(KeyCode.G)) { secretTimers[0] = Time.fixedTime; }
+            if (Input.GetKeyDown(KeyCode.N)) { secretTimers[1] = Time.fixedTime; }
+            if (Input.GetKeyDown(KeyCode.O)) { secretTimers[2] = Time.fixedTime; }
+            if (Input.GetKeyDown(KeyCode.M)) { secretTimers[3] = Time.fixedTime; }
+            if (Input.GetKeyDown(KeyCode.E)) { secretTimers[4] = Time.fixedTime; }
+
+            bool successful = true;
+            for (int i = 0; i < 5; i++)
+            {
+                successful = successful && (Time.fixedTime - secretTimers[i]) < 0.5;
+            }
+
+            if (successful && (Time.fixedTime - secretTimers[5]) > 3)
+            {
+                Chat.AddMessage("Gnome loves you");
+
+                SecretAchieved(Run.instance);
+
+                secretTimers[5] = Time.fixedTime;
             }
         }
     }

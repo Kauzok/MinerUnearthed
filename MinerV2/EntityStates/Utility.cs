@@ -1,5 +1,6 @@
 ﻿using EntityStates;
 using RoR2;
+using System;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -10,6 +11,7 @@ namespace EntityStates.Miner
         public static float damageCoefficient = 6f;
         public float baseDuration = 0.35f;
         private float duration;
+        public static event Action<int> Compacted;
 
         public override void OnEnter()
         {
@@ -50,11 +52,13 @@ namespace EntityStates.Miner
                 blastAttack.crit = Util.CheckRoll(base.characterBody.crit, base.characterBody.master);
                 blastAttack.baseDamage = base.characterBody.damage * BackBlast.damageCoefficient;
                 blastAttack.falloffModel = BlastAttack.FalloffModel.None;
-                blastAttack.baseForce = 3f;
+                blastAttack.baseForce = 500f;
                 blastAttack.teamIndex = TeamComponent.GetObjectTeam(blastAttack.attacker);
                 blastAttack.damageType = DamageType.Stun1s;
                 blastAttack.attackerFiltering = AttackerFiltering.NeverHit;
-                blastAttack.Fire();
+                BlastAttack.Result result = blastAttack.Fire();
+
+                Compacted(result.hitCount);
 
                 EffectData effectData = new EffectData();
                 effectData.origin = theSpot;

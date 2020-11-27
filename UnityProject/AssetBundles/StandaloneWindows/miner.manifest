@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 1779388308
+CRC: 3684000947
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: a779e68e41aaa86fb4ecd0bffdcd7fd9
+    Hash: 4ca9df5b3add5e69e244667d1ddb053b
   TypeTreeHash:
     serializedVersion: 2
     Hash: c481fc624b836dbc0bbd36da54171a5a
@@ -107,6 +107,7 @@ Assets:
 - Assets/Miner/DrillBreakIcon.png
 - Assets/Miner/Animations/SprintAdrenaline.anim
 - Assets/Miner/Textures/texMinerGoldEmission.png
+- Assets/Miner/Icons/texPupleAchievement.png
 - Assets/Miner/Textures/texMinerTundra.png
 - Assets/Miner/Animations/AimYaw.anim
 - Assets/Miner/Textures/texMinerMoltenEmission.png
@@ -123,6 +124,7 @@ Assets:
 - Assets/Miner/Animations/ToTheStarsEnd.anim
 - Assets/Miner/Animations/DrillChargeHorizontal.anim
 - Assets/Miner/Animations/AimPitch.anim
+- Assets/Miner/Icons/texUtilityAchievement.png
 - Assets/Miner/Animations/Sprint.anim
 - Assets/Miner/VFX/texMinerHitSpark.png
 - Assets/Miner/Animations/Flip.anim
@@ -149,6 +151,7 @@ Assets:
 - Assets/Miner/VFX/MinerSwingMesh.asset
 - Assets/Miner/ToTheStarsScepterIcon.png
 - Assets/Miner/Materials/matC4.mat
+- Assets/Miner/Icons/texPrimaryAchievement.png
 - Assets/Miner/ImpactMinerHeavy.prefab
 - Assets/Miner/Animations/GestureMask2.mask
 - Assets/Miner/Animations/Descend.anim
@@ -168,6 +171,7 @@ Assets:
 - Assets/Miner/Animations/RunB.anim
 - Assets/Miner/mdlMiner.prefab
 - Assets/Miner/Textures/texMiner.png
+- Assets/Miner/Icons/texSecondaryAchievement.png
 - Assets/Miner/Animations/RunF.anim
 - Assets/Miner/Animations/RunR.anim
 - Assets/Miner/DrillChargeIcon.png

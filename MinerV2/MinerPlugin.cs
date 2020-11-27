@@ -21,7 +21,7 @@ namespace MinerPlugin
     [BepInDependency("com.KomradeSpectre.Aetherium", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("com.Sivelos.SivsItems", BepInDependency.DependencyFlags.SoftDependency)]
     [NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod, VersionStrictness.EveryoneNeedSameModVersion)]
-    [BepInPlugin(MODUID, "MinerUnearthed", "1.3.1")]
+    [BepInPlugin(MODUID, "MinerUnearthed", "1.3.2")]
     [R2APISubmoduleDependency(new string[]
     {
         "PrefabAPI",
@@ -926,7 +926,7 @@ namespace MinerPlugin
             skillFamily.variants[skillFamily.variants.Length - 1] = new SkillFamily.Variant
             {
                 skillDef = mySkillDef,
-                unlockableName = "",
+                unlockableName = "MINER_CRUSHUNLOCKABLE_REWARD_ID",
                 viewableNode = new ViewablesCatalog.Node(mySkillDef.skillNameToken, false, null)
             };
         }
@@ -1017,7 +1017,7 @@ namespace MinerPlugin
             skillFamily.variants[skillFamily.variants.Length - 1] = new SkillFamily.Variant
             {
                 skillDef = mySkillDef,
-                unlockableName = "",
+                unlockableName = "MINER_CRACKUNLOCKABLE_REWARD_ID",
                 viewableNode = new ViewablesCatalog.Node(mySkillDef.skillNameToken, false, null)
             };
         }
@@ -1106,7 +1106,7 @@ namespace MinerPlugin
             skillFamily.variants[skillFamily.variants.Length - 1] = new SkillFamily.Variant
             {
                 skillDef = mySkillDef,
-                unlockableName = "",
+                unlockableName = "MINER_CAVEINUNLOCKABLE_REWARD_ID",
                 viewableNode = new ViewablesCatalog.Node(mySkillDef.skillNameToken, false, null)
             };
         }

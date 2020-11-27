@@ -18,12 +18,32 @@ namespace MinerPlugin
             LanguageAPI.Add("MINER_MONSOONUNLOCKABLE_UNLOCKABLE_NAME", "Miner: Mastery");
 
             LanguageAPI.Add("MINER_TUNDRAUNLOCKABLE_ACHIEVEMENT_NAME", "Miner: Frozen");
-            LanguageAPI.Add("MINER_TUNDRAUNLOCKABLE_ACHIEVEMENT_DESC", "As Miner, beat the game.");
+            LanguageAPI.Add("MINER_TUNDRAUNLOCKABLE_ACHIEVEMENT_DESC", "As Miner, reach Rallypoint Delta in under 8 minutes.");
             LanguageAPI.Add("MINER_TUNDRAUNLOCKABLE_UNLOCKABLE_NAME", "Miner: Frozen");
+
+            LanguageAPI.Add("MINER_PUPLEUNLOCKABLE_ACHIEVEMENT_NAME", "Miner: The Five Keys");
+            LanguageAPI.Add("MINER_PUPLEUNLOCKABLE_ACHIEVEMENT_DESC", "As Miner, Discover G-N-O-M-E's debugging secret.");
+            LanguageAPI.Add("MINER_PUPLEUNLOCKABLE_UNLOCKABLE_NAME", "Miner: The Five Keys");
+
+            LanguageAPI.Add("MINER_CRUSHUNLOCKABLE_ACHIEVEMENT_NAME", "Miner: Pillaged Gold");
+            LanguageAPI.Add("MINER_CRUSHUNLOCKABLE_ACHIEVEMENT_DESC", "As Miner, apply 12 stacks of cleave to the unique guardian of Gilded Coast.");
+            LanguageAPI.Add("MINER_CRUSHUNLOCKABLE_UNLOCKABLE_NAME", "Miner: Pillaged Gold");
+
+            LanguageAPI.Add("MINER_CRACKUNLOCKABLE_ACHIEVEMENT_NAME", "Miner: Junkie");
+            LanguageAPI.Add("MINER_CRACKUNLOCKABLE_ACHIEVEMENT_DESC", "As Miner, gain " + MinerPlugin.maxAdrenaline.Value + " stacks of Adrenaline.");
+            LanguageAPI.Add("MINER_CRACKUNLOCKABLE_UNLOCKABLE_NAME", "Miner: Junkie");
+
+            LanguageAPI.Add("MINER_CAVEINUNLOCKABLE_ACHIEVEMENT_NAME", "Miner: Compacted");
+            LanguageAPI.Add("MINER_CAVEINUNLOCKABLE_ACHIEVEMENT_DESC", "As Miner, hit 20 enemies with one Backblast.");
+            LanguageAPI.Add("MINER_CAVEINUNLOCKABLE_UNLOCKABLE_NAME", "Miner: Compacted");
 
             UnlockablesAPI.AddUnlockable<Achievements.MinerUnlockAchievement>(true);
             UnlockablesAPI.AddUnlockable<Achievements.MasteryAchievement>(true);
             UnlockablesAPI.AddUnlockable<Achievements.TundraAchievement>(true);
+            UnlockablesAPI.AddUnlockable<Achievements.PupleAchievement>(true);
+            UnlockablesAPI.AddUnlockable<Achievements.CrushAchievement>(true);
+            UnlockablesAPI.AddUnlockable<Achievements.CrackHammerAchievement>(true);
+            UnlockablesAPI.AddUnlockable<Achievements.CaveInAchievement>(true);
         }
     }
 }
@@ -131,18 +151,95 @@ namespace MinerPlugin.Achievements
             return BodyCatalog.FindBodyIndex("MinerBody");
         }
 
-        public void ClearCheck(Run run, RunReport runReport)
+        public void Check(float time)
         {
-            if (run is null) return;
-            if (runReport is null) return;
-
-            if (!runReport.gameEnding) return;
-
-            if (runReport.gameEnding.isWin)
+            if (time <= 480f && base.meetsBodyRequirement)
             {
-                if (base.meetsBodyRequirement)
+                base.Grant();
+            }
+        }
+
+        public override void OnInstall()
+        {
+            base.OnInstall();
+
+            EntityStates.Miner.MinerMain.rallypoint += Check;
+        }
+
+        public override void OnUninstall()
+        {
+            base.OnUninstall();
+
+            EntityStates.Miner.MinerMain.rallypoint -= Check;
+        }
+    }
+
+    public class PupleAchievement : ModdedUnlockableAndAchievement<CustomSpriteProvider>
+    {
+        public override String AchievementIdentifier { get; } = "MINER_PUPLEUNLOCKABLE_ACHIEVEMENT_ID";
+        public override String UnlockableIdentifier { get; } = "MINER_PUPLEUNLOCKABLE_REWARD_ID";
+        public override String PrerequisiteUnlockableIdentifier { get; } = "MINER_PUPLEUNLOCKABLE_PREREQ_ID";
+        public override String AchievementNameToken { get; } = "MINER_PUPLEUNLOCKABLE_ACHIEVEMENT_NAME";
+        public override String AchievementDescToken { get; } = "MINER_PUPLEUNLOCKABLE_ACHIEVEMENT_DESC";
+        public override String UnlockableNameToken { get; } = "MINER_PUPLEUNLOCKABLE_UNLOCKABLE_NAME";
+        protected override CustomSpriteProvider SpriteProvider { get; } = new CustomSpriteProvider("@Miner:Assets/Miner/Icons/texPupleAchievement.png");
+
+        public override int LookUpRequiredBodyIndex()
+        {
+            return BodyCatalog.FindBodyIndex("MinerBody");
+        }
+
+        public void Check(Run run)
+        {
+            if (base.meetsBodyRequirement)
+            {
+                base.Grant();
+            }
+        }
+
+        public override void OnInstall()
+        {
+            base.OnInstall();
+
+            EntityStates.Miner.MinerMain.SecretAchieved += Check;
+        }
+
+        public override void OnUninstall()
+        {
+            base.OnUninstall();
+
+            EntityStates.Miner.MinerMain.SecretAchieved -= Check;
+        }
+    }
+
+    public class CrushAchievement : ModdedUnlockableAndAchievement<CustomSpriteProvider>
+    {
+        public override String AchievementIdentifier { get; } = "MINER_CRUSHUNLOCKABLE_ACHIEVEMENT_ID";
+        public override String UnlockableIdentifier { get; } = "MINER_CRUSHUNLOCKABLE_REWARD_ID";
+        public override String PrerequisiteUnlockableIdentifier { get; } = "MINER_CRUSHUNLOCKABLE_PREREQ_ID";
+        public override String AchievementNameToken { get; } = "MINER_CRUSHUNLOCKABLE_ACHIEVEMENT_NAME";
+        public override String AchievementDescToken { get; } = "MINER_CRUSHUNLOCKABLE_ACHIEVEMENT_DESC";
+        public override String UnlockableNameToken { get; } = "MINER_CRUSHUNLOCKABLE_UNLOCKABLE_NAME";
+        protected override CustomSpriteProvider SpriteProvider { get; } = new CustomSpriteProvider("@Miner:Assets/Miner/Icons/texPrimaryAchievement.png");
+
+        public override int LookUpRequiredBodyIndex()
+        {
+            return BodyCatalog.FindBodyIndex("MinerBody");
+        }
+
+        public void Check(DamageReport report)
+        {
+            if (report != null)
+            {
+                if (report.victimBody != null && report.attackerBody != null)
                 {
-                    base.Grant();
+                    if (report.attackerBodyIndex == BodyCatalog.FindBodyIndex("MinerBody") && report.victimBodyIndex == BodyCatalog.FindBodyIndex("TitanGoldBody"))
+                    {
+                        if (report.victimBody.GetBuffCount(MinerPlugin.cleave) >= 12f && base.meetsBodyRequirement)
+                        {
+                            base.Grant();
+                        }
+                    }
                 }
             }
         }
@@ -151,14 +248,84 @@ namespace MinerPlugin.Achievements
         {
             base.OnInstall();
 
-            Run.onClientGameOverGlobal += this.ClearCheck;
+            GlobalEventManager.onServerDamageDealt += Check;
         }
 
         public override void OnUninstall()
         {
             base.OnUninstall();
 
-            Run.onClientGameOverGlobal -= this.ClearCheck;
+            GlobalEventManager.onServerDamageDealt -= Check;
+        }
+    }
+
+    public class CrackHammerAchievement : ModdedUnlockableAndAchievement<CustomSpriteProvider>
+    {
+        public override String AchievementIdentifier { get; } = "MINER_CRACKUNLOCKABLE_ACHIEVEMENT_ID";
+        public override String UnlockableIdentifier { get; } = "MINER_CRACKUNLOCKABLE_REWARD_ID";
+        public override String PrerequisiteUnlockableIdentifier { get; } = "MINER_CRACKUNLOCKABLE_PREREQ_ID";
+        public override String AchievementNameToken { get; } = "MINER_CRACKUNLOCKABLE_ACHIEVEMENT_NAME";
+        public override String AchievementDescToken { get; } = "MINER_CRACKUNLOCKABLE_ACHIEVEMENT_DESC";
+        public override String UnlockableNameToken { get; } = "MINER_CRACKUNLOCKABLE_UNLOCKABLE_NAME";
+        protected override CustomSpriteProvider SpriteProvider { get; } = new CustomSpriteProvider("@Miner:Assets/Miner/Icons/texSecondaryAchievement.png");
+
+        public override int LookUpRequiredBodyIndex()
+        {
+            return BodyCatalog.FindBodyIndex("MinerBody");
+        }
+
+        public void Check(bool check)
+        {
+            if (check && base.meetsBodyRequirement) base.Grant();
+        }
+
+        public override void OnInstall()
+        {
+            base.OnInstall();
+
+            EntityStates.Miner.MinerMain.JunkieAchieved += Check;
+        }
+
+        public override void OnUninstall()
+        {
+            base.OnUninstall();
+
+            EntityStates.Miner.MinerMain.JunkieAchieved -= Check;
+        }
+    }
+
+    public class CaveInAchievement : ModdedUnlockableAndAchievement<CustomSpriteProvider>
+    {
+        public override String AchievementIdentifier { get; } = "MINER_CAVEINUNLOCKABLE_ACHIEVEMENT_ID";
+        public override String UnlockableIdentifier { get; } = "MINER_CAVEINUNLOCKABLE_REWARD_ID";
+        public override String PrerequisiteUnlockableIdentifier { get; } = "MINER_CAVEINUNLOCKABLE_PREREQ_ID";
+        public override String AchievementNameToken { get; } = "MINER_CAVEINUNLOCKABLE_ACHIEVEMENT_NAME";
+        public override String AchievementDescToken { get; } = "MINER_CAVEINUNLOCKABLE_ACHIEVEMENT_DESC";
+        public override String UnlockableNameToken { get; } = "MINER_CAVEINUNLOCKABLE_UNLOCKABLE_NAME";
+        protected override CustomSpriteProvider SpriteProvider { get; } = new CustomSpriteProvider("@Miner:Assets/Miner/Icons/texUtilityAchievement.png");
+
+        public override int LookUpRequiredBodyIndex()
+        {
+            return BodyCatalog.FindBodyIndex("MinerBody");
+        }
+
+        public void Check(int count)
+        {
+            if (count >= 20 && base.meetsBodyRequirement) base.Grant();
+        }
+
+        public override void OnInstall()
+        {
+            base.OnInstall();
+
+            EntityStates.Miner.BackBlast.Compacted += Check;
+        }
+
+        public override void OnUninstall()
+        {
+            base.OnUninstall();
+
+            EntityStates.Miner.BackBlast.Compacted -= Check;
         }
     }
 }

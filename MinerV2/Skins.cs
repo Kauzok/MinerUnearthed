@@ -185,7 +185,7 @@ namespace MinerPlugin
             pupleSkinDefInfo.MinionSkinReplacements = new SkinDef.MinionSkinReplacement[0];
             pupleSkinDefInfo.ProjectileGhostReplacements = new SkinDef.ProjectileGhostReplacement[0];
             pupleSkinDefInfo.GameObjectActivations = getActivations(allObjects);
-            pupleSkinDefInfo.Icon = Resources.Load<GameObject>("Prefabs/CharacterBodies/EngiBody").GetComponentInChildren<ModelSkinController>().skins[0].icon;
+            pupleSkinDefInfo.Icon = Assets.mainAssetBundle.LoadAsset<Sprite>("texPupleAchievement");
             pupleSkinDefInfo.MeshReplacements = new SkinDef.MeshReplacement[]
             {
                 new SkinDef.MeshReplacement
@@ -198,7 +198,7 @@ namespace MinerPlugin
             pupleSkinDefInfo.NameToken = "MINERBODY_PUPLE_SKIN_NAME";
             pupleSkinDefInfo.RendererInfos = characterModel.baseRendererInfos;
             pupleSkinDefInfo.RootObject = model;
-            pupleSkinDefInfo.UnlockableName = "";
+            pupleSkinDefInfo.UnlockableName = "MINER_PUPLEUNLOCKABLE_REWARD_ID";
 
             rendererInfos = skinDefInfo.RendererInfos;
             array = new CharacterModel.RendererInfo[rendererInfos.Length];
@@ -431,11 +431,11 @@ namespace MinerPlugin
                 defaultSkin,
                 moltenSkin,
                 tundraSkin,
+                pupleSkin
             };
 
             if (MinerPlugin.extraSkins.Value)
             {
-                skinDefs.Add(pupleSkin);
                 skinDefs.Add(ironSkin);
                 skinDefs.Add(goldSkin);
                 skinDefs.Add(diamondSkin);
