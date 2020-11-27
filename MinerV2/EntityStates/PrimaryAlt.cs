@@ -78,7 +78,10 @@ namespace EntityStates.Miner
                 if (this.swingIndex == 0) muzzleString = "SwingRight";
                 else muzzleString = "SwingLeft";
 
-                EffectManager.SimpleMuzzleFlash(MinerPlugin.Assets.swingFX, base.gameObject, muzzleString, true);
+                GameObject effectPrefab = MinerPlugin.Assets.swingFX;
+                if (base.characterBody.GetBuffCount(MinerPlugin.MinerPlugin.goldRush) >= 0.8f * MinerPlugin.MinerPlugin.adrenalineCap) effectPrefab = MinerPlugin.Assets.empoweredSwingFX;
+
+                EffectManager.SimpleMuzzleFlash(effectPrefab, base.gameObject, muzzleString, true);
 
                 if (base.isAuthority)
                 {

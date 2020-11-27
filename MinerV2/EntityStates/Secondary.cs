@@ -31,6 +31,18 @@ namespace EntityStates.Miner
             base.OnEnter();
             base.StartAimMode(0.6f, false);
 
+            Transform modelTransform = base.GetModelTransform();
+            if (modelTransform)
+            {
+                TemporaryOverlay temporaryOverlay = modelTransform.gameObject.AddComponent<TemporaryOverlay>();
+                temporaryOverlay.duration = this.chargeDuration;
+                temporaryOverlay.animateShaderAlpha = true;
+                temporaryOverlay.alphaCurve = AnimationCurve.EaseInOut(0f, 1f, 1f, 0f);
+                temporaryOverlay.destroyComponentOnEnd = true;
+                temporaryOverlay.originalMaterial = Resources.Load<Material>("Materials/matOnFire");
+                temporaryOverlay.AddToCharacerModel(modelTransform.GetComponent<CharacterModel>());
+            }
+
             Ray aimRay = base.GetAimRay();
             if (base.isAuthority)
             {
@@ -45,11 +57,10 @@ namespace EntityStates.Miner
                 Quaternion major = Quaternion.FromToRotation(left, direct);
                 chargeInstance = Object.Instantiate<GameObject>(chargePrefab, aimRay.origin, transform.rotation * major);
                 chargeInstance.transform.localScale *= 0.0125f;
-
-                Util.PlaySound(MinerPlugin.Sounds.DrillChargeStart, base.gameObject);
             }
 
             base.PlayAnimation("Gesture, Override", "DrillChargeStart");
+            Util.PlaySound(MinerPlugin.Sounds.DrillChargeStart, base.gameObject);
         }
 
         public override void OnExit()
@@ -113,6 +124,18 @@ namespace EntityStates.Miner
 
             base.GetModelChildLocator().FindChild("DrillChargeEffect").GetComponent<ParticleSystem>().Play();
 
+            Transform modelTransform = base.GetModelTransform();
+            if (modelTransform)
+            {
+                TemporaryOverlay temporaryOverlay = modelTransform.gameObject.AddComponent<TemporaryOverlay>();
+                temporaryOverlay.duration = this.duration;
+                temporaryOverlay.animateShaderAlpha = true;
+                temporaryOverlay.alphaCurve = AnimationCurve.EaseInOut(0f, 15f, 1f, 0f);
+                temporaryOverlay.destroyComponentOnEnd = true;
+                temporaryOverlay.originalMaterial = Resources.Load<Material>("Materials/matOnFire");
+                temporaryOverlay.AddToCharacerModel(modelTransform.GetComponent<CharacterModel>());
+            }
+
             //bool flag = false;
             //float angle = Vector3.Angle(new Vector3(0, -1, 0), aimRay.direction);
             //if (angle > 120) flag = true;
@@ -156,7 +179,7 @@ namespace EntityStates.Miner
             blastAttack.teamIndex = TeamComponent.GetObjectTeam(blastAttack.attacker);
 
             effectData = new EffectData();
-            effectData.scale = 2.5f;
+            effectData.scale = 1.5f;
             effectData.color = new Color32(234, 234, 127, 100);
 
             if (base.isAuthority)

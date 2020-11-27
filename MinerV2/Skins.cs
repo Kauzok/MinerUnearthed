@@ -26,8 +26,6 @@ namespace MinerPlugin
                 });
             }
 
-            return new SkinDef.GameObjectActivation[0];
-
             return GameObjectActivations.ToArray();
         }
 
@@ -146,7 +144,7 @@ namespace MinerPlugin
 
             moltenSkinDefInfo.GameObjectActivations = getActivations(allObjects);
 
-            moltenSkinDefInfo.Icon = LoadoutAPI.CreateSkinIcon(new Color(0.43f, 0.1f, 0.1f), Color.red, new Color(0.31f, 0.04f, 0.07f), Color.black);
+            moltenSkinDefInfo.Icon = Assets.mainAssetBundle.LoadAsset<Sprite>("texMoltenAchievement");
             moltenSkinDefInfo.MeshReplacements = new SkinDef.MeshReplacement[]
             {
                 new SkinDef.MeshReplacement
@@ -228,7 +226,7 @@ namespace MinerPlugin
             tundraSkinDefInfo.MinionSkinReplacements = new SkinDef.MinionSkinReplacement[0];
             tundraSkinDefInfo.ProjectileGhostReplacements = new SkinDef.ProjectileGhostReplacement[0];
             tundraSkinDefInfo.GameObjectActivations = getActivations(allObjects);
-            tundraSkinDefInfo.Icon = LoadoutAPI.CreateSkinIcon(new Color(0.83f, 0.83f, 0.83f), new Color(0.64f, 0.64f, 0.64f), new Color(0.25f, 0.25f, 0.25f), new Color(0f, 0f, 0f));
+            tundraSkinDefInfo.Icon = Assets.mainAssetBundle.LoadAsset<Sprite>("texTundraAchievement");
             tundraSkinDefInfo.MeshReplacements = new SkinDef.MeshReplacement[]
             {
                 new SkinDef.MeshReplacement
@@ -441,7 +439,7 @@ namespace MinerPlugin
                 skinDefs.Add(ironSkin);
                 skinDefs.Add(goldSkin);
                 skinDefs.Add(diamondSkin);
-                //skinDefs.Add(steveSkin);
+                skinDefs.Add(steveSkin);
             }
 
             skinController.skins = skinDefs.ToArray();

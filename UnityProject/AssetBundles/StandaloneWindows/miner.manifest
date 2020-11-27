@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 1109888547
+CRC: 1779388308
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: f09fcda73e3c2cd8685d3cadaf540e0f
+    Hash: a779e68e41aaa86fb4ecd0bffdcd7fd9
   TypeTreeHash:
     serializedVersion: 2
     Hash: c481fc624b836dbc0bbd36da54171a5a
@@ -66,9 +66,9 @@ Assets:
 - Assets/Miner/CrushIcon.png
 - Assets/Miner/Animations/RunL.anim
 - Assets/Miner/Materials/matMiner.mat
+- Assets/Miner/Animations/IdleArenaline.anim
 - Assets/Miner/Animations/Rest.anim
 - Assets/Miner/Animations/CaveIn.anim
-- Assets/Miner/MinerDisplay.prefab
 - Assets/Miner/Materials/matDiamondPick.mat
 - Assets/Miner/Animations/Crush.anim
 - Assets/Miner/SteveMesh.mesh
@@ -80,6 +80,7 @@ Assets:
 - Assets/Miner/Animations/DrillChargeHoriEnd.anim
 - Assets/Miner/Animations/DrillChargeStart.anim
 - Assets/Miner/Textures/texMinerTundraEmission.png
+- Assets/Miner/MinerDisplay.prefab
 - Assets/Miner/Textures/texMinerMolten.png
 - Assets/Miner/Animations/animMinerMenu.controller
 - Assets/Miner/CaveInIcon.png
@@ -87,13 +88,16 @@ Assets:
 - Assets/Miner/TundraMesh.mesh
 - Assets/Miner/Animations/IdleIn.anim
 - Assets/Miner/VFX/matMinerSwing.mat
+- Assets/Miner/Icons/texMinerAchievement.png
 - Assets/Miner/ToTheStarsIcon.png
 - Assets/Miner/Animations/DrillChargeVertical.anim
+- Assets/Miner/Icons/texTundraAchievement.png
 - Assets/Miner/Animations/LightImpact.anim
 - Assets/Miner/Animations/Ascend.anim
 - Assets/Miner/Materials/matMinerTundra.mat
 - Assets/Miner/Textures/texMinerSteveEmission.png
 - Assets/Miner/VFX/texMinerSwing.png
+- Assets/Miner/Icons/texMoltenAchievement.png
 - Assets/Miner/Animations/ToTheStarsStart.anim
 - Assets/Miner/Animations/ImpactMask.mask
 - Assets/Miner/Animations/Jump.anim
@@ -101,6 +105,7 @@ Assets:
 - Assets/Miner/BackblastIcon.png
 - Assets/Miner/VFX/matMinerImpact.mat
 - Assets/Miner/DrillBreakIcon.png
+- Assets/Miner/Animations/SprintAdrenaline.anim
 - Assets/Miner/Textures/texMinerGoldEmission.png
 - Assets/Miner/Textures/texMinerTundra.png
 - Assets/Miner/Animations/AimYaw.anim
@@ -112,6 +117,8 @@ Assets:
 - Assets/Miner/Animations/Backblast.anim
 - Assets/Miner/Animations/MenuIdleIn.anim
 - Assets/Miner/Animations/BackblastDown.anim
+- Assets/Miner/MinerSwingEmpowered.prefab
+- Assets/Miner/Animations/FallingCometStart.anim
 - Assets/Miner/Animations/Idle.anim
 - Assets/Miner/Animations/ToTheStarsEnd.anim
 - Assets/Miner/Animations/DrillChargeHorizontal.anim
@@ -126,6 +133,7 @@ Assets:
 - Assets/Miner/VFX/matMinerHitSpark.mat
 - Assets/Miner/Textures/texMinerSteve.png
 - Assets/Miner/VFX/matMinerShockwave.mat
+- Assets/Miner/Animations/FallingCometEnd.anim
 - Assets/Miner/Animations/animMinerTest.controller
 - Assets/Miner/Animations/AimMask.mask
 - Assets/Miner/VFX/matMinerSpark.mat
@@ -139,6 +147,7 @@ Assets:
 - Assets/Miner/MinerMesh.mesh
 - Assets/Miner/VFX/texMinerSpark.png
 - Assets/Miner/VFX/MinerSwingMesh.asset
+- Assets/Miner/ToTheStarsScepterIcon.png
 - Assets/Miner/Materials/matC4.mat
 - Assets/Miner/ImpactMinerHeavy.prefab
 - Assets/Miner/Animations/GestureMask2.mask
@@ -151,6 +160,7 @@ Assets:
 - Assets/Miner/GougeIcon.png
 - Assets/Miner/Materials/matMinerPuple.mat
 - Assets/Miner/Animations/DrillChargeShortEnd.anim
+- Assets/Miner/VFX/matMinerSwingEmpowered.mat
 - Assets/Miner/Animations/Swing2.anim
 - Assets/Miner/TimedExplosiveIcon.png
 - Assets/Miner/Textures/texMinerDiamond.png

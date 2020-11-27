@@ -42,11 +42,22 @@ namespace EntityStates.Miner
                 Quaternion major = Quaternion.FromToRotation(left, direct);
                 chargeInstance = UnityEngine.Object.Instantiate<GameObject>(chargePrefab, aimRay.origin, transform.rotation * major);
                 chargeInstance.transform.localScale *= 0.0125f;
-
-                Util.PlaySound(MinerPlugin.Sounds.DrillChargeStart, base.gameObject);
             }
 
             base.PlayAnimation("Gesture, Override", "DrillChargeStart");
+            Util.PlaySound(MinerPlugin.Sounds.DrillChargeStart, base.gameObject);
+
+            Transform modelTransform = base.GetModelTransform();
+            if (modelTransform)
+            {
+                TemporaryOverlay temporaryOverlay = modelTransform.gameObject.AddComponent<TemporaryOverlay>();
+                temporaryOverlay.duration = this.chargeDuration;
+                temporaryOverlay.animateShaderAlpha = true;
+                temporaryOverlay.alphaCurve = AnimationCurve.EaseInOut(0f, 1f, 1f, 0f);
+                temporaryOverlay.destroyComponentOnEnd = true;
+                temporaryOverlay.originalMaterial = Resources.Load<Material>("Materials/matOnFire");
+                temporaryOverlay.AddToCharacerModel(modelTransform.GetComponent<CharacterModel>());
+            }
         }
 
         public override void OnExit()
@@ -105,7 +116,7 @@ namespace EntityStates.Miner
 
             if (NetworkServer.active) base.characterBody.AddBuff(BuffIndex.HiddenInvincibility);
 
-            Util.PlaySound(MinerPlugin.Sounds.DrillCharge, base.gameObject);
+            Util.PlaySound(MinerPlugin.Sounds.CrackHammer, base.gameObject);
             base.characterMotor.velocity += 75 * aimRay.direction;
 
             HitBoxGroup hitBoxGroup = null;
@@ -135,6 +146,17 @@ namespace EntityStates.Miner
             effectData.scale = 8;
 
             EffectManager.SpawnEffect(MinerPlugin.MinerPlugin.backblastEffect, effectData, true);
+
+            if (modelTransform)
+            {
+                TemporaryOverlay temporaryOverlay = modelTransform.gameObject.AddComponent<TemporaryOverlay>();
+                temporaryOverlay.duration = this.duration;
+                temporaryOverlay.animateShaderAlpha = true;
+                temporaryOverlay.alphaCurve = AnimationCurve.EaseInOut(0f, 1f, 1f, 0f);
+                temporaryOverlay.destroyComponentOnEnd = true;
+                temporaryOverlay.originalMaterial = Resources.Load<Material>("Materials/matOnFire");
+                temporaryOverlay.AddToCharacerModel(modelTransform.GetComponent<CharacterModel>());
+            }
         }
 
         public override void OnExit()

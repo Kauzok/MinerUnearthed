@@ -18,274 +18,307 @@
 
   <ItemGroup>
     <Reference Include="0Harmony">
-      <HintPath>..\..\MimicMonster\MimicMonster\bin\Debug\netstandard2.0\0Harmony.dll</HintPath>
+      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\0Harmony.dll</HintPath>
     </Reference>
     <Reference Include="Aatrox">
-      <HintPath>..\..\..\ror2mods\Aatrox\Aatrox\Aatrox\bin\Debug\netstandard2.0\Aatrox.dll</HintPath>
+      <HintPath>..\..\..\..\Downloads\risky\Aatrox\Aatrox.dll</HintPath>
+    </Reference>
+    <Reference Include="Aetherium">
+      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\Aetherium.dll</HintPath>
     </Reference>
     <Reference Include="Assembly-CSharp">
-      <HintPath>..\..\MimicMonster\MimicMonster\bin\Debug\netstandard2.0\Assembly-CSharp.dll</HintPath>
-    </Reference>
-    <Reference Include="Assembly-CSharp.R2API.mm">
-      <HintPath>..\..\MimicMonster\MimicMonster\bin\Debug\netstandard2.0\Assembly-CSharp.R2API.mm.dll</HintPath>
+      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\Assembly-CSharp.dll</HintPath>
     </Reference>
     <Reference Include="BepInEx">
-      <HintPath>..\..\MimicMonster\MimicMonster\bin\Debug\netstandard2.0\BepInEx.dll</HintPath>
+      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\BepInEx.dll</HintPath>
     </Reference>
     <Reference Include="BepInEx.Harmony">
-      <HintPath>..\..\MimicMonster\MimicMonster\bin\Debug\netstandard2.0\BepInEx.Harmony.dll</HintPath>
+      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\BepInEx.Harmony.dll</HintPath>
     </Reference>
     <Reference Include="BepInEx.Preloader">
-      <HintPath>..\..\MimicMonster\MimicMonster\bin\Debug\netstandard2.0\BepInEx.Preloader.dll</HintPath>
+      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\BepInEx.Preloader.dll</HintPath>
+    </Reference>
+    <Reference Include="ClassicItems">
+      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\ClassicItems.dll</HintPath>
     </Reference>
     <Reference Include="Facepunch.Steamworks">
-      <HintPath>..\..\MimicMonster\MimicMonster\bin\Debug\netstandard2.0\Facepunch.Steamworks.dll</HintPath>
+      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\Facepunch.Steamworks.dll</HintPath>
     </Reference>
     <Reference Include="HGCSharpUtils">
-      <HintPath>..\..\MimicMonster\MimicMonster\bin\Debug\netstandard2.0\HGCSharpUtils.dll</HintPath>
+      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\HGCSharpUtils.dll</HintPath>
     </Reference>
     <Reference Include="HGUnityUtils">
-      <HintPath>..\..\MimicMonster\MimicMonster\bin\Debug\netstandard2.0\HGUnityUtils.dll</HintPath>
+      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\HGUnityUtils.dll</HintPath>
     </Reference>
     <Reference Include="MMHOOK_Assembly-CSharp">
-      <HintPath>..\..\MimicMonster\MimicMonster\bin\Debug\netstandard2.0\MMHOOK_Assembly-CSharp.dll</HintPath>
+      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\MMHOOK_Assembly-CSharp.dll</HintPath>
     </Reference>
     <Reference Include="Mono.Cecil">
-      <HintPath>..\..\MimicMonster\MimicMonster\bin\Debug\netstandard2.0\Mono.Cecil.dll</HintPath>
+      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\Mono.Cecil.dll</HintPath>
     </Reference>
     <Reference Include="Mono.Cecil.Mdb">
-      <HintPath>..\..\MimicMonster\MimicMonster\bin\Debug\netstandard2.0\Mono.Cecil.Mdb.dll</HintPath>
+      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\Mono.Cecil.Mdb.dll</HintPath>
     </Reference>
     <Reference Include="Mono.Cecil.Pdb">
-      <HintPath>..\..\MimicMonster\MimicMonster\bin\Debug\netstandard2.0\Mono.Cecil.Pdb.dll</HintPath>
+      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\Mono.Cecil.Pdb.dll</HintPath>
     </Reference>
     <Reference Include="Mono.Cecil.Rocks">
-      <HintPath>..\..\MimicMonster\MimicMonster\bin\Debug\netstandard2.0\Mono.Cecil.Rocks.dll</HintPath>
+      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\Mono.Cecil.Rocks.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Security">
+      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\Mono.Security.dll</HintPath>
     </Reference>
     <Reference Include="MonoMod.RuntimeDetour">
-      <HintPath>..\..\MimicMonster\MimicMonster\bin\Debug\netstandard2.0\MonoMod.RuntimeDetour.dll</HintPath>
+      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\MonoMod.RuntimeDetour.dll</HintPath>
     </Reference>
     <Reference Include="MonoMod.Utils">
-      <HintPath>..\..\MimicMonster\MimicMonster\bin\Debug\netstandard2.0\MonoMod.Utils.dll</HintPath>
+      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\MonoMod.Utils.dll</HintPath>
     </Reference>
     <Reference Include="R2API">
-      <HintPath>..\..\MimicMonster\MimicMonster\bin\Debug\netstandard2.0\R2API.dll</HintPath>
+      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\R2API.dll</HintPath>
     </Reference>
     <Reference Include="Rewired_Core">
-      <HintPath>..\..\MimicMonster\MimicMonster\bin\Debug\netstandard2.0\Rewired_Core.dll</HintPath>
+      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\Rewired_Core.dll</HintPath>
     </Reference>
     <Reference Include="Rewired_CSharp">
-      <HintPath>..\..\MimicMonster\MimicMonster\bin\Debug\netstandard2.0\Rewired_CSharp.dll</HintPath>
+      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\Rewired_CSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="Rewired_Windows_Lib">
+      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\Rewired_Windows_Lib.dll</HintPath>
+    </Reference>
+    <Reference Include="SivsItemsRoR2">
+      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\SivsItemsRoR2.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Configuration">
+      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\System.Configuration.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Diagnostics.StackTrace">
+      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\System.Diagnostics.StackTrace.dll</HintPath>
+    </Reference>
+    <Reference Include="System.EnterpriseServices">
+      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\System.EnterpriseServices.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Globalization.Extensions">
+      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\System.Globalization.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ServiceModel.Internals">
+      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\System.ServiceModel.Internals.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.XPath.XDocument">
+      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\System.Xml.XPath.XDocument.dll</HintPath>
+    </Reference>
+    <Reference Include="TILER2">
+      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\TILER2.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Postprocessing.Runtime">
-      <HintPath>..\..\MimicMonster\MimicMonster\bin\Debug\netstandard2.0\Unity.Postprocessing.Runtime.dll</HintPath>
+      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\Unity.Postprocessing.Runtime.dll</HintPath>
     </Reference>
     <Reference Include="Unity.RenderPipelines.Core.Runtime">
-      <HintPath>..\..\MimicMonster\MimicMonster\bin\Debug\netstandard2.0\Unity.RenderPipelines.Core.Runtime.dll</HintPath>
+      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\Unity.RenderPipelines.Core.Runtime.dll</HintPath>
     </Reference>
     <Reference Include="Unity.RenderPipelines.Core.ShaderLibrary">
-      <HintPath>..\..\MimicMonster\MimicMonster\bin\Debug\netstandard2.0\Unity.RenderPipelines.Core.ShaderLibrary.dll</HintPath>
+      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\Unity.RenderPipelines.Core.ShaderLibrary.dll</HintPath>
     </Reference>
     <Reference Include="Unity.TextMeshPro">
-      <HintPath>..\..\MimicMonster\MimicMonster\bin\Debug\netstandard2.0\Unity.TextMeshPro.dll</HintPath>
+      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\Unity.TextMeshPro.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine">
-      <HintPath>..\..\MimicMonster\MimicMonster\bin\Debug\netstandard2.0\UnityEngine.dll</HintPath>
+      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\UnityEngine.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.AccessibilityModule">
-      <HintPath>..\..\MimicMonster\MimicMonster\bin\Debug\netstandard2.0\UnityEngine.AccessibilityModule.dll</HintPath>
+      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\UnityEngine.AccessibilityModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.AIModule">
-      <HintPath>..\..\MimicMonster\MimicMonster\bin\Debug\netstandard2.0\UnityEngine.AIModule.dll</HintPath>
+      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\UnityEngine.AIModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.AnimationModule">
-      <HintPath>..\..\MimicMonster\MimicMonster\bin\Debug\netstandard2.0\UnityEngine.AnimationModule.dll</HintPath>
+      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\UnityEngine.AnimationModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.ARModule">
-      <HintPath>..\..\MimicMonster\MimicMonster\bin\Debug\netstandard2.0\UnityEngine.ARModule.dll</HintPath>
+      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\UnityEngine.ARModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.AssetBundleModule">
-      <HintPath>..\..\MimicMonster\MimicMonster\bin\Debug\netstandard2.0\UnityEngine.AssetBundleModule.dll</HintPath>
+      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\UnityEngine.AssetBundleModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.AudioModule">
-      <HintPath>..\..\MimicMonster\MimicMonster\bin\Debug\netstandard2.0\UnityEngine.AudioModule.dll</HintPath>
+      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\UnityEngine.AudioModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.BaselibModule">
-      <HintPath>..\..\MimicMonster\MimicMonster\bin\Debug\netstandard2.0\UnityEngine.BaselibModule.dll</HintPath>
+      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\UnityEngine.BaselibModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.ClothModule">
-      <HintPath>..\..\MimicMonster\MimicMonster\bin\Debug\netstandard2.0\UnityEngine.ClothModule.dll</HintPath>
+      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\UnityEngine.ClothModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.ClusterInputModule">
-      <HintPath>..\..\MimicMonster\MimicMonster\bin\Debug\netstandard2.0\UnityEngine.ClusterInputModule.dll</HintPath>
+      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\UnityEngine.ClusterInputModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.ClusterRendererModule">
-      <HintPath>..\..\MimicMonster\MimicMonster\bin\Debug\netstandard2.0\UnityEngine.ClusterRendererModule.dll</HintPath>
+      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\UnityEngine.ClusterRendererModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.CoreModule">
-      <HintPath>..\..\MimicMonster\MimicMonster\bin\Debug\netstandard2.0\UnityEngine.CoreModule.dll</HintPath>
+      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\UnityEngine.CoreModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.CrashReportingModule">
-      <HintPath>..\..\MimicMonster\MimicMonster\bin\Debug\netstandard2.0\UnityEngine.CrashReportingModule.dll</HintPath>
+      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\UnityEngine.CrashReportingModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.DirectorModule">
-      <HintPath>..\..\MimicMonster\MimicMonster\bin\Debug\netstandard2.0\UnityEngine.DirectorModule.dll</HintPath>
+      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\UnityEngine.DirectorModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.FileSystemHttpModule">
-      <HintPath>..\..\MimicMonster\MimicMonster\bin\Debug\netstandard2.0\UnityEngine.FileSystemHttpModule.dll</HintPath>
+      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\UnityEngine.FileSystemHttpModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.GameCenterModule">
-      <HintPath>..\..\MimicMonster\MimicMonster\bin\Debug\netstandard2.0\UnityEngine.GameCenterModule.dll</HintPath>
+      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\UnityEngine.GameCenterModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.GridModule">
-      <HintPath>..\..\MimicMonster\MimicMonster\bin\Debug\netstandard2.0\UnityEngine.GridModule.dll</HintPath>
+      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\UnityEngine.GridModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.HotReloadModule">
-      <HintPath>..\..\MimicMonster\MimicMonster\bin\Debug\netstandard2.0\UnityEngine.HotReloadModule.dll</HintPath>
+      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\UnityEngine.HotReloadModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.ImageConversionModule">
-      <HintPath>..\..\MimicMonster\MimicMonster\bin\Debug\netstandard2.0\UnityEngine.ImageConversionModule.dll</HintPath>
+      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\UnityEngine.ImageConversionModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.IMGUIModule">
-      <HintPath>..\..\MimicMonster\MimicMonster\bin\Debug\netstandard2.0\UnityEngine.IMGUIModule.dll</HintPath>
+      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\UnityEngine.IMGUIModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.InputModule">
-      <HintPath>..\..\MimicMonster\MimicMonster\bin\Debug\netstandard2.0\UnityEngine.InputModule.dll</HintPath>
+      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\UnityEngine.InputModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.JSONSerializeModule">
-      <HintPath>..\..\MimicMonster\MimicMonster\bin\Debug\netstandard2.0\UnityEngine.JSONSerializeModule.dll</HintPath>
+      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\UnityEngine.JSONSerializeModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.LocalizationModule">
-      <HintPath>..\..\MimicMonster\MimicMonster\bin\Debug\netstandard2.0\UnityEngine.LocalizationModule.dll</HintPath>
+      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\UnityEngine.LocalizationModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.Networking">
-      <HintPath>..\..\MimicMonster\MimicMonster\bin\Debug\netstandard2.0\UnityEngine.Networking.dll</HintPath>
+      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\UnityEngine.Networking.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.ParticleSystemModule">
-      <HintPath>..\..\MimicMonster\MimicMonster\bin\Debug\netstandard2.0\UnityEngine.ParticleSystemModule.dll</HintPath>
+      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\UnityEngine.ParticleSystemModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.PerformanceReportingModule">
-      <HintPath>..\..\MimicMonster\MimicMonster\bin\Debug\netstandard2.0\UnityEngine.PerformanceReportingModule.dll</HintPath>
+      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\UnityEngine.PerformanceReportingModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.Physics2DModule">
-      <HintPath>..\..\MimicMonster\MimicMonster\bin\Debug\netstandard2.0\UnityEngine.Physics2DModule.dll</HintPath>
+      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\UnityEngine.Physics2DModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.PhysicsModule">
-      <HintPath>..\..\MimicMonster\MimicMonster\bin\Debug\netstandard2.0\UnityEngine.PhysicsModule.dll</HintPath>
+      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\UnityEngine.PhysicsModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.ProfilerModule">
-      <HintPath>..\..\MimicMonster\MimicMonster\bin\Debug\netstandard2.0\UnityEngine.ProfilerModule.dll</HintPath>
+      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\UnityEngine.ProfilerModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.ScreenCaptureModule">
-      <HintPath>..\..\MimicMonster\MimicMonster\bin\Debug\netstandard2.0\UnityEngine.ScreenCaptureModule.dll</HintPath>
+      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\UnityEngine.ScreenCaptureModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.SharedInternalsModule">
-      <HintPath>..\..\MimicMonster\MimicMonster\bin\Debug\netstandard2.0\UnityEngine.SharedInternalsModule.dll</HintPath>
+      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\UnityEngine.SharedInternalsModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.SpatialTracking">
-      <HintPath>..\..\MimicMonster\MimicMonster\bin\Debug\netstandard2.0\UnityEngine.SpatialTracking.dll</HintPath>
+      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\UnityEngine.SpatialTracking.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.SpriteMaskModule">
-      <HintPath>..\..\MimicMonster\MimicMonster\bin\Debug\netstandard2.0\UnityEngine.SpriteMaskModule.dll</HintPath>
+      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\UnityEngine.SpriteMaskModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.SpriteShapeModule">
-      <HintPath>..\..\MimicMonster\MimicMonster\bin\Debug\netstandard2.0\UnityEngine.SpriteShapeModule.dll</HintPath>
+      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\UnityEngine.SpriteShapeModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.StreamingModule">
-      <HintPath>..\..\MimicMonster\MimicMonster\bin\Debug\netstandard2.0\UnityEngine.StreamingModule.dll</HintPath>
+      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\UnityEngine.StreamingModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.StyleSheetsModule">
-      <HintPath>..\..\MimicMonster\MimicMonster\bin\Debug\netstandard2.0\UnityEngine.StyleSheetsModule.dll</HintPath>
+      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\UnityEngine.StyleSheetsModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.SubstanceModule">
-      <HintPath>..\..\MimicMonster\MimicMonster\bin\Debug\netstandard2.0\UnityEngine.SubstanceModule.dll</HintPath>
+      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\UnityEngine.SubstanceModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.TerrainModule">
-      <HintPath>..\..\MimicMonster\MimicMonster\bin\Debug\netstandard2.0\UnityEngine.TerrainModule.dll</HintPath>
+      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\UnityEngine.TerrainModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.TerrainPhysicsModule">
-      <HintPath>..\..\MimicMonster\MimicMonster\bin\Debug\netstandard2.0\UnityEngine.TerrainPhysicsModule.dll</HintPath>
+      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\UnityEngine.TerrainPhysicsModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.TextCoreModule">
-      <HintPath>..\..\MimicMonster\MimicMonster\bin\Debug\netstandard2.0\UnityEngine.TextCoreModule.dll</HintPath>
+      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\UnityEngine.TextCoreModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.TextRenderingModule">
-      <HintPath>..\..\MimicMonster\MimicMonster\bin\Debug\netstandard2.0\UnityEngine.TextRenderingModule.dll</HintPath>
+      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\UnityEngine.TextRenderingModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.TilemapModule">
-      <HintPath>..\..\MimicMonster\MimicMonster\bin\Debug\netstandard2.0\UnityEngine.TilemapModule.dll</HintPath>
+      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\UnityEngine.TilemapModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.Timeline">
-      <HintPath>..\..\MimicMonster\MimicMonster\bin\Debug\netstandard2.0\UnityEngine.Timeline.dll</HintPath>
+      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\UnityEngine.Timeline.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.TimelineModule">
-      <HintPath>..\..\MimicMonster\MimicMonster\bin\Debug\netstandard2.0\UnityEngine.TimelineModule.dll</HintPath>
+      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\UnityEngine.TimelineModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.TLSModule">
-      <HintPath>..\..\MimicMonster\MimicMonster\bin\Debug\netstandard2.0\UnityEngine.TLSModule.dll</HintPath>
+      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\UnityEngine.TLSModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.UI">
-      <HintPath>..\..\MimicMonster\MimicMonster\bin\Debug\netstandard2.0\UnityEngine.UI.dll</HintPath>
+      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\UnityEngine.UI.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.UIElementsModule">
-      <HintPath>..\..\MimicMonster\MimicMonster\bin\Debug\netstandard2.0\UnityEngine.UIElementsModule.dll</HintPath>
+      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\UnityEngine.UIElementsModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.UIModule">
-      <HintPath>..\..\MimicMonster\MimicMonster\bin\Debug\netstandard2.0\UnityEngine.UIModule.dll</HintPath>
+      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\UnityEngine.UIModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.UmbraModule">
-      <HintPath>..\..\MimicMonster\MimicMonster\bin\Debug\netstandard2.0\UnityEngine.UmbraModule.dll</HintPath>
+      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\UnityEngine.UmbraModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.UNETModule">
-      <HintPath>..\..\MimicMonster\MimicMonster\bin\Debug\netstandard2.0\UnityEngine.UNETModule.dll</HintPath>
+      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\UnityEngine.UNETModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.UnityAnalyticsModule">
-      <HintPath>..\..\MimicMonster\MimicMonster\bin\Debug\netstandard2.0\UnityEngine.UnityAnalyticsModule.dll</HintPath>
+      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\UnityEngine.UnityAnalyticsModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.UnityConnectModule">
-      <HintPath>..\..\MimicMonster\MimicMonster\bin\Debug\netstandard2.0\UnityEngine.UnityConnectModule.dll</HintPath>
+      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\UnityEngine.UnityConnectModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.UnityTestProtocolModule">
-      <HintPath>..\..\MimicMonster\MimicMonster\bin\Debug\netstandard2.0\UnityEngine.UnityTestProtocolModule.dll</HintPath>
+      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\UnityEngine.UnityTestProtocolModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.UnityWebRequestAssetBundleModule">
-      <HintPath>..\..\MimicMonster\MimicMonster\bin\Debug\netstandard2.0\UnityEngine.UnityWebRequestAssetBundleModule.dll</HintPath>
+      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\UnityEngine.UnityWebRequestAssetBundleModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.UnityWebRequestAudioModule">
-      <HintPath>..\..\MimicMonster\MimicMonster\bin\Debug\netstandard2.0\UnityEngine.UnityWebRequestAudioModule.dll</HintPath>
+      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\UnityEngine.UnityWebRequestAudioModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.UnityWebRequestModule">
-      <HintPath>..\..\MimicMonster\MimicMonster\bin\Debug\netstandard2.0\UnityEngine.UnityWebRequestModule.dll</HintPath>
+      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\UnityEngine.UnityWebRequestModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.UnityWebRequestTextureModule">
-      <HintPath>..\..\MimicMonster\MimicMonster\bin\Debug\netstandard2.0\UnityEngine.UnityWebRequestTextureModule.dll</HintPath>
+      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\UnityEngine.UnityWebRequestTextureModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.UnityWebRequestWWWModule">
-      <HintPath>..\..\MimicMonster\MimicMonster\bin\Debug\netstandard2.0\UnityEngine.UnityWebRequestWWWModule.dll</HintPath>
+      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\UnityEngine.UnityWebRequestWWWModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.VehiclesModule">
-      <HintPath>..\..\MimicMonster\MimicMonster\bin\Debug\netstandard2.0\UnityEngine.VehiclesModule.dll</HintPath>
+      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\UnityEngine.VehiclesModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.VFXModule">
-      <HintPath>..\..\MimicMonster\MimicMonster\bin\Debug\netstandard2.0\UnityEngine.VFXModule.dll</HintPath>
+      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\UnityEngine.VFXModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.VideoModule">
-      <HintPath>..\..\MimicMonster\MimicMonster\bin\Debug\netstandard2.0\UnityEngine.VideoModule.dll</HintPath>
+      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\UnityEngine.VideoModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.VRModule">
-      <HintPath>..\..\MimicMonster\MimicMonster\bin\Debug\netstandard2.0\UnityEngine.VRModule.dll</HintPath>
+      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\UnityEngine.VRModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.WindModule">
-      <HintPath>..\..\MimicMonster\MimicMonster\bin\Debug\netstandard2.0\UnityEngine.WindModule.dll</HintPath>
+      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\UnityEngine.WindModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.XRModule">
-      <HintPath>..\..\MimicMonster\MimicMonster\bin\Debug\netstandard2.0\UnityEngine.XRModule.dll</HintPath>
+      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\UnityEngine.XRModule.dll</HintPath>
     </Reference>
     <Reference Include="Wwise">
-      <HintPath>..\..\MimicMonster\MimicMonster\bin\Debug\netstandard2.0\Wwise.dll</HintPath>
+      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\Wwise.dll</HintPath>
     </Reference>
     <Reference Include="Zio">
-      <HintPath>..\..\MimicMonster\MimicMonster\bin\Debug\netstandard2.0\Zio.dll</HintPath>
+      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\Zio.dll</HintPath>
     </Reference>
   </ItemGroup>
 

@@ -11,13 +11,17 @@ using UnityEngine.Networking;
 using KinematicCharacterController;
 using EntityStates.Miner;
 using BepInEx.Configuration;
+using System.Runtime.CompilerServices;
 
 namespace MinerPlugin
 {
     [BepInDependency("com.bepis.r2api", BepInDependency.DependencyFlags.HardDependency)]
     [BepInDependency("com.rob.Aatrox", BepInDependency.DependencyFlags.SoftDependency)]
+    [BepInDependency("com.ThinkInvisible.ClassicItems", BepInDependency.DependencyFlags.SoftDependency)]
+    [BepInDependency("com.KomradeSpectre.Aetherium", BepInDependency.DependencyFlags.SoftDependency)]
+    [BepInDependency("com.Sivelos.SivsItems", BepInDependency.DependencyFlags.SoftDependency)]
     [NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod, VersionStrictness.EveryoneNeedSameModVersion)]
-    [BepInPlugin(MODUID, "MinerUnearthed", "1.3.0")]
+    [BepInPlugin(MODUID, "MinerUnearthed", "1.3.1")]
     [R2APISubmoduleDependency(new string[]
     {
         "PrefabAPI",
@@ -79,11 +83,19 @@ namespace MinerPlugin
 
         public static GameObject backblastEffect;
 
-        public static bool hasAatrox = false;
+        public static SkillDef scepterSpecialSkillDef;
 
+        public static bool hasAatrox = false;
+        public static bool aetheriumInstalled = false;
+        public static bool sivsItemsInstalled = false;
+
+        public static ConfigEntry<bool> forceUnlock;
         public static ConfigEntry<float> maxAdrenaline;
         public static ConfigEntry<bool> extraSkins;
         public static ConfigEntry<bool> styleUI;
+
+        public static ConfigEntry<KeyCode> restKeybind;
+        public static ConfigEntry<KeyCode> tauntKeybind;
 
         public MinerPlugin()
         {
@@ -98,15 +110,28 @@ namespace MinerPlugin
             ConfigShit();
             Assets.PopulateAssets();
 
-            if (BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("com.rob.Aatrox"))
-            {
-                hasAatrox = true;
-            }
-
             CreateDisplayPrefab();
             CreatePrefab();
             RegisterCharacter();
             Skins.RegisterSkins();
+
+            //aetherium item displays- dll won't compile without a reference to aetherium
+            if (BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("com.KomradeSpectre.Aetherium"))
+            {
+                aetheriumInstalled = true;
+            }
+            //sivs item displays- dll won't compile without a reference
+            if (BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("com.Sivelos.SivsItems"))
+            {
+                sivsItemsInstalled = true;
+            }
+            //scepter stuff- dll won't compile without a reference to TILER2 and ClassicItems
+            if (BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("com.ThinkInvisible.ClassicItems"))
+            {
+                ScepterSkillSetup();
+                ScepterSetup();
+            }
+
             ItemDisplays.RegisterDisplays();
             Unlockables.RegisterUnlockables();
             RegisterEffects();
@@ -120,6 +145,23 @@ namespace MinerPlugin
 
         private void MinerPlugin_LoadStart()
         {
+            if (styleUI.Value && BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("com.rob.Aatrox"))
+            {
+                hasAatrox = true;
+                AddStyleMeter();
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+        private void ScepterSetup()
+        {
+            ThinkInvisible.ClassicItems.Scepter_V2.instance.RegisterScepterSkill(scepterSpecialSkillDef, "MinerBody", SkillSlot.Special, 0);
+        }
+
+        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+        private void AddStyleMeter()
+        {
+            characterPrefab.AddComponent<Aatrox.GenericStyleController>();
         }
 
         public void Awake()
@@ -143,10 +185,14 @@ namespace MinerPlugin
 
         private void ConfigShit()
         {
+            forceUnlock = base.Config.Bind<bool>(new ConfigDefinition("01 - General Settings", "Force Unlock"), false, new ConfigDescription("Unlocks the Miner by default", null, Array.Empty<object>()));
             maxAdrenaline = base.Config.Bind<float>(new ConfigDefinition("01 - General Settings", "Adrenaline Cap"), 50, new ConfigDescription("Max Adrenaline stacks allowed", null, Array.Empty<object>()));
             adrenalineCap = maxAdrenaline.Value - 1;
             extraSkins = base.Config.Bind<bool>(new ConfigDefinition("01 - General Settings", "Extra Skins"), false, new ConfigDescription("Enables a bunch of extra skins", null, Array.Empty<object>()));
-            styleUI = base.Config.Bind<bool>(new ConfigDefinition("01 - General Settings", "Style Rank"), false, new ConfigDescription("Enables a style ranking system taken from Devil May Cry (only if Aatrox is installed as well)", null, Array.Empty<object>()));
+            styleUI = base.Config.Bind<bool>(new ConfigDefinition("01 - General Settings", "Style Rank"), true, new ConfigDescription("Enables a style ranking system taken from Devil May Cry (only if Aatrox is installed as well)", null, Array.Empty<object>()));
+
+            restKeybind = base.Config.Bind<KeyCode>(new ConfigDefinition("02 - Keybinds", "Rest Emote"), KeyCode.Alpha1, new ConfigDescription("Keybind used for the Rest emote", null, Array.Empty<object>()));
+            tauntKeybind = base.Config.Bind<KeyCode>(new ConfigDefinition("02 - Keybinds", "Taunt Emote"), KeyCode.Alpha2, new ConfigDescription("Keybind used for the Taunt emote", null, Array.Empty<object>()));
         }
 
         private void RegisterEffects()
@@ -474,6 +520,9 @@ namespace MinerPlugin
             bodyComponent.skinIndex = 0U;
 
             LoadoutAPI.AddSkill(typeof(MinerMain));
+            LoadoutAPI.AddSkill(typeof(BaseEmote));
+            LoadoutAPI.AddSkill(typeof(Rest));
+            LoadoutAPI.AddSkill(typeof(Taunt));
 
             var stateMachine = bodyComponent.GetComponent<EntityStateMachine>();
             stateMachine.mainStateType = new SerializableEntityStateType(typeof(MinerMain));
@@ -646,7 +695,7 @@ namespace MinerPlugin
             chargeHitbox.transform.parent = childLocator.FindChild("SwingCenter");
             chargeHitbox.transform.localPosition = new Vector3(0f, 0f, 0f);
             chargeHitbox.transform.localRotation = Quaternion.identity;
-            chargeHitbox.transform.localScale = Vector3.one * 0.08f;
+            chargeHitbox.transform.localScale = Vector3.one * 0.05f;
 
             HitBox chargeHitBox = chargeHitbox.AddComponent<HitBox>();
             chargeHitbox.layer = LayerIndex.projectile.intVal;
@@ -695,11 +744,6 @@ namespace MinerPlugin
             aimAnimator.giveupDuration = 3f;
             aimAnimator.inputBank = characterPrefab.GetComponent<InputBankTest>();
 
-            /*if (styleUI.Value && hasAatrox)
-            {
-                characterPrefab.AddComponent<Aatrox.GenericStyleController>();
-            }*/
-
             GameObject particlesObject = childLocator.FindChild("AdrenalineFire").gameObject;
             if (particlesObject)
             {
@@ -725,7 +769,8 @@ namespace MinerPlugin
 
             characterDisplay.AddComponent<NetworkIdentity>();
 
-            string unlockString = "";//"MINER_CHARACTERUNLOCKABLE_REWARD_ID"
+            string unlockString = "";
+            if (!forceUnlock.Value) unlockString = "MINER_UNLOCKABLE_REWARD_ID";//"MINER_CHARACTERUNLOCKABLE_REWARD_ID"
 
             SurvivorDef survivorDef = new SurvivorDef
             {
@@ -792,65 +837,16 @@ namespace MinerPlugin
 
         private void PrimarySetup()
         {
-            LoadoutAPI.AddSkill(typeof(Crush));
-
-            string desc = "<style=cIsUtility>Agile.</style> Crush nearby enemies for <style=cIsDamage>" + 100f * Crush.damageCoefficient + "% damage</style>. <style=cIsUtility>Range increases with attack speed</style>.";
-
-            LanguageAPI.Add("MINER_PRIMARY_CRUSH_NAME", "Crush");
-            LanguageAPI.Add("MINER_PRIMARY_CRUSH_DESCRIPTION", desc);
-
-            SkillDef mySkillDef = ScriptableObject.CreateInstance<SkillDef>();
-            mySkillDef.activationState = new SerializableEntityStateType(typeof(Crush));
-            mySkillDef.activationStateMachineName = "Weapon";
-            mySkillDef.baseMaxStock = 1;
-            mySkillDef.baseRechargeInterval = 0f;
-            mySkillDef.beginSkillCooldownOnSkillEnd = false;
-            mySkillDef.canceledFromSprinting = false;
-            mySkillDef.fullRestockOnAssign = true;
-            mySkillDef.interruptPriority = InterruptPriority.Any;
-            mySkillDef.isBullets = false;
-            mySkillDef.isCombatSkill = true;
-            mySkillDef.mustKeyPress = false;
-            mySkillDef.noSprint = false;
-            mySkillDef.rechargeStock = 1;
-            mySkillDef.requiredStock = 1;
-            mySkillDef.shootDelay = 0.5f;
-            mySkillDef.stockToConsume = 1;
-            mySkillDef.icon = Assets.icon1;
-            mySkillDef.skillDescriptionToken = "MINER_PRIMARY_CRUSH_DESCRIPTION";
-            mySkillDef.skillName = "MINER_PRIMARY_CRUSH_NAME";
-            mySkillDef.skillNameToken = "MINER_PRIMARY_CRUSH_NAME";
-            mySkillDef.keywordTokens = new string[] {
-                "KEYWORD_AGILE"
-            };
-
-            LoadoutAPI.AddSkillDef(mySkillDef);
-
-            skillLocator.primary = characterPrefab.AddComponent<GenericSkill>();
-            SkillFamily newFamily = ScriptableObject.CreateInstance<SkillFamily>();
-            newFamily.variants = new SkillFamily.Variant[1];
-            LoadoutAPI.AddSkillFamily(newFamily);
-            skillLocator.primary.SetFieldValue("_skillFamily", newFamily);
-            SkillFamily skillFamily = skillLocator.primary.skillFamily;
-
-            skillFamily.variants[0] = new SkillFamily.Variant
-            {
-                skillDef = mySkillDef,
-                unlockableName = "",
-                viewableNode = new ViewablesCatalog.Node(mySkillDef.skillNameToken, false, null)
-            };
-
-
             LoadoutAPI.AddSkill(typeof(Gouge));
 
             LanguageAPI.Add("KEYWORD_CLEAVING", "<style=cKeywordName>Cleaving</style><style=cSub>Applies a stacking debuff that lowers <style=cIsDamage>armor</style> by <style=cIsHealth>3 per stack</style>.</style>");
 
-            desc = "<style=cIsUtility>Agile.</style> Wildly swing at nearby enemies for <style=cIsDamage>" + 100f * Gouge.damageCoefficient + "% damage</style>, <style=cIsHealth>cleaving</style> their armor.";
+            string desc = "<style=cIsUtility>Agile.</style> Wildly swing at nearby enemies for <style=cIsDamage>" + 100f * Gouge.damageCoefficient + "% damage</style>, <style=cIsHealth>cleaving</style> their armor.";
 
             LanguageAPI.Add("MINER_PRIMARY_GOUGE_NAME", "Gouge");
             LanguageAPI.Add("MINER_PRIMARY_GOUGE_DESCRIPTION", desc);
 
-            mySkillDef = ScriptableObject.CreateInstance<SkillDef>();
+            SkillDef mySkillDef = ScriptableObject.CreateInstance<SkillDef>();
             mySkillDef.activationState = new SerializableEntityStateType(typeof(Gouge));
             mySkillDef.activationStateMachineName = "Weapon";
             mySkillDef.baseMaxStock = 1;
@@ -874,6 +870,54 @@ namespace MinerPlugin
             mySkillDef.keywordTokens = new string[] {
                 "KEYWORD_AGILE",
                 "KEYWORD_CLEAVING"
+            };
+
+            LoadoutAPI.AddSkillDef(mySkillDef);
+
+            skillLocator.primary = characterPrefab.AddComponent<GenericSkill>();
+            SkillFamily newFamily = ScriptableObject.CreateInstance<SkillFamily>();
+            newFamily.variants = new SkillFamily.Variant[1];
+            LoadoutAPI.AddSkillFamily(newFamily);
+            skillLocator.primary.SetFieldValue("_skillFamily", newFamily);
+            SkillFamily skillFamily = skillLocator.primary.skillFamily;
+
+            skillFamily.variants[0] = new SkillFamily.Variant
+            {
+                skillDef = mySkillDef,
+                unlockableName = "",
+                viewableNode = new ViewablesCatalog.Node(mySkillDef.skillNameToken, false, null)
+            };
+
+            LoadoutAPI.AddSkill(typeof(Crush));
+
+            desc = "<style=cIsUtility>Agile.</style> Crush nearby enemies for <style=cIsDamage>" + 100f * Crush.damageCoefficient + "% damage</style>. <style=cIsUtility>Range increases with attack speed</style>.";
+
+            LanguageAPI.Add("MINER_PRIMARY_CRUSH_NAME", "Crush");
+            LanguageAPI.Add("MINER_PRIMARY_CRUSH_DESCRIPTION", desc);
+
+            mySkillDef = ScriptableObject.CreateInstance<SkillDef>();
+            mySkillDef.activationState = new SerializableEntityStateType(typeof(Crush));
+            mySkillDef.activationStateMachineName = "Weapon";
+            mySkillDef.baseMaxStock = 1;
+            mySkillDef.baseRechargeInterval = 0f;
+            mySkillDef.beginSkillCooldownOnSkillEnd = false;
+            mySkillDef.canceledFromSprinting = false;
+            mySkillDef.fullRestockOnAssign = true;
+            mySkillDef.interruptPriority = InterruptPriority.Any;
+            mySkillDef.isBullets = false;
+            mySkillDef.isCombatSkill = true;
+            mySkillDef.mustKeyPress = false;
+            mySkillDef.noSprint = false;
+            mySkillDef.rechargeStock = 1;
+            mySkillDef.requiredStock = 1;
+            mySkillDef.shootDelay = 0.5f;
+            mySkillDef.stockToConsume = 1;
+            mySkillDef.icon = Assets.icon1B;
+            mySkillDef.skillDescriptionToken = "MINER_PRIMARY_CRUSH_DESCRIPTION";
+            mySkillDef.skillName = "MINER_PRIMARY_CRUSH_NAME";
+            mySkillDef.skillNameToken = "MINER_PRIMARY_CRUSH_NAME";
+            mySkillDef.keywordTokens = new string[] {
+                "KEYWORD_AGILE"
             };
 
             LoadoutAPI.AddSkillDef(mySkillDef);
@@ -1032,7 +1076,7 @@ namespace MinerPlugin
             LanguageAPI.Add("MINER_UTILITY_CAVEIN_DESCRIPTION", "<style=cIsUtility>Stunning.</style> Blast backwards a short distance, <style=cIsUtility>pulling</style> together all enemies in a large radius. You cannot be hit while dashing.");
 
             mySkillDef = ScriptableObject.CreateInstance<SkillDef>();
-            mySkillDef.activationState = new SerializableEntityStateType(typeof(VaultState));
+            mySkillDef.activationState = new SerializableEntityStateType(typeof(CaveIn));
             mySkillDef.activationStateMachineName = "Weapon";
             mySkillDef.baseMaxStock = 1;
             mySkillDef.baseRechargeInterval = 5;
@@ -1112,6 +1156,40 @@ namespace MinerPlugin
                 viewableNode = new ViewablesCatalog.Node(mySkillDef.skillNameToken, false, null)
             };
         }
+
+        private void ScepterSkillSetup()
+        {
+            LoadoutAPI.AddSkill(typeof(FallingComet));
+
+            LanguageAPI.Add("MINER_SPECIAL_SCEPTERTOTHESTARS_NAME", "Falling Comet");
+            LanguageAPI.Add("MINER_SPECIAL_SCEPTERTOTHESTARS_DESCRIPTION", "Jump into the air, shooting a wide spray of explosive projectiles downwards for <style=cIsDamage>30x" + 100f * FallingComet.damageCoefficient + "% damage</style> total, then fall downwards creating a huge blast on impact that deals <style=cIsDamage>" + 100f * FallingComet.blastDamageCoefficient + "% damage</style> and <style=cIsDamage>ignites</style> enemies hit.");
+
+            SkillDef mySkillDef = ScriptableObject.CreateInstance<SkillDef>();
+            mySkillDef.activationState = new SerializableEntityStateType(typeof(FallingComet));
+            mySkillDef.activationStateMachineName = "Weapon";
+            mySkillDef.baseMaxStock = 1;
+            mySkillDef.baseRechargeInterval = 6f;
+            mySkillDef.beginSkillCooldownOnSkillEnd = false;
+            mySkillDef.canceledFromSprinting = false;
+            mySkillDef.fullRestockOnAssign = true;
+            mySkillDef.interruptPriority = InterruptPriority.PrioritySkill;
+            mySkillDef.isBullets = false;
+            mySkillDef.isCombatSkill = true;
+            mySkillDef.mustKeyPress = false;
+            mySkillDef.noSprint = true;
+            mySkillDef.rechargeStock = 1;
+            mySkillDef.requiredStock = 1;
+            mySkillDef.shootDelay = 0f;
+            mySkillDef.stockToConsume = 1;
+            mySkillDef.icon = Assets.icon4S;
+            mySkillDef.skillDescriptionToken = "MINER_SPECIAL_SCEPTERTOTHESTARS_DESCRIPTION";
+            mySkillDef.skillName = "MINER_SPECIAL_SCEPTERTOTHESTARS_NAME";
+            mySkillDef.skillNameToken = "MINER_SPECIAL_SCEPTERTOTHESTARS_NAME";
+
+            LoadoutAPI.AddSkillDef(mySkillDef);
+
+            scepterSpecialSkillDef = mySkillDef;
+        }
     }
 
     public class MenuSound : MonoBehaviour
@@ -1134,8 +1212,10 @@ namespace MinerPlugin
         public static readonly string Crush = "Crush";
         public static readonly string DrillChargeStart = "DrillCharging";
         public static readonly string DrillCharge = "DrillCharge";
+        public static readonly string CrackHammer = "CrackHammer";
         public static readonly string Backblast = "Backblast";
         public static readonly string ToTheStars = "ToTheStars";
+        public static readonly string ToTheStarsExplosion = "Explosive";
 
         public static readonly string Swing = "MinerSwing";
         public static readonly string Hit = "MinerHit";

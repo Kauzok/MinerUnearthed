@@ -17,6 +17,7 @@ namespace EntityStates.Miner
         private float adrenalineCap;
         private Material bodyMat;
         //private StyleSystem.StyleComponent styleComponent;
+        private Animator animator;
         private AdrenalineParticleTimer adrenalineParticles;
         private int moneyTracker;
         private float residue;
@@ -26,6 +27,7 @@ namespace EntityStates.Miner
         {
             base.OnEnter();
             this.isMainSkin = false;
+            this.animator = base.GetModelAnimator();
 
             if (base.characterBody)
             {
@@ -46,6 +48,20 @@ namespace EntityStates.Miner
         public override void Update()
         {
             base.Update();
+
+            if (base.isAuthority && base.characterMotor.isGrounded)
+            {
+                if (Input.GetKeyDown(MinerPlugin.MinerPlugin.restKeybind.Value))
+                {
+                    this.outer.SetInterruptState(EntityState.Instantiate(new SerializableEntityStateType(typeof(Rest))), InterruptPriority.Any);
+                    return;
+                }
+                else if (Input.GetKeyDown(MinerPlugin.MinerPlugin.tauntKeybind.Value))
+                {
+                    this.outer.SetInterruptState(EntityState.Instantiate(new SerializableEntityStateType(typeof(Taunt))), InterruptPriority.Any);
+                    return;
+                }
+            }
         }
 
         public override void FixedUpdate()
@@ -53,6 +69,8 @@ namespace EntityStates.Miner
             base.FixedUpdate();
 
             if (NetworkServer.active) this.UpdatePassiveBuff();
+
+            this.animator.SetFloat("adrenaline", Util.Remap(base.GetBuffCount(MinerPlugin.MinerPlugin.goldRush), 0, adrenalineCap, 0, 1));
         }
 
         public override void OnExit()

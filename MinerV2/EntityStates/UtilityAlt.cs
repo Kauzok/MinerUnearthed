@@ -10,7 +10,7 @@ namespace EntityStates.Miner
         public static float damageCoefficient = 0f;
         public float baseDuration = 0.15f;
         public static float blastRadius = 25f;
-        public static float succForce = 8f;
+        public static float succForce = 7f;
 
         private float duration;
         private ChildLocator childLocator;
@@ -79,7 +79,7 @@ namespace EntityStates.Miner
                                     float mass = 1;
                                     if (motor) mass = motor.mass;
                                     else if (rb) mass = rb.mass;
-                                    if (mass < 1) mass = 1;
+                                    if (mass < 100) mass = 100;
 
                                     pushForce *= mass;
 
