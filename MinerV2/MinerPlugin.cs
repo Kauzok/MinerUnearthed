@@ -21,7 +21,7 @@ namespace MinerPlugin
     [BepInDependency("com.KomradeSpectre.Aetherium", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("com.Sivelos.SivsItems", BepInDependency.DependencyFlags.SoftDependency)]
     [NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod, VersionStrictness.EveryoneNeedSameModVersion)]
-    [BepInPlugin(MODUID, "MinerUnearthed", "1.3.2")]
+    [BepInPlugin(MODUID, "MinerUnearthed", "1.3.8")]
     [R2APISubmoduleDependency(new string[]
     {
         "PrefabAPI",
@@ -93,9 +93,21 @@ namespace MinerPlugin
         public static ConfigEntry<float> maxAdrenaline;
         public static ConfigEntry<bool> extraSkins;
         public static ConfigEntry<bool> styleUI;
+        public static ConfigEntry<bool> enableDireseeker;
+        public static ConfigEntry<bool> enableDireseekerSurvivor;
+
+        public static ConfigEntry<float> gougeDamage;
+        public static ConfigEntry<float> crushDamage;
+
+        public static ConfigEntry<float> drillChargeDamage;
+        public static ConfigEntry<float> drillChargeCooldown;
+
+        public static ConfigEntry<float> drillBreakDamage;
+        public static ConfigEntry<float> drillBreakCooldown;
 
         public static ConfigEntry<KeyCode> restKeybind;
         public static ConfigEntry<KeyCode> tauntKeybind;
+        public static ConfigEntry<KeyCode> jokeKeybind;
 
         public MinerPlugin()
         {
@@ -137,6 +149,8 @@ namespace MinerPlugin
             RegisterEffects();
             RegisterBuffs();
             CreateDoppelganger();
+
+            Direseeker.CreateDireseeker();
 
             //the il is broken and idk how to fix, sorry
             //ILHook();
@@ -190,9 +204,22 @@ namespace MinerPlugin
             adrenalineCap = maxAdrenaline.Value - 1;
             extraSkins = base.Config.Bind<bool>(new ConfigDefinition("01 - General Settings", "Extra Skins"), false, new ConfigDescription("Enables a bunch of extra skins", null, Array.Empty<object>()));
             styleUI = base.Config.Bind<bool>(new ConfigDefinition("01 - General Settings", "Style Rank"), true, new ConfigDescription("Enables a style ranking system taken from Devil May Cry (only if Aatrox is installed as well)", null, Array.Empty<object>()));
+            enableDireseeker = base.Config.Bind<bool>(new ConfigDefinition("01 - General Settings", "Enable Direseeker"), true, new ConfigDescription("Enables the new boss", null, Array.Empty<object>()));
+            enableDireseekerSurvivor = base.Config.Bind<bool>(new ConfigDefinition("01 - General Settings", "Direseeker Survivor"), false, new ConfigDescription("Enables the new boss as a survivor?", null, Array.Empty<object>()));
 
             restKeybind = base.Config.Bind<KeyCode>(new ConfigDefinition("02 - Keybinds", "Rest Emote"), KeyCode.Alpha1, new ConfigDescription("Keybind used for the Rest emote", null, Array.Empty<object>()));
             tauntKeybind = base.Config.Bind<KeyCode>(new ConfigDefinition("02 - Keybinds", "Taunt Emote"), KeyCode.Alpha2, new ConfigDescription("Keybind used for the Taunt emote", null, Array.Empty<object>()));
+            jokeKeybind = base.Config.Bind<KeyCode>(new ConfigDefinition("02 - Keybinds", "Joke Emote"), KeyCode.Alpha3, new ConfigDescription("Keybind used for the Joke emote", null, Array.Empty<object>()));
+
+            gougeDamage = base.Config.Bind<float>(new ConfigDefinition("03 - Gouge", "Damage"), 2.75f, new ConfigDescription("Damage coefficient", null, Array.Empty<object>()));
+
+            crushDamage = base.Config.Bind<float>(new ConfigDefinition("04 - Crush", "Damage"), 2.25f, new ConfigDescription("Damage coefficient", null, Array.Empty<object>()));
+
+            drillChargeDamage = base.Config.Bind<float>(new ConfigDefinition("05 - Drill Charge", "Damage"), 1.8f, new ConfigDescription("Damage coefficient per hit", null, Array.Empty<object>()));
+            drillChargeCooldown = base.Config.Bind<float>(new ConfigDefinition("05 - Drill Charge", "Cooldown"), 7f, new ConfigDescription("Base cooldown", null, Array.Empty<object>()));
+
+            drillBreakDamage = base.Config.Bind<float>(new ConfigDefinition("06 - Drill Crack Hammer", "Damage"), 2f, new ConfigDescription("Damage coefficient", null, Array.Empty<object>()));
+            drillBreakCooldown = base.Config.Bind<float>(new ConfigDefinition("06 - Crack Hammer", "Cooldown"), 3f, new ConfigDescription("Base cooldown", null, Array.Empty<object>()));
         }
 
         private void RegisterEffects()
@@ -239,6 +266,20 @@ namespace MinerPlugin
         {
             On.RoR2.CharacterBody.RecalculateStats += CharacterBody_RecalculateStats;
             On.RoR2.HealthComponent.TakeDamage += HealthComponent_TakeDamage;
+            On.RoR2.SceneDirector.Start += SceneDirector_Start;
+        }
+
+        private void SceneDirector_Start(On.RoR2.SceneDirector.orig_Start orig, SceneDirector self)
+        {
+            if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "dampcavesimple")
+            {
+                GameObject hammer = Instantiate(Assets.blacksmithHammer);
+                hammer.transform.position = new Vector3(76, -143.4f, -526);
+                hammer.transform.rotation = Quaternion.Euler(new Vector3(340, 340, 70));
+                hammer.transform.localScale = new Vector3(200, 200, 200);
+            }
+
+            orig(self);
         }
 
         private void HealthComponent_TakeDamage(On.RoR2.HealthComponent.orig_TakeDamage orig, HealthComponent self, DamageInfo info)
@@ -427,11 +468,24 @@ namespace MinerPlugin
                     renderer = childLocator.FindChild("DiamondPickR").GetComponent<MeshRenderer>(),
                     defaultShadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On,
                     ignoreOverlays = false
+                },
+                new CharacterModel.RendererInfo
+                {
+                    defaultMaterial = childLocator.FindChild("JokeC4").GetComponentInChildren<MeshRenderer>().material,
+                    renderer = childLocator.FindChild("JokeC4").GetComponentInChildren<MeshRenderer>(),
+                    defaultShadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On,
+                    ignoreOverlays = false
                 }
             };
             characterModel.autoPopulateLightInfos = true;
             characterModel.invisibilityCount = 0;
             characterModel.temporaryOverlays = new List<TemporaryOverlay>();
+
+            Shader hotpoo = Resources.Load<Shader>("Shaders/Deferred/hgstandard");
+            characterModel.baseRendererInfos[0].defaultMaterial.shader = hotpoo;
+            characterModel.baseRendererInfos[1].defaultMaterial.shader = hotpoo;
+            characterModel.baseRendererInfos[2].defaultMaterial.shader = hotpoo;
+            characterModel.baseRendererInfos[3].defaultMaterial.shader = hotpoo;
 
             characterModel.SetFieldValue("mainSkinnedMeshRenderer", characterModel.baseRendererInfos[0].renderer.gameObject.GetComponent<SkinnedMeshRenderer>());
 
@@ -523,6 +577,7 @@ namespace MinerPlugin
             LoadoutAPI.AddSkill(typeof(BaseEmote));
             LoadoutAPI.AddSkill(typeof(Rest));
             LoadoutAPI.AddSkill(typeof(Taunt));
+            LoadoutAPI.AddSkill(typeof(Joke));
 
             var stateMachine = bodyComponent.GetComponent<EntityStateMachine>();
             stateMachine.mainStateType = new SerializableEntityStateType(typeof(MinerMain));
@@ -574,12 +629,24 @@ namespace MinerPlugin
                     renderer = childLocator.FindChild("DiamondPickR").GetComponent<MeshRenderer>(),
                     defaultShadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On,
                     ignoreOverlays = false
+                },
+                new CharacterModel.RendererInfo
+                {
+                    defaultMaterial = childLocator.FindChild("JokeC4").GetComponentInChildren<MeshRenderer>().material,
+                    renderer = childLocator.FindChild("JokeC4").GetComponentInChildren<MeshRenderer>(),
+                    defaultShadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On,
+                    ignoreOverlays = false
                 }
             };
-
             characterModel.autoPopulateLightInfos = true;
             characterModel.invisibilityCount = 0;
             characterModel.temporaryOverlays = new List<TemporaryOverlay>();
+
+            Shader hotpoo = Resources.Load<Shader>("Shaders/Deferred/hgstandard");
+            characterModel.baseRendererInfos[0].defaultMaterial.shader = hotpoo;
+            characterModel.baseRendererInfos[1].defaultMaterial.shader = hotpoo;
+            characterModel.baseRendererInfos[2].defaultMaterial.shader = hotpoo;
+            characterModel.baseRendererInfos[3].defaultMaterial.shader = hotpoo;
 
             characterModel.SetFieldValue("mainSkinnedMeshRenderer", characterModel.baseRendererInfos[0].renderer.gameObject.GetComponent<SkinnedMeshRenderer>());
 
@@ -841,7 +908,7 @@ namespace MinerPlugin
 
             LanguageAPI.Add("KEYWORD_CLEAVING", "<style=cKeywordName>Cleaving</style><style=cSub>Applies a stacking debuff that lowers <style=cIsDamage>armor</style> by <style=cIsHealth>3 per stack</style>.</style>");
 
-            string desc = "<style=cIsUtility>Agile.</style> Wildly swing at nearby enemies for <style=cIsDamage>" + 100f * Gouge.damageCoefficient + "% damage</style>, <style=cIsHealth>cleaving</style> their armor.";
+            string desc = "<style=cIsUtility>Agile.</style> Wildly swing at nearby enemies for <style=cIsDamage>" + 100f * gougeDamage.Value + "% damage</style>, <style=cIsHealth>cleaving</style> their armor.";
 
             LanguageAPI.Add("MINER_PRIMARY_GOUGE_NAME", "Gouge");
             LanguageAPI.Add("MINER_PRIMARY_GOUGE_DESCRIPTION", desc);
@@ -890,7 +957,7 @@ namespace MinerPlugin
 
             LoadoutAPI.AddSkill(typeof(Crush));
 
-            desc = "<style=cIsUtility>Agile.</style> Crush nearby enemies for <style=cIsDamage>" + 100f * Crush.damageCoefficient + "% damage</style>. <style=cIsUtility>Range increases with attack speed</style>.";
+            desc = "<style=cIsUtility>Agile.</style> Crush nearby enemies for <style=cIsDamage>" + 100f * crushDamage.Value + "% damage</style>. <style=cIsUtility>Range increases with attack speed</style>.";
 
             LanguageAPI.Add("MINER_PRIMARY_CRUSH_NAME", "Crush");
             LanguageAPI.Add("MINER_PRIMARY_CRUSH_DESCRIPTION", desc);
@@ -936,7 +1003,7 @@ namespace MinerPlugin
             LoadoutAPI.AddSkill(typeof(DrillChargeStart));
             LoadoutAPI.AddSkill(typeof(DrillCharge));
 
-            string desc = "Charge up for 1 second, then dash into enemies for up to <style=cIsDamage>12x" + 100f * DrillCharge.damageCoefficient + "% damage</style>. <style=cIsUtility>You cannot be hit during and following the dash.</style>";
+            string desc = "Charge up for 1 second, then dash into enemies for up to <style=cIsDamage>6x" + 100f * drillChargeDamage.Value + "% damage</style>. <style=cIsUtility>You cannot be hit during and following the dash.</style>";
 
             LanguageAPI.Add("MINER_SECONDARY_CHARGE_NAME", "Drill Charge");
             LanguageAPI.Add("MINER_SECONDARY_CHARGE_DESCRIPTION", desc);
@@ -945,7 +1012,7 @@ namespace MinerPlugin
             mySkillDef.activationState = new SerializableEntityStateType(typeof(DrillChargeStart));
             mySkillDef.activationStateMachineName = "Weapon";
             mySkillDef.baseMaxStock = 1;
-            mySkillDef.baseRechargeInterval = 7f;
+            mySkillDef.baseRechargeInterval = drillChargeCooldown.Value;
             mySkillDef.beginSkillCooldownOnSkillEnd = true;
             mySkillDef.canceledFromSprinting = false;
             mySkillDef.fullRestockOnAssign = true;
@@ -983,7 +1050,7 @@ namespace MinerPlugin
             LoadoutAPI.AddSkill(typeof(DrillBreakStart));
             LoadoutAPI.AddSkill(typeof(DrillBreak));
 
-            desc = "Dash forward, exploding for <style=cIsDamage>2x" + 100f * DrillBreak.damageCoefficient + "% damage</style> on contact with an enemy. <style=cIsUtility>You cannot be hit during and following the dash.</style>";
+            desc = "Dash forward, exploding for <style=cIsDamage>2x" + 100f * drillBreakDamage.Value + "% damage</style> on contact with an enemy. <style=cIsUtility>You cannot be hit during and following the dash.</style>";
 
             LanguageAPI.Add("MINER_SECONDARY_BREAK_NAME", "Crack Hammer");
             LanguageAPI.Add("MINER_SECONDARY_BREAK_DESCRIPTION", desc);
@@ -992,7 +1059,7 @@ namespace MinerPlugin
             mySkillDef.activationState = new SerializableEntityStateType(typeof(DrillBreakStart));
             mySkillDef.activationStateMachineName = "Weapon";
             mySkillDef.baseMaxStock = 1;
-            mySkillDef.baseRechargeInterval = 3f;
+            mySkillDef.baseRechargeInterval = drillBreakCooldown.Value;
             mySkillDef.beginSkillCooldownOnSkillEnd = true;
             mySkillDef.canceledFromSprinting = false;
             mySkillDef.fullRestockOnAssign = true;
@@ -1204,6 +1271,33 @@ namespace MinerPlugin
         private void OnDestroy()
         {
             AkSoundEngine.StopPlayingID(this.playID);
+        }
+    }
+
+    public class BlacksmithHammerComponent : MonoBehaviour
+    {
+        public static event Action<bool> HammerGet = delegate { };
+
+        private void Awake()
+        {
+            InvokeRepeating("Sex", 0.5f, 0.5f);
+        }
+
+        private void Sex()
+        {
+            Collider[] array = Physics.OverlapSphere(transform.position, 4, LayerIndex.defaultLayer.mask);
+            for (int i = 0; i < array.Length; i++)
+            {
+                CharacterBody component = array[i].GetComponent<CharacterBody>();
+                if (component)
+                {
+                    if (component.baseNameToken == "MINER_NAME")
+                    {
+                        HammerGet?.Invoke(true);
+                        Destroy(this.gameObject);
+                    }
+                }
+            }
         }
     }
 

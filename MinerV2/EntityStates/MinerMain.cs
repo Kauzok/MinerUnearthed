@@ -25,9 +25,9 @@ namespace EntityStates.Miner
         private int buffCounter;
         private float[] secretTimers = new float[6];
 
-        public static event Action<float> rallypoint;
-        public static event Action<Run> SecretAchieved;
-        public static event Action<bool> JunkieAchieved;
+        public static event Action<float> rallypoint = delegate { };
+        public static event Action<Run> SecretAchieved = delegate { };
+        public static event Action<bool> JunkieAchieved = delegate { };
         private bool gotJunkie;
 
         public override void OnEnter()
@@ -49,6 +49,7 @@ namespace EntityStates.Miner
 
                 if (base.characterBody.skinIndex == 0) this.isMainSkin = true;
                 else if (base.characterBody.skinIndex == 2) this.isMainSkin = true;
+                else if (base.characterBody.skinIndex == 4) this.isMainSkin = true;
             }
 
             this.adrenalineCap = MinerPlugin.MinerPlugin.adrenalineCap;
@@ -57,7 +58,7 @@ namespace EntityStates.Miner
 
             if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "frozenwall")
             {
-                rallypoint(Run.instance.time);
+                rallypoint?.Invoke(Run.instance.time);
             }
         }
 
@@ -77,6 +78,11 @@ namespace EntityStates.Miner
                     this.outer.SetInterruptState(EntityState.Instantiate(new SerializableEntityStateType(typeof(Taunt))), InterruptPriority.Any);
                     return;
                 }
+                else if (Input.GetKeyDown(MinerPlugin.MinerPlugin.jokeKeybind.Value))
+                {
+                    this.outer.SetInterruptState(EntityState.Instantiate(new SerializableEntityStateType(typeof(Joke))), InterruptPriority.Any);
+                    return;
+                }
             }
 
             if (base.isAuthority)
@@ -91,6 +97,7 @@ namespace EntityStates.Miner
 
             this.adrenalineGainBuffer -= Time.fixedDeltaTime;
             if (this.adrenalineGainBuffer <= 0 && NetworkServer.active) this.UpdatePassiveBuff();
+            else this.buffCounter = base.GetBuffCount(MinerPlugin.MinerPlugin.goldRush);
 
             if (this.animator)
             {
@@ -120,6 +127,7 @@ namespace EntityStates.Miner
         {
             int currentCount = base.characterBody.GetBuffCount(MinerPlugin.MinerPlugin.goldRush);
             int newMoney = (int)base.characterBody.master.money;
+
             if (this.moneyTracker < newMoney)
             {
                 this.RefreshExistingStacks(currentCount);
@@ -184,18 +192,18 @@ namespace EntityStates.Miner
         {
             if (this.isMainSkin && this.bodyMat)
             {
-                float emValue = Util.Remap(this.buffCounter, 0, this.adrenalineCap, MinerMain.minEmission, MinerMain.maxEmission);
+                float emValue = Util.Remap(this.adrenalineSmooth, 0, this.adrenalineCap, MinerMain.minEmission, MinerMain.maxEmission);
                 Color emColor = Color.white;
 
-                if (this.buffCounter <= 0.5f * this.adrenalineCap)
+                if (this.adrenalineSmooth <= 0.5f * this.adrenalineCap)
                 {
-                    float colorValue = Util.Remap(this.buffCounter, 0, 0.5f * this.adrenalineCap, 0f, 1f);
+                    float colorValue = Util.Remap(this.adrenalineSmooth, 0, 0.5f * this.adrenalineCap, 0f, 1f);
                     emColor = new Color(colorValue, colorValue, colorValue);
                 }
                 else
                 {
                     float startValue = this.adrenalineCap * 0.5f;
-                    float colorValue = Util.Remap(this.buffCounter, 0, this.adrenalineCap - startValue, 1f, 0f);
+                    float colorValue = Util.Remap(this.adrenalineSmooth - startValue, 0, this.adrenalineCap - startValue, 1f, 0f);
                     emColor = new Color(1, colorValue, colorValue);
                 }
 

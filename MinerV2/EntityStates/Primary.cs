@@ -6,7 +6,7 @@ namespace EntityStates.Miner
 {
     public class Crush : BaseSkillState
     {
-        public static float damageCoefficient = 2.25f;
+        public static float damageCoefficient = MinerPlugin.MinerPlugin.crushDamage.Value;
         public float baseDuration = 0.65f;
         public static float attackRecoil = 0.75f;
         public static float hitHopVelocity = 5f;
@@ -16,7 +16,6 @@ namespace EntityStates.Miner
         public GameObject explodePrefab = Resources.Load<GameObject>("prefabs/effects/omnieffect/OmniExplosionVFX");
         public GameObject slashPrefab = Resources.Load<GameObject>("prefabs/effects/omnieffect/OmniImpactVFXSlash");
         public GameObject swingPrefab = Resources.Load<GameObject>("prefabs/effects/lemurianbitetrail");
-        public static event Action<Run> CompactedAchieved;
         private bool hasFired;
         private float hitPauseTimer;
         private OverlapAttack attack;

@@ -58,8 +58,6 @@ namespace EntityStates.Miner
                 blastAttack.attackerFiltering = AttackerFiltering.NeverHit;
                 BlastAttack.Result result = blastAttack.Fire();
 
-                Compacted(result.hitCount);
-
                 EffectData effectData = new EffectData();
                 effectData.origin = theSpot;
                 effectData.scale = 15;
@@ -67,6 +65,8 @@ namespace EntityStates.Miner
                 EffectManager.SpawnEffect(MinerPlugin.MinerPlugin.backblastEffect, effectData, false);
 
                 base.characterMotor.velocity = -80 * aimRay.direction;
+
+                Compacted?.Invoke(result.hitCount);
             }
         }
 

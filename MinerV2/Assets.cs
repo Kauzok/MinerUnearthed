@@ -11,6 +11,8 @@ namespace MinerPlugin
     {
         public static AssetBundle mainAssetBundle = null;
 
+        public static GameObject blacksmithHammer;
+
         public static Texture charPortrait;
 
         public static Sprite iconP;
@@ -27,11 +29,13 @@ namespace MinerPlugin
         public static GameObject c4Model;
 
         public static Mesh tundraMesh;
+        public static Mesh blacksmithMesh;
         public static Mesh steveMesh;
 
         public static GameObject swingFX;
         public static GameObject empoweredSwingFX;
         public static GameObject hitFX;
+        public static GameObject slashFX;
         public static GameObject heavyHitFX;
 
         public static void PopulateAssets()
@@ -60,6 +64,10 @@ namespace MinerPlugin
                 SoundAPI.SoundBanks.Add(array);
             }
 
+            blacksmithHammer = mainAssetBundle.LoadAsset<GameObject>("BlacksmithHammer");
+            blacksmithHammer.AddComponent<BlacksmithHammerComponent>();
+            blacksmithHammer.GetComponentInChildren<MeshRenderer>().material.shader = Resources.Load<Shader>("Shaders/Deferred/hgstandard");
+
             charPortrait = mainAssetBundle.LoadAsset<Sprite>("texMinerIcon").texture;
 
             iconP = mainAssetBundle.LoadAsset<Sprite>("GoldRushIcon");
@@ -76,57 +84,33 @@ namespace MinerPlugin
             c4Model = mainAssetBundle.LoadAsset<GameObject>("MinerC4");
 
             tundraMesh = mainAssetBundle.LoadAsset<Mesh>("TundraMesh");
+            blacksmithMesh = mainAssetBundle.LoadAsset<Mesh>("BlacksmithMesh");
             steveMesh = mainAssetBundle.LoadAsset<Mesh>("SteveMesh");
 
-            swingFX = mainAssetBundle.LoadAsset<GameObject>("MinerSwing");
-            empoweredSwingFX = mainAssetBundle.LoadAsset<GameObject>("MinerSwingEmpowered");
-            hitFX = mainAssetBundle.LoadAsset<GameObject>("ImpactMinerSwing");
-            heavyHitFX = mainAssetBundle.LoadAsset<GameObject>("ImpactMinerHeavy");
+            swingFX = LoadEffect("MinerSwing", "", mainAssetBundle);
+            empoweredSwingFX = LoadEffect("MinerSwingEmpowered", "", mainAssetBundle);
+            hitFX = LoadEffect("ImpactMinerSwing", "", mainAssetBundle);
+            slashFX = LoadEffect("ImpactMinerSlash", "", mainAssetBundle);
+            heavyHitFX = LoadEffect("ImpactMinerHeavy", "", mainAssetBundle);
+        }
 
-            swingFX.AddComponent<DestroyOnTimer>().duration = 5;
-            swingFX.AddComponent<NetworkIdentity>();
-            swingFX.AddComponent<VFXAttributes>().vfxPriority = VFXAttributes.VFXPriority.Always;
-            var effect = swingFX.AddComponent<EffectComponent>();
+        private static GameObject LoadEffect(string resourceName, string soundName, AssetBundle bundle)
+        {
+            GameObject newEffect = bundle.LoadAsset<GameObject>(resourceName);
+
+            newEffect.AddComponent<DestroyOnTimer>().duration = 12;
+            newEffect.AddComponent<NetworkIdentity>();
+            newEffect.AddComponent<VFXAttributes>().vfxPriority = VFXAttributes.VFXPriority.Always;
+            var effect = newEffect.AddComponent<EffectComponent>();
             effect.applyScale = false;
             effect.effectIndex = EffectIndex.Invalid;
             effect.parentToReferencedTransform = true;
             effect.positionAtReferencedTransform = true;
-            effect.soundName = "";
+            effect.soundName = soundName;
 
-            empoweredSwingFX.AddComponent<DestroyOnTimer>().duration = 5;
-            empoweredSwingFX.AddComponent<NetworkIdentity>();
-            empoweredSwingFX.AddComponent<VFXAttributes>().vfxPriority = VFXAttributes.VFXPriority.Always;
-            effect = empoweredSwingFX.AddComponent<EffectComponent>();
-            effect.applyScale = false;
-            effect.effectIndex = EffectIndex.Invalid;
-            effect.parentToReferencedTransform = true;
-            effect.positionAtReferencedTransform = true;
-            effect.soundName = "";
+            EffectAPI.AddEffect(newEffect);
 
-            hitFX.AddComponent<DestroyOnTimer>().duration = 5;
-            hitFX.AddComponent<NetworkIdentity>();
-            hitFX.AddComponent<VFXAttributes>().vfxPriority = VFXAttributes.VFXPriority.Always;
-            effect = hitFX.AddComponent<EffectComponent>();
-            effect.applyScale = false;
-            effect.effectIndex = EffectIndex.Invalid;
-            effect.parentToReferencedTransform = true;
-            effect.positionAtReferencedTransform = true;
-            effect.soundName = Sounds.Swing;
-
-            heavyHitFX.AddComponent<DestroyOnTimer>().duration = 5;
-            heavyHitFX.AddComponent<NetworkIdentity>();
-            heavyHitFX.AddComponent<VFXAttributes>().vfxPriority = VFXAttributes.VFXPriority.Always;
-            effect = heavyHitFX.AddComponent<EffectComponent>();
-            effect.applyScale = false;
-            effect.effectIndex = EffectIndex.Invalid;
-            effect.parentToReferencedTransform = true;
-            effect.positionAtReferencedTransform = true;
-            effect.soundName = Sounds.Swing;
-
-            EffectAPI.AddEffect(swingFX);
-            EffectAPI.AddEffect(empoweredSwingFX);
-            EffectAPI.AddEffect(hitFX);
-            EffectAPI.AddEffect(heavyHitFX);
+            return newEffect;
         }
     }
 }

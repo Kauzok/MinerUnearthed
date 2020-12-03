@@ -54,6 +54,7 @@ namespace MinerPlugin
             LanguageAPI.Add("MINERBODY_MOLTEN_SKIN_NAME", "Molten");
             LanguageAPI.Add("MINERBODY_PUPLE_SKIN_NAME", "Puple");
             LanguageAPI.Add("MINERBODY_TUNDRA_SKIN_NAME", "Tundra");
+            LanguageAPI.Add("MINERBODY_BLACKSMITH_SKIN_NAME", "Blacksmith");
             LanguageAPI.Add("MINERBODY_IRON_SKIN_NAME", "Iron");
             LanguageAPI.Add("MINERBODY_GOLD_SKIN_NAME", "Gold");
             LanguageAPI.Add("MINERBODY_DIAMOND_SKIN_NAME", "Diamond");
@@ -96,7 +97,7 @@ namespace MinerPlugin
                 material.SetColor("_Color", Color.white);
                 material.SetTexture("_MainTex", Assets.mainAssetBundle.LoadAsset<Material>("matMiner").GetTexture("_MainTex"));
                 material.SetColor("_EmColor", Color.white);
-                material.SetFloat("_EmPower", 0.4f);
+                material.SetFloat("_EmPower", 0f);
                 material.SetTexture("_EmTex", Assets.mainAssetBundle.LoadAsset<Material>("matMiner").GetTexture("_EmissionMap"));
                 material.SetFloat("_NormalStrength", 0);
                 //material.SetTexture("_NormalTex", Assets.mainAssetBundle.LoadAsset<Material>("matMiner").GetTexture("_BumpMap"));
@@ -252,7 +253,7 @@ namespace MinerPlugin
                 material = UnityEngine.Object.Instantiate<Material>(material);
                 material.SetTexture("_MainTex", Assets.mainAssetBundle.LoadAsset<Material>("matMinerTundra").GetTexture("_MainTex"));
                 material.SetColor("_EmColor", Color.white);
-                material.SetFloat("_EmPower", 1);
+                material.SetFloat("_EmPower", 0);
                 material.SetTexture("_EmTex", Assets.mainAssetBundle.LoadAsset<Material>("matMinerTundra").GetTexture("_EmissionMap"));
 
                 array[0].defaultMaterial = material;
@@ -344,6 +345,7 @@ namespace MinerPlugin
 
             SkinDef goldSkin = LoadoutAPI.CreateNewSkinDef(goldSkinDefInfo);
 
+            #region Diamond
             LoadoutAPI.SkinDefInfo diamondSkinDefInfo = default(LoadoutAPI.SkinDefInfo);
             diamondSkinDefInfo.BaseSkins = Array.Empty<SkinDef>();
             diamondSkinDefInfo.MinionSkinReplacements = new SkinDef.MinionSkinReplacement[0];
@@ -384,7 +386,52 @@ namespace MinerPlugin
             diamondSkinDefInfo.RendererInfos = array;
 
             SkinDef diamondSkin = LoadoutAPI.CreateNewSkinDef(diamondSkinDefInfo);
+            #endregion
 
+            #region Blacksmith
+            LoadoutAPI.SkinDefInfo blacksmithSkinDefInfo = default(LoadoutAPI.SkinDefInfo);
+            blacksmithSkinDefInfo.BaseSkins = Array.Empty<SkinDef>();
+            blacksmithSkinDefInfo.MinionSkinReplacements = new SkinDef.MinionSkinReplacement[0];
+            blacksmithSkinDefInfo.ProjectileGhostReplacements = new SkinDef.ProjectileGhostReplacement[0];
+            blacksmithSkinDefInfo.GameObjectActivations = getActivations(allObjects);
+            blacksmithSkinDefInfo.Icon = Assets.mainAssetBundle.LoadAsset<Sprite>("texBlacksmithAchievement");
+            blacksmithSkinDefInfo.MeshReplacements = new SkinDef.MeshReplacement[]
+            {
+                new SkinDef.MeshReplacement
+                {
+                    renderer = mainRenderer,
+                    mesh = Assets.blacksmithMesh
+                }
+            };
+            blacksmithSkinDefInfo.Name = "MINERBODY_BLACKSMITH_SKIN_NAME";
+            blacksmithSkinDefInfo.NameToken = "MINERBODY_BLACKSMITH_SKIN_NAME";
+            blacksmithSkinDefInfo.RendererInfos = characterModel.baseRendererInfos;
+            blacksmithSkinDefInfo.RootObject = model;
+            blacksmithSkinDefInfo.UnlockableName = "MINER_BLACKSMITHUNLOCKABLE_REWARD_ID";
+
+            rendererInfos = skinDefInfo.RendererInfos;
+            array = new CharacterModel.RendererInfo[rendererInfos.Length];
+            rendererInfos.CopyTo(array, 0);
+
+            material = array[0].defaultMaterial;
+
+            if (material)
+            {
+                material = UnityEngine.Object.Instantiate<Material>(material);
+                material.SetTexture("_MainTex", Assets.mainAssetBundle.LoadAsset<Material>("matBlacksmith").GetTexture("_MainTex"));
+                material.SetColor("_EmColor", Color.white);
+                material.SetFloat("_EmPower", 0f);
+                material.SetTexture("_EmTex", Assets.mainAssetBundle.LoadAsset<Material>("matBlacksmith").GetTexture("_EmissionMap"));
+
+                array[0].defaultMaterial = material;
+            }
+
+            blacksmithSkinDefInfo.RendererInfos = array;
+
+            SkinDef blacksmithSkin = LoadoutAPI.CreateNewSkinDef(blacksmithSkinDefInfo);
+            #endregion
+
+            #region Steve
             LoadoutAPI.SkinDefInfo steveSkinDefInfo = default(LoadoutAPI.SkinDefInfo);
             steveSkinDefInfo.BaseSkins = Array.Empty<SkinDef>();
             steveSkinDefInfo.MinionSkinReplacements = new SkinDef.MinionSkinReplacement[0];
@@ -425,13 +472,15 @@ namespace MinerPlugin
             steveSkinDefInfo.RendererInfos = array;
 
             SkinDef steveSkin = LoadoutAPI.CreateNewSkinDef(steveSkinDefInfo);
+            #endregion
 
             var skinDefs = new List<SkinDef>()
             {
                 defaultSkin,
                 moltenSkin,
                 tundraSkin,
-                pupleSkin
+                pupleSkin,
+                blacksmithSkin
             };
 
             if (MinerPlugin.extraSkins.Value)

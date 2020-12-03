@@ -20,12 +20,14 @@ namespace EntityStates.Miner
         public GameObject flashEffectPrefab = Resources.Load<GameObject>("prefabs/effects/muzzleflashes/muzzleflashfire");
 
         private Quaternion major = Quaternion.FromToRotation(Vector3.forward, Vector3.down);
+        private ParticleSystem cometParticle;
 
         public override void OnEnter()
         {
             base.OnEnter();
             this.duration = this.baseDuration;
             this.hasFallen = false;
+            this.cometParticle = base.GetModelChildLocator().FindChild("CometEffect").GetComponentInChildren<ParticleSystem>();
 
             if (base.isAuthority)
             {
@@ -62,7 +64,11 @@ namespace EntityStates.Miner
 
             this.FireBlast();
 
+            if (this.cometParticle) this.cometParticle.Stop();
+
             if (NetworkServer.active) base.characterBody.RemoveBuff(BuffIndex.HiddenInvincibility);
+
+            base.characterMotor.velocity *= 0.1f;
 
             base.OnExit();
         }
@@ -80,7 +86,12 @@ namespace EntityStates.Miner
             {
                 this.FireProjectiles();
 
-                base.characterMotor.velocity.y = -120f;
+                base.characterMotor.velocity.y = -100f;
+            }
+
+            if (this.hasFallen && NetworkServer.active)
+            {
+                if (!base.HasBuff(BuffIndex.HiddenInvincibility)) base.characterBody.AddBuff(BuffIndex.HiddenInvincibility);
             }
 
             if (base.fixedAge >= this.duration && base.isAuthority && base.isGrounded)
@@ -126,7 +137,7 @@ namespace EntityStates.Miner
             {
                 this.hasFallen = true;
 
-                if (NetworkServer.active) base.characterBody.AddBuff(BuffIndex.HiddenInvincibility);
+                if (this.cometParticle) this.cometParticle.Play();
 
                 Util.PlayScaledSound(MinerPlugin.Sounds.ToTheStars, base.gameObject, 0.5f);
 

@@ -116,7 +116,7 @@ namespace EntityStates.Miner
 
             if (NetworkServer.active) base.characterBody.AddBuff(BuffIndex.HiddenInvincibility);
 
-            Util.PlaySound(MinerPlugin.Sounds.CrackHammer, base.gameObject);
+            Util.PlaySound(MinerPlugin.Sounds.DrillCharge, base.gameObject);
             base.characterMotor.velocity += 75 * aimRay.direction;
 
             HitBoxGroup hitBoxGroup = null;

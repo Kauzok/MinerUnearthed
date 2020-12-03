@@ -89,6 +89,9 @@
     <Reference Include="SivsItemsRoR2">
       <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\SivsItemsRoR2.dll</HintPath>
     </Reference>
+    <Reference Include="SupplyDrop">
+      <HintPath>..\..\..\..\Downloads\risky\SupplyDrop.dll</HintPath>
+    </Reference>
     <Reference Include="System.Configuration">
       <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\System.Configuration.dll</HintPath>
     </Reference>

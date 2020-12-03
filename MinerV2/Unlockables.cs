@@ -37,6 +37,10 @@ namespace MinerPlugin
             LanguageAPI.Add("MINER_CAVEINUNLOCKABLE_ACHIEVEMENT_DESC", "As Miner, hit 20 enemies with one Backblast.");
             LanguageAPI.Add("MINER_CAVEINUNLOCKABLE_UNLOCKABLE_NAME", "Miner: Compacted");
 
+            LanguageAPI.Add("MINER_BLACKSMITHUNLOCKABLE_ACHIEVEMENT_NAME", "Miner: Tempered");
+            LanguageAPI.Add("MINER_BLACKSMITHUNLOCKABLE_ACHIEVEMENT_DESC", "As Miner, find a smithing tool on the planet.");
+            LanguageAPI.Add("MINER_BLACKSMITHUNLOCKABLE_UNLOCKABLE_NAME", "Miner: Tempered");
+
             UnlockablesAPI.AddUnlockable<Achievements.MinerUnlockAchievement>(true);
             UnlockablesAPI.AddUnlockable<Achievements.MasteryAchievement>(true);
             UnlockablesAPI.AddUnlockable<Achievements.TundraAchievement>(true);
@@ -44,6 +48,7 @@ namespace MinerPlugin
             UnlockablesAPI.AddUnlockable<Achievements.CrushAchievement>(true);
             UnlockablesAPI.AddUnlockable<Achievements.CrackHammerAchievement>(true);
             UnlockablesAPI.AddUnlockable<Achievements.CaveInAchievement>(true);
+            UnlockablesAPI.AddUnlockable<Achievements.BlacksmithAchievement>(true);
         }
     }
 }
@@ -326,6 +331,41 @@ namespace MinerPlugin.Achievements
             base.OnUninstall();
 
             EntityStates.Miner.BackBlast.Compacted -= Check;
+        }
+    }
+
+    public class BlacksmithAchievement : ModdedUnlockableAndAchievement<CustomSpriteProvider>
+    {
+        public override String AchievementIdentifier { get; } = "MINER_BLACKSMITHUNLOCKABLE_ACHIEVEMENT_ID";
+        public override String UnlockableIdentifier { get; } = "MINER_BLACKSMITHUNLOCKABLE_REWARD_ID";
+        public override String PrerequisiteUnlockableIdentifier { get; } = "MINER_BLACKSMITHUNLOCKABLE_PREREQ_ID";
+        public override String AchievementNameToken { get; } = "MINER_BLACKSMITHUNLOCKABLE_ACHIEVEMENT_NAME";
+        public override String AchievementDescToken { get; } = "MINER_BLACKSMITHUNLOCKABLE_ACHIEVEMENT_DESC";
+        public override String UnlockableNameToken { get; } = "MINER_BLACKSMITHUNLOCKABLE_UNLOCKABLE_NAME";
+        protected override CustomSpriteProvider SpriteProvider { get; } = new CustomSpriteProvider("@Miner:Assets/Miner/Icons/texBlacksmithAchievement.png");
+
+        public override int LookUpRequiredBodyIndex()
+        {
+            return BodyCatalog.FindBodyIndex("MinerBody");
+        }
+
+        private void Get(bool cum)
+        {
+            if (cum && base.meetsBodyRequirement) base.Grant();
+        }
+
+        public override void OnInstall()
+        {
+            base.OnInstall();
+
+            BlacksmithHammerComponent.HammerGet += Get;
+        }
+
+        public override void OnUninstall()
+        {
+            base.OnUninstall();
+
+            BlacksmithHammerComponent.HammerGet -= Get;
         }
     }
 }

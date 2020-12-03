@@ -10,7 +10,9 @@ namespace EntityStates.Miner
         public string animString;
         public float duration;
         public float animDuration;
+        public bool explosive;
 
+        private bool hasExploded;
         private uint activePlayID;
         private float initialTime;
         private Animator animator;
@@ -55,6 +57,35 @@ namespace EntityStates.Miner
             this.childLocator.FindChild("PickR").localScale = Vector3.one;
         }
 
+        private void Explode()
+        {
+            if (!this.hasExploded)
+            {
+                this.hasExploded = true;
+
+                BlastAttack blastAttack = new BlastAttack();
+                blastAttack.radius = 8f;
+                blastAttack.procCoefficient = 1f;
+                blastAttack.position = base.characterBody.corePosition + (0.5f * base.characterDirection.forward) + (Vector3.up * - 0.25f);
+                blastAttack.attacker = null;
+                blastAttack.crit = base.RollCrit();
+                blastAttack.baseDamage = base.characterBody.damage * 100f;
+                blastAttack.falloffModel = BlastAttack.FalloffModel.SweetSpot;
+                blastAttack.baseForce = 8000f;
+                blastAttack.teamIndex = TeamComponent.GetObjectTeam(blastAttack.attacker);
+                blastAttack.damageType = DamageType.BypassOneShotProtection;
+                blastAttack.attackerFiltering = AttackerFiltering.AlwaysHit;
+                blastAttack.Fire();
+
+                EffectData effectData = new EffectData();
+                effectData.origin = base.characterBody.footPosition;
+                effectData.scale = 32;
+
+                EffectManager.SpawnEffect(Resources.Load<GameObject>("Prefabs/Effects/OmniEffect/OmniExplosionVFX"), effectData, false);
+                Util.PlaySound(MinerPlugin.Sounds.ToTheStarsExplosion, base.gameObject);
+            }
+        }
+
         public override void FixedUpdate()
         {
             base.FixedUpdate();
@@ -81,16 +112,22 @@ namespace EntityStates.Miner
             //emote cancels
             if (base.isAuthority && base.characterMotor.isGrounded)
             {
-                if (Input.GetKeyDown("1"))
+                if (Input.GetKeyDown(MinerPlugin.MinerPlugin.restKeybind.Value))
                 {
                     flag = false;
                     this.outer.SetInterruptState(EntityState.Instantiate(new SerializableEntityStateType(typeof(Rest))), InterruptPriority.Any);
                     return;
                 }
-                else if (Input.GetKeyDown("2"))
+                else if (Input.GetKeyDown(MinerPlugin.MinerPlugin.tauntKeybind.Value))
                 {
                     flag = false;
                     this.outer.SetInterruptState(EntityState.Instantiate(new SerializableEntityStateType(typeof(Taunt))), InterruptPriority.Any);
+                    return;
+                }
+                else if (Input.GetKeyDown(MinerPlugin.MinerPlugin.jokeKeybind.Value))
+                {
+                    flag = false;
+                    this.outer.SetInterruptState(EntityState.Instantiate(new SerializableEntityStateType(typeof(Joke))), InterruptPriority.Any);
                     return;
                 }
             }
@@ -102,6 +139,11 @@ namespace EntityStates.Miner
             float smoothFactor = 8 / Mathf.Pow(denom, 2);
             Vector3 smoothVector = new Vector3(-3 / 20, 1 / 16, -1);
             ctp.idealLocalCameraPos = new Vector3(0f, -1.4f, -6f) + smoothFactor * smoothVector;
+
+            if (this.explosive && base.fixedAge >= this.duration && base.isAuthority)
+            {
+                this.Explode();
+            }
 
             if (flag)
             {
@@ -121,6 +163,7 @@ namespace EntityStates.Miner
         {
             this.animString = "Rest";
             this.animDuration = 2.5f;
+            this.explosive = false;
             base.OnEnter();
         }
     }
@@ -131,6 +174,19 @@ namespace EntityStates.Miner
         {
             this.animString = "Taunt";
             this.animDuration = 2f;
+            this.explosive = false;
+            base.OnEnter();
+        }
+    }
+
+    public class Joke : BaseEmote
+    {
+        public override void OnEnter()
+        {
+            this.animString = "Joke";
+            this.animDuration = 3.5f;
+            this.duration = 3.5f;
+            this.explosive = true;
             base.OnEnter();
         }
     }

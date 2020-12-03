@@ -100,7 +100,7 @@ namespace EntityStates.Miner
 
     public class DrillCharge : BaseSkillState
     {
-        public static float damageCoefficient = 1.8f;
+        public static float damageCoefficient = MinerPlugin.MinerPlugin.drillChargeDamage.Value;
         public float baseDuration = 0.4f;
         public static float styleCoefficient = 0.4f;
 

@@ -6,7 +6,7 @@ namespace EntityStates.Miner
 {
     public class Gouge : BaseSkillState
     {
-        public static float damageCoefficient = 2.75f;
+        public static float damageCoefficient = MinerPlugin.MinerPlugin.gougeDamage.Value;
         public float baseDuration = 1f;
         public static float attackRecoil = 0.5f;
         public static float hitHopVelocity = 5f;
@@ -15,6 +15,7 @@ namespace EntityStates.Miner
         public static float baseEarlyExit = 0.4f;
         public int swingIndex;
 
+        private bool isSlash;
         private float earlyExitDuration;
         private float duration;
         private bool hasFired;
@@ -37,6 +38,9 @@ namespace EntityStates.Miner
             //this.styleComponent = base.GetComponent<StyleSystem.StyleComponent>();
             base.StartAimMode(0.5f + this.duration, false);
 
+            if (base.characterBody.skinIndex == 4 && this.swingIndex == 0) this.isSlash = true;
+            else this.isSlash = false;
+
             HitBoxGroup hitBoxGroup = null;
             Transform modelTransform = base.GetModelTransform();
 
@@ -55,7 +59,8 @@ namespace EntityStates.Miner
             this.attack.teamIndex = base.GetTeam();
             this.attack.damage = Gouge.damageCoefficient * this.damageStat;
             this.attack.procCoefficient = 1;
-            this.attack.hitEffectPrefab = MinerPlugin.Assets.hitFX;
+            if (this.isSlash) this.attack.hitEffectPrefab = MinerPlugin.Assets.slashFX;
+            else this.attack.hitEffectPrefab = MinerPlugin.Assets.hitFX;
             this.attack.forceVector = Vector3.zero;
             this.attack.pushAwayForce = 1f;
             this.attack.hitBoxGroup = hitBoxGroup;
@@ -91,7 +96,8 @@ namespace EntityStates.Miner
 
                     if (this.attack.Fire())
                     {
-                        Util.PlaySound(MinerPlugin.Sounds.Hit, base.gameObject);
+                        if (this.isSlash) Util.PlaySound(EntityStates.Merc.GroundLight.hitSoundString, base.gameObject);
+                        else Util.PlaySound(MinerPlugin.Sounds.Hit, base.gameObject);
                         //if (this.styleComponent) this.styleComponent.AddStyle(Gouge.styleCoefficient);
 
                         if (!this.hasHopped)
