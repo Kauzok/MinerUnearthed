@@ -1,12 +1,12 @@
 ManifestFileVersion: 0
-CRC: 1795933668
+CRC: 3661148805
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 46a82c41d98c74b437518479683399e2
+    Hash: 4e5371ff4a87f2e0f94e3c806cd5d746
   TypeTreeHash:
     serializedVersion: 2
-    Hash: c481fc624b836dbc0bbd36da54171a5a
+    Hash: 8615316d04f527ccc888cdd43c6e8e6d
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -26,6 +26,8 @@ ClassTypes:
 - Class: 48
   Script: {instanceID: 0}
 - Class: 54
+  Script: {instanceID: 0}
+- Class: 64
   Script: {instanceID: 0}
 - Class: 74
   Script: {instanceID: 0}
@@ -76,6 +78,7 @@ Assets:
 - Assets/Miner/TundraMesh.mesh
 - Assets/Miner/SteveMesh.mesh
 - Assets/Miner/Animations/animMiner.controller
+- Assets/Miner/MinerSwingAlt.prefab
 - Assets/Miner/Materials/matMinerGold.mat
 - Assets/Miner/Animations/Taunt.anim
 - Assets/Miner/VFX/matFireParticle.mat
@@ -83,9 +86,11 @@ Assets:
 - Assets/Miner/Animations/DrillChargeHoriEnd.anim
 - Assets/Miner/Animations/DrillChargeStart.anim
 - Assets/Miner/Textures/texMinerTundraEmission.png
+- Assets/Miner/Direseeker/DireHorn.prefab
 - Assets/Miner/Textures/texMinerMolten.png
 - Assets/Miner/VFX/matMinerImpact2.mat
 - Assets/Miner/Direseeker/texDireseeker.png
+- Assets/Miner/Materials/matAnvil.mat
 - Assets/Miner/Animations/animMinerMenu.controller
 - Assets/Miner/CaveInIcon.png
 - Assets/Miner/ImpactMinerSwing.prefab
@@ -127,10 +132,12 @@ Assets:
 - Assets/Miner/Materials/matMinerDiamond.mat
 - Assets/Miner/Animations/Backblast.anim
 - Assets/Miner/Animations/MenuIdleIn.anim
+- Assets/Miner/Direseeker/DireHornBroken.prefab
 - Assets/Miner/Animations/BackblastDown.anim
 - Assets/Miner/MinerSwingEmpowered.prefab
 - Assets/Miner/Animations/FallingCometStart.anim
 - Assets/Miner/Animations/Idle.anim
+- Assets/Miner/BlacksmithAnvil.prefab
 - Assets/Miner/Animations/ToTheStarsEnd.anim
 - Assets/Miner/Animations/DrillChargeHorizontal.anim
 - Assets/Miner/Animations/AimPitch.anim
@@ -146,6 +153,7 @@ Assets:
 - Assets/Miner/VFX/matMinerHitSpark.mat
 - Assets/Miner/Textures/texMinerSteve.png
 - Assets/Miner/VFX/matMinerShockwave.mat
+- Assets/Miner/Direseeker/FBX/DireHornBroken.fbx
 - Assets/Miner/Animations/FallingCometEnd.anim
 - Assets/Miner/Icons/texBlacksmithAchievement.png
 - Assets/Miner/Animations/animMinerTest.controller
@@ -180,6 +188,7 @@ Assets:
 - Assets/Miner/Materials/matMinerPuple.mat
 - Assets/Miner/Animations/DrillChargeShortEnd.anim
 - Assets/Miner/Direseeker/texDireseekerPlayerIcon.png
+- Assets/Miner/Direseeker/DireseekerRageFlame.prefab
 - Assets/Miner/VFX/matMinerSwingEmpowered.mat
 - Assets/Miner/Animations/Swing2.anim
 - Assets/Miner/TimedExplosiveIcon.png
@@ -194,5 +203,7 @@ Assets:
 - Assets/Miner/Animations/RunR.anim
 - Assets/Miner/DrillChargeIcon.png
 - Assets/Miner/Materials/matMinerMolten.mat
+- Assets/Miner/Direseeker/DireseekerBurstFlame.prefab
 - Assets/Miner/MinerC4.prefab
+- Assets/Miner/Direseeker/FBX/DireHorn.fbx
 Dependencies: []

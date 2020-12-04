@@ -12,6 +12,7 @@ namespace MinerPlugin
         public static AssetBundle mainAssetBundle = null;
 
         public static GameObject blacksmithHammer;
+        public static GameObject blacksmithAnvil;
 
         public static Texture charPortrait;
 
@@ -67,6 +68,10 @@ namespace MinerPlugin
             blacksmithHammer = mainAssetBundle.LoadAsset<GameObject>("BlacksmithHammer");
             blacksmithHammer.AddComponent<BlacksmithHammerComponent>();
             blacksmithHammer.GetComponentInChildren<MeshRenderer>().material.shader = Resources.Load<Shader>("Shaders/Deferred/hgstandard");
+
+            blacksmithAnvil = mainAssetBundle.LoadAsset<GameObject>("BlacksmithAnvil");
+            blacksmithAnvil.GetComponentInChildren<MeshRenderer>().material.shader = Resources.Load<Shader>("Shaders/Deferred/hgstandard");
+            blacksmithAnvil.gameObject.layer = LayerIndex.world.intVal;
 
             charPortrait = mainAssetBundle.LoadAsset<Sprite>("texMinerIcon").texture;
 

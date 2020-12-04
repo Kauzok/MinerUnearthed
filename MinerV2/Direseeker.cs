@@ -8,6 +8,7 @@ using RoR2.Projectile;
 using RoR2.Skills;
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Text;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -245,7 +246,7 @@ namespace MinerPlugin
 
         public static void CreateDireseeker()
         {
-            PerroGrande();
+            if (MinerPlugin.fatAcrid.Value) PerroGrande();
 
             CreateProjectiles();
 
@@ -301,12 +302,70 @@ namespace MinerPlugin
 
             model.baseRendererInfos[0].defaultMaterial = newMat;
 
+            GameObject horn1 = Assets.mainAssetBundle.LoadAsset<GameObject>("DireHorn").InstantiateClone("DireseekerHorn", false);
+            GameObject horn2 = Assets.mainAssetBundle.LoadAsset<GameObject>("DireHornBroken").InstantiateClone("DireseekerHornBroken", false);
+            //GameObject rageFlame = Assets.mainAssetBundle.LoadAsset<GameObject>("DireseekerRageFlame").InstantiateClone("DireseekerRageFlame", false);
+            GameObject burstFlame = Assets.mainAssetBundle.LoadAsset<GameObject>("DireseekerBurstFlame").InstantiateClone("DireseekerBurstFlame", false);
+
+            ChildLocator childLocator = bodyPrefab.GetComponentInChildren<ChildLocator>();
+
+            horn1.transform.SetParent(childLocator.FindChild("Head"));
+            horn1.transform.localPosition = new Vector3(-2.5f, 1, -0.5f);
+            horn1.transform.localRotation = Quaternion.Euler(new Vector3(45, 0, 90));
+            horn1.transform.localScale = new Vector3(100, 100, 100);
+
+            horn2.transform.SetParent(childLocator.FindChild("Head"));
+            horn2.transform.localPosition = new Vector3(2.5f, 1, -0.5f);
+            horn2.transform.localRotation = Quaternion.Euler(new Vector3(45, 0, 90));
+            horn2.transform.localScale = new Vector3(100, -100, 100);
+
+            /*rageFlame.transform.SetParent(childLocator.FindChild("Head"));
+            rageFlame.transform.localPosition = new Vector3(0, 1, 0);
+            rageFlame.transform.localRotation = Quaternion.Euler(new Vector3(270, 180, 0));
+            rageFlame.transform.localScale = new Vector3(5, 5, 5);*/
+
+            burstFlame.transform.SetParent(childLocator.FindChild("Head"));
+            burstFlame.transform.localPosition = new Vector3(0, 1, 0);
+            burstFlame.transform.localRotation = Quaternion.Euler(new Vector3(270, 180, 0));
+            burstFlame.transform.localScale = new Vector3(5, 5, 5);
+
+            bodyPrefab.AddComponent<DireseekerController>().burstFlame = burstFlame.GetComponent<ParticleSystem>();
+
+            Shader hotpoo = Resources.Load<Shader>("Shaders/Deferred/hgstandard");
+
+            Material hornMat = horn1.GetComponentInChildren<MeshRenderer>().material;
+            hornMat.shader = hotpoo;
+
+            //add horns
+
+            CharacterModel.RendererInfo[] infos = model.baseRendererInfos;
+            CharacterModel.RendererInfo[] newInfos = new CharacterModel.RendererInfo[]
+            {
+                infos[0],
+                new CharacterModel.RendererInfo
+                {
+                    renderer = horn1.GetComponentInChildren<MeshRenderer>(),
+                    defaultMaterial = hornMat,
+                    defaultShadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On,
+                    ignoreOverlays = true
+                },
+                new CharacterModel.RendererInfo
+                {
+                    renderer = horn2.GetComponentInChildren<MeshRenderer>(),
+                    defaultMaterial = hornMat,
+                    defaultShadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On,
+                    ignoreOverlays = true
+                }
+            };
+
+            model.baseRendererInfos = newInfos;
+
             masterPrefab = PrefabAPI.InstantiateClone(Resources.Load<GameObject>("Prefabs/CharacterMasters/LemurianBruiserMaster"), "DireseekerMaster");
 
             CharacterMaster master = masterPrefab.GetComponent<CharacterMaster>();
 
             master.bodyPrefab = bodyPrefab;
-            master.isBoss = true;
+            master.isBoss = false;
 
             BodyCatalog.getAdditionalEntries += delegate (List<GameObject> list)
             {
@@ -393,8 +452,8 @@ namespace MinerPlugin
                 //resize
 
                 survivorPrefab.GetComponent<ModelLocator>().modelBaseTransform.gameObject.transform.localScale *= 0.75f;
-                survivorPrefab.transform.GetChild(0).position = new Vector3(0, -3, 0);
-                survivorPrefab.transform.GetChild(2).position = new Vector3(0, 0.8f, 1.5f);
+                survivorPrefab.transform.GetChild(0).localPosition = new Vector3(0, -2.75f, 0);
+                survivorPrefab.transform.GetChild(2).localPosition = new Vector3(0, 0.8f, 1.5f);
 
                 foreach (KinematicCharacterMotor kinematicCharacterMotor in survivorPrefab.GetComponentsInChildren<KinematicCharacterMotor>())
                 {
@@ -407,8 +466,65 @@ namespace MinerPlugin
 
                 model2.baseRendererInfos[0].defaultMaterial = newMat;
 
+                GameObject horn1b = Assets.mainAssetBundle.LoadAsset<GameObject>("DireHorn").InstantiateClone("DireseekerHorn", false);
+                GameObject horn2b = Assets.mainAssetBundle.LoadAsset<GameObject>("DireHornBroken").InstantiateClone("DireseekerHornBroken", false);
+                //GameObject rageFlame = Assets.mainAssetBundle.LoadAsset<GameObject>("DireseekerRageFlame").InstantiateClone("DireseekerRageFlame", false);
+                GameObject burstFlame2 = Assets.mainAssetBundle.LoadAsset<GameObject>("DireseekerBurstFlame").InstantiateClone("DireseekerBurstFlame", false);
+
+                ChildLocator childLocator2 = survivorPrefab.GetComponentInChildren<ChildLocator>();
+
+                horn1b.transform.SetParent(childLocator2.FindChild("Head"));
+                horn1b.transform.localPosition = new Vector3(-2.5f, 1, -0.5f);
+                horn1b.transform.localRotation = Quaternion.Euler(new Vector3(45, 0, 90));
+                horn1b.transform.localScale = new Vector3(100, 100, 100);
+
+                horn2b.transform.SetParent(childLocator2.FindChild("Head"));
+                horn2b.transform.localPosition = new Vector3(2.5f, 1, -0.5f);
+                horn2b.transform.localRotation = Quaternion.Euler(new Vector3(45, 0, 90));
+                horn2b.transform.localScale = new Vector3(100, -100, 100);
+
+                /*rageFlame.transform.SetParent(childLocator.FindChild("Head"));
+                rageFlame.transform.localPosition = new Vector3(0, 1, 0);
+                rageFlame.transform.localRotation = Quaternion.Euler(new Vector3(270, 180, 0));
+                rageFlame.transform.localScale = new Vector3(5, 5, 5);*/
+
+                burstFlame2.transform.SetParent(childLocator2.FindChild("Head"));
+                burstFlame2.transform.localPosition = new Vector3(0, 1, 0);
+                burstFlame2.transform.localRotation = Quaternion.Euler(new Vector3(270, 180, 0));
+                burstFlame2.transform.localScale = new Vector3(5, 5, 5);
+
+                survivorPrefab.AddComponent<DireseekerController>().burstFlame = burstFlame2.GetComponent<ParticleSystem>();
+
+                //add horns
+
+                CharacterModel.RendererInfo[] infos2 = model2.baseRendererInfos;
+                CharacterModel.RendererInfo[] newInfos2 = new CharacterModel.RendererInfo[]
+                {
+                    infos2[0],
+                    new CharacterModel.RendererInfo
+                    {
+                        renderer = horn1b.GetComponentInChildren<MeshRenderer>(),
+                        defaultMaterial = hornMat,
+                        defaultShadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On,
+                        ignoreOverlays = true
+                    },
+                    new CharacterModel.RendererInfo
+                    {
+                        renderer = horn2b.GetComponentInChildren<MeshRenderer>(),
+                        defaultMaterial = hornMat,
+                        defaultShadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On,
+                        ignoreOverlays = true
+                    }
+                };
+
+                model2.baseRendererInfos = newInfos2;
+
                 survivorPrefab.GetComponent<DeathRewards>().logUnlockableName = "";
                 survivorPrefab.GetComponent<Interactor>().maxInteractionDistance = 5f;
+
+                survivorPrefab.tag = "Player";
+
+                SkinSetup();
 
                 BodyCatalog.getAdditionalEntries += delegate (List<GameObject> list)
                 {
@@ -417,6 +533,7 @@ namespace MinerPlugin
 
                 GameObject displayPrefab = PrefabAPI.InstantiateClone(survivorPrefab.GetComponent<ModelLocator>().modelTransform.gameObject, "DireseekerDisplay", true);
                 displayPrefab.AddComponent<NetworkIdentity>();
+                displayPrefab.transform.localScale *= 0.5f;
 
                 SurvivorDef survivorDef = new SurvivorDef
                 {
@@ -431,6 +548,87 @@ namespace MinerPlugin
 
                 SurvivorAPI.AddSurvivor(survivorDef);
             }
+        }
+
+        public static void LateSetup()
+        {
+            if (MinerPlugin.sivsItemsInstalled)
+            {
+                AddBossPickup();
+            }
+        }
+
+        private static void SkinSetup()
+        {
+            GameObject model = survivorPrefab.GetComponentInChildren<ModelLocator>().modelTransform.gameObject;
+            CharacterModel characterModel = model.GetComponent<CharacterModel>();
+
+            if (model.GetComponent<ModelSkinController>()) MinerPlugin.Destroy(model.GetComponent<ModelSkinController>());
+
+            ModelSkinController skinController = model.AddComponent<ModelSkinController>();
+            ChildLocator childLocator = model.GetComponent<ChildLocator>();
+
+            SkinnedMeshRenderer mainRenderer = Reflection.GetFieldValue<SkinnedMeshRenderer>(characterModel, "mainSkinnedMeshRenderer");
+
+            LanguageAPI.Add("DIRESEEKER_BODY_DEFAULT_SKIN_NAME", "Default");
+
+            LoadoutAPI.SkinDefInfo skinDefInfo = default(LoadoutAPI.SkinDefInfo);
+            skinDefInfo.BaseSkins = Array.Empty<SkinDef>();
+            skinDefInfo.ProjectileGhostReplacements = new SkinDef.ProjectileGhostReplacement[0];
+            skinDefInfo.MinionSkinReplacements = new SkinDef.MinionSkinReplacement[0];
+
+            skinDefInfo.GameObjectActivations = Array.Empty<SkinDef.GameObjectActivation>();
+
+            skinDefInfo.Icon = Assets.mainAssetBundle.LoadAsset<Sprite>("texMoltenAchievement");
+            skinDefInfo.MeshReplacements = new SkinDef.MeshReplacement[0];
+            /*{
+                new SkinDef.MeshReplacement
+                {
+                    renderer = mainRenderer,
+                    mesh = mainRenderer.sharedMesh
+                }
+            };*/
+            skinDefInfo.Name = "DIRESEEKER_BODY_DEFAULT_SKIN_NAME";
+            skinDefInfo.NameToken = "DIRESEEKER_BODY_DEFAULT_SKIN_NAME";
+            skinDefInfo.RendererInfos = characterModel.baseRendererInfos;
+            skinDefInfo.RootObject = model;
+            skinDefInfo.UnlockableName = "";
+
+            SkinDef defaultSkin = LoadoutAPI.CreateNewSkinDef(skinDefInfo);
+
+            skinController.skins = new SkinDef[1]
+            {
+                defaultSkin
+            };
+        }
+
+        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+        private static void AddBossPickup()
+        {
+            if (MinerPlugin.enableDireseeker.Value)
+            {
+                var pickup = new SerializablePickupIndex();
+                pickup.pickupName = PickupCatalog.FindPickupIndex("FlameGland").ToString();
+                bodyPrefab.GetComponent<DeathRewards>().bossPickup = new SerializablePickupIndex();
+
+                Debug.Log("direseeker drop is" + (PickupIndex)pickup);
+            }
+        }
+    }
+
+    public class DireseekerController : MonoBehaviour
+    {
+        public ParticleSystem burstFlame;
+        public ParticleSystem rageFlame;
+
+        public void StartRageMode()
+        {
+            if (rageFlame) rageFlame.Play();
+        }
+
+        public void FlameBurst()
+        {
+            if (burstFlame) burstFlame.Play();
         }
     }
 }

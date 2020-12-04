@@ -21,7 +21,7 @@ namespace MinerPlugin
     [BepInDependency("com.KomradeSpectre.Aetherium", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("com.Sivelos.SivsItems", BepInDependency.DependencyFlags.SoftDependency)]
     [NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod, VersionStrictness.EveryoneNeedSameModVersion)]
-    [BepInPlugin(MODUID, "MinerUnearthed", "1.3.8")]
+    [BepInPlugin(MODUID, "MinerUnearthed", "1.4.0")]
     [R2APISubmoduleDependency(new string[]
     {
         "PrefabAPI",
@@ -95,6 +95,7 @@ namespace MinerPlugin
         public static ConfigEntry<bool> styleUI;
         public static ConfigEntry<bool> enableDireseeker;
         public static ConfigEntry<bool> enableDireseekerSurvivor;
+        public static ConfigEntry<bool> fatAcrid;
 
         public static ConfigEntry<float> gougeDamage;
         public static ConfigEntry<float> crushDamage;
@@ -164,6 +165,8 @@ namespace MinerPlugin
                 hasAatrox = true;
                 AddStyleMeter();
             }
+
+            //Direseeker.LateSetup();
         }
 
         [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
@@ -206,6 +209,7 @@ namespace MinerPlugin
             styleUI = base.Config.Bind<bool>(new ConfigDefinition("01 - General Settings", "Style Rank"), true, new ConfigDescription("Enables a style ranking system taken from Devil May Cry (only if Aatrox is installed as well)", null, Array.Empty<object>()));
             enableDireseeker = base.Config.Bind<bool>(new ConfigDefinition("01 - General Settings", "Enable Direseeker"), true, new ConfigDescription("Enables the new boss", null, Array.Empty<object>()));
             enableDireseekerSurvivor = base.Config.Bind<bool>(new ConfigDefinition("01 - General Settings", "Direseeker Survivor"), false, new ConfigDescription("Enables the new boss as a survivor?", null, Array.Empty<object>()));
+            fatAcrid = base.Config.Bind<bool>(new ConfigDefinition("01 - General Settings", "Perro Grande"), false, new ConfigDescription("Enables fat Acrid as a lategame scav-tier boss", null, Array.Empty<object>()));
 
             restKeybind = base.Config.Bind<KeyCode>(new ConfigDefinition("02 - Keybinds", "Rest Emote"), KeyCode.Alpha1, new ConfigDescription("Keybind used for the Rest emote", null, Array.Empty<object>()));
             tauntKeybind = base.Config.Bind<KeyCode>(new ConfigDefinition("02 - Keybinds", "Taunt Emote"), KeyCode.Alpha2, new ConfigDescription("Keybind used for the Taunt emote", null, Array.Empty<object>()));
@@ -274,9 +278,14 @@ namespace MinerPlugin
             if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "dampcavesimple")
             {
                 GameObject hammer = Instantiate(Assets.blacksmithHammer);
-                hammer.transform.position = new Vector3(76, -143.4f, -526);
+                hammer.transform.position = new Vector3(76, -143.5f, -526);
                 hammer.transform.rotation = Quaternion.Euler(new Vector3(340, 340, 70));
                 hammer.transform.localScale = new Vector3(200, 200, 200);
+
+                GameObject anvil = Instantiate(Assets.blacksmithAnvil);
+                anvil.transform.position = new Vector3(76.8f, -142.5f, -530);
+                anvil.transform.rotation = Quaternion.Euler(new Vector3(10, 90, 0));
+                anvil.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
             }
 
             orig(self);
@@ -417,7 +426,7 @@ namespace MinerPlugin
 
             GameObject gameObject = new GameObject("ModelBase");
             gameObject.transform.parent = tempDisplay.transform;
-            gameObject.transform.localPosition = new Vector3(0f, -0.81f, 0f);
+            gameObject.transform.localPosition = new Vector3(0f, -0.9f, 0f);
             gameObject.transform.localRotation = Quaternion.identity;
             gameObject.transform.localScale = new Vector3(1f, 1f, 1f);
 
@@ -504,7 +513,7 @@ namespace MinerPlugin
 
             GameObject gameObject = new GameObject("ModelBase");
             gameObject.transform.parent = characterPrefab.transform;
-            gameObject.transform.localPosition = new Vector3(0f, -0.81f, 0f);
+            gameObject.transform.localPosition = new Vector3(0f, -0.9f, 0f);
             gameObject.transform.localRotation = Quaternion.identity;
             gameObject.transform.localScale = new Vector3(1f, 1f, 1f);
 
@@ -1285,7 +1294,7 @@ namespace MinerPlugin
 
         private void Sex()
         {
-            Collider[] array = Physics.OverlapSphere(transform.position, 4, LayerIndex.defaultLayer.mask);
+            Collider[] array = Physics.OverlapSphere(transform.position, 2.5f, LayerIndex.defaultLayer.mask);
             for (int i = 0; i < array.Length; i++)
             {
                 CharacterBody component = array[i].GetComponent<CharacterBody>();

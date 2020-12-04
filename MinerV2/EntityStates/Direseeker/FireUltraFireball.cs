@@ -1,4 +1,5 @@
-﻿using RoR2;
+﻿using MinerPlugin;
+using RoR2;
 using RoR2.Projectile;
 using UnityEngine;
 
@@ -6,23 +7,27 @@ namespace EntityStates.Direseeker
 {
     public class FireUltraFireball : BaseState
     {
-        public static int projectileCount = 8;
-        public static float totalYawSpread = 15f;
+        public static int projectileCount = 15;
+        public static float totalYawSpread = 25f;
         public static float baseDuration = 1.5f;
         public static float baseFireDuration = 0.25f;
-        public static float damageCoefficient = 2.4f;
+        public static float damageCoefficient = 2.5f;
         public static float projectileSpeed = 80f;
         public static float force = 1200f;
 
         private float duration;
         private float fireDuration;
         private int projectilesFired;
+        private DireseekerController direController;
 
         public override void OnEnter()
         {
             base.OnEnter();
             this.duration = FireUltraFireball.baseDuration / this.attackSpeedStat;
             this.fireDuration = FireUltraFireball.baseFireDuration / this.attackSpeedStat;
+            this.direController = base.GetComponent<DireseekerController>();
+
+            if (this.direController) this.direController.FlameBurst();
 
             base.PlayAnimation("Gesture, Additive", "FireMegaFireball", "FireMegaFireball.playbackRate", this.duration);
             Util.PlaySound(EntityStates.LemurianBruiserMonster.FireMegaFireball.attackString, base.gameObject);
