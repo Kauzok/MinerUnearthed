@@ -1,6 +1,7 @@
 ﻿using RoR2;
 using UnityEngine;
 using System;
+using UnityEngine.Networking;
 
 namespace EntityStates.Miner
 {
@@ -49,8 +50,8 @@ namespace EntityStates.Miner
                 hitBoxGroup = Array.Find<HitBoxGroup>(modelTransform.GetComponents<HitBoxGroup>(), (HitBoxGroup element) => element.groupName == "Crush");
             }
 
-            if (this.swingIndex == 0) base.PlayAnimation("Pick, Override", "Swing1", "Swing.playbackRate", this.duration);
-            else base.PlayAnimation("Pick, Override", "Swing2", "Swing.playbackRate", this.duration);
+            if (this.swingIndex == 0) base.PlayCrossfade("Pick, Override", "Swing1", "Swing.playbackRate", this.duration, 0.05f);
+            else base.PlayCrossfade("Pick, Override", "Swing2", "Swing.playbackRate", this.duration, 0.05f);
 
             this.attack = new OverlapAttack();
             this.attack.damageType = DamageType.ApplyMercExpose;
@@ -79,17 +80,17 @@ namespace EntityStates.Miner
                 this.hasFired = true;
                 Util.PlayScaledSound(MinerPlugin.Sounds.Swing, base.gameObject, this.attackSpeedStat);
 
-                string muzzleString = null;
-                if (this.swingIndex == 0) muzzleString = "SwingRight";
-                else muzzleString = "SwingLeft";
-
-                GameObject effectPrefab = MinerPlugin.Assets.swingFX;
-                if (base.characterBody.GetBuffCount(MinerPlugin.MinerPlugin.goldRush) >= 0.8f * MinerPlugin.MinerPlugin.adrenalineCap) effectPrefab = MinerPlugin.Assets.empoweredSwingFX;
-
-                EffectManager.SimpleMuzzleFlash(effectPrefab, base.gameObject, muzzleString, true);
-
                 if (base.isAuthority)
                 {
+                    string muzzleString = null;
+                    if (this.swingIndex == 0) muzzleString = "SwingRight";
+                    else muzzleString = "SwingLeft";
+
+                    GameObject effectPrefab = MinerPlugin.Assets.swingFX;
+                    if (base.characterBody.GetBuffCount(MinerPlugin.MinerPlugin.goldRush) >= 0.8f * MinerPlugin.MinerPlugin.adrenalineCap) effectPrefab = MinerPlugin.Assets.empoweredSwingFX;
+
+                    EffectManager.SimpleMuzzleFlash(effectPrefab, base.gameObject, muzzleString, true);
+
                     base.AddRecoil(-1f * Gouge.attackRecoil, -2f * Gouge.attackRecoil, -0.5f * Gouge.attackRecoil, 0.5f * Gouge.attackRecoil);
 
                     base.GetModelChildLocator().FindChild("SwingCenter").transform.localScale = Vector3.one * Gouge.attackRadius;
@@ -150,7 +151,7 @@ namespace EntityStates.Miner
 
             if (base.fixedAge >= (this.duration - this.earlyExitDuration) && base.isAuthority)
             {
-                if (base.IsKeyDownAuthority())
+                if (base.inputBank.skill1.down)
                 {
                     int index = this.swingIndex;
                     if (index == 0) index = 1;
@@ -177,6 +178,18 @@ namespace EntityStates.Miner
         public override InterruptPriority GetMinimumInterruptPriority()
         {
             return InterruptPriority.Skill;
+        }
+
+        public override void OnSerialize(NetworkWriter writer)
+        {
+            base.OnSerialize(writer);
+            writer.Write(this.swingIndex);
+        }
+
+        public override void OnDeserialize(NetworkReader reader)
+        {
+            base.OnDeserialize(reader);
+            this.swingIndex = reader.ReadInt32();
         }
     }
 }

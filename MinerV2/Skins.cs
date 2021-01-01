@@ -59,6 +59,7 @@ namespace MinerPlugin
             LanguageAPI.Add("MINERBODY_GOLD_SKIN_NAME", "Gold");
             LanguageAPI.Add("MINERBODY_DIAMOND_SKIN_NAME", "Diamond");
             LanguageAPI.Add("MINERBODY_STEVE_SKIN_NAME", "Minecraft");
+            LanguageAPI.Add("MINERBODY_DRIP_SKIN_NAME", "Drip");
 
             LoadoutAPI.SkinDefInfo skinDefInfo = default(LoadoutAPI.SkinDefInfo);
             skinDefInfo.BaseSkins = Array.Empty<SkinDef>();
@@ -431,6 +432,49 @@ namespace MinerPlugin
             SkinDef blacksmithSkin = LoadoutAPI.CreateNewSkinDef(blacksmithSkinDefInfo);
             #endregion
 
+            #region Drip
+            LoadoutAPI.SkinDefInfo dripSkinDefInfo = default(LoadoutAPI.SkinDefInfo);
+            dripSkinDefInfo.BaseSkins = Array.Empty<SkinDef>();
+            dripSkinDefInfo.MinionSkinReplacements = new SkinDef.MinionSkinReplacement[0];
+            dripSkinDefInfo.ProjectileGhostReplacements = new SkinDef.ProjectileGhostReplacement[0];
+            dripSkinDefInfo.GameObjectActivations = getActivations(allObjects);
+            dripSkinDefInfo.Icon = Assets.mainAssetBundle.LoadAsset<Sprite>("texDripSkin");
+            dripSkinDefInfo.MeshReplacements = new SkinDef.MeshReplacement[]
+            {
+                new SkinDef.MeshReplacement
+                {
+                    renderer = mainRenderer,
+                    mesh = Assets.dripMesh
+                }
+            };
+            dripSkinDefInfo.Name = "MINERBODY_DRIP_SKIN_NAME";
+            dripSkinDefInfo.NameToken = "MINERBODY_DRIP_SKIN_NAME";
+            dripSkinDefInfo.RendererInfos = characterModel.baseRendererInfos;
+            dripSkinDefInfo.RootObject = model;
+            dripSkinDefInfo.UnlockableName = "";
+
+            rendererInfos = skinDefInfo.RendererInfos;
+            array = new CharacterModel.RendererInfo[rendererInfos.Length];
+            rendererInfos.CopyTo(array, 0);
+
+            material = array[0].defaultMaterial;
+
+            if (material)
+            {
+                material = UnityEngine.Object.Instantiate<Material>(material);
+                material.SetTexture("_MainTex", Assets.mainAssetBundle.LoadAsset<Material>("matDripMiner").GetTexture("_MainTex"));
+                material.SetColor("_EmColor", Color.white);
+                material.SetFloat("_EmPower", 0f);
+                material.SetTexture("_EmTex", Assets.mainAssetBundle.LoadAsset<Material>("matDripMiner").GetTexture("_EmissionMap"));
+
+                array[0].defaultMaterial = material;
+            }
+
+            dripSkinDefInfo.RendererInfos = array;
+
+            SkinDef dripSkin = LoadoutAPI.CreateNewSkinDef(dripSkinDefInfo);
+            #endregion
+
             #region Steve
             LoadoutAPI.SkinDefInfo steveSkinDefInfo = default(LoadoutAPI.SkinDefInfo);
             steveSkinDefInfo.BaseSkins = Array.Empty<SkinDef>();
@@ -485,10 +529,11 @@ namespace MinerPlugin
 
             if (MinerPlugin.extraSkins.Value)
             {
+                skinDefs.Add(dripSkin);
+                skinDefs.Add(steveSkin);
                 skinDefs.Add(ironSkin);
                 skinDefs.Add(goldSkin);
                 skinDefs.Add(diamondSkin);
-                skinDefs.Add(steveSkin);
             }
 
             skinController.skins = skinDefs.ToArray();

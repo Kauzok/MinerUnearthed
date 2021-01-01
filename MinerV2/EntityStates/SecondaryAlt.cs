@@ -98,7 +98,7 @@ namespace EntityStates.Miner
     public class DrillBreak : BaseSkillState
     {
         public static float damageCoefficient = 2f;
-        public float baseDuration = 0.4f;
+        public float baseDuration = 0.5f;
 
         private float duration;
         private OverlapAttack attack;
@@ -113,6 +113,7 @@ namespace EntityStates.Miner
             base.characterMotor.disableAirControlUntilCollision = false;
 
             base.PlayAnimation("FullBody, Override", "DrillChargeShort");
+            //base.PlayAnimation("FullBody, Override", "DrillBreak", "DrillBreak.playbackRate", this.duration * 1.5f);
 
             if (NetworkServer.active) base.characterBody.AddBuff(BuffIndex.HiddenInvincibility);
 
@@ -141,11 +142,14 @@ namespace EntityStates.Miner
             this.attack.hitBoxGroup = hitBoxGroup;
             this.attack.isCrit = base.RollCrit();
 
-            EffectData effectData = new EffectData();
-            effectData.origin = base.transform.position;
-            effectData.scale = 8;
+            if (base.isAuthority)
+            {
+                EffectData effectData = new EffectData();
+                effectData.origin = base.transform.position;
+                effectData.scale = 8;
 
-            EffectManager.SpawnEffect(MinerPlugin.MinerPlugin.backblastEffect, effectData, true);
+                EffectManager.SpawnEffect(MinerPlugin.MinerPlugin.backblastEffect, effectData, true);
+            }
 
             if (modelTransform)
             {

@@ -17,11 +17,12 @@ namespace MinerPlugin
 {
     [BepInDependency("com.bepis.r2api", BepInDependency.DependencyFlags.HardDependency)]
     [BepInDependency("com.rob.Aatrox", BepInDependency.DependencyFlags.SoftDependency)]
+    [BepInDependency("com.rob.Direseeker", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("com.ThinkInvisible.ClassicItems", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("com.KomradeSpectre.Aetherium", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("com.Sivelos.SivsItems", BepInDependency.DependencyFlags.SoftDependency)]
     [NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod, VersionStrictness.EveryoneNeedSameModVersion)]
-    [BepInPlugin(MODUID, "MinerUnearthed", "1.4.0")]
+    [BepInPlugin(MODUID, "MinerUnearthed", "1.4.4")]
     [R2APISubmoduleDependency(new string[]
     {
         "PrefabAPI",
@@ -86,6 +87,7 @@ namespace MinerPlugin
         public static SkillDef scepterSpecialSkillDef;
 
         public static bool hasAatrox = false;
+        public static bool direseekerInstalled = false;
         public static bool aetheriumInstalled = false;
         public static bool sivsItemsInstalled = false;
 
@@ -128,6 +130,11 @@ namespace MinerPlugin
             RegisterCharacter();
             Skins.RegisterSkins();
 
+            //direseeker compat
+            if (BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("com.rob.Direseeker"))
+            {
+                direseekerInstalled = true;
+            }
             //aetherium item displays- dll won't compile without a reference to aetherium
             if (BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("com.KomradeSpectre.Aetherium"))
             {

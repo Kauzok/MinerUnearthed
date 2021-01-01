@@ -244,15 +244,15 @@ namespace MinerPlugin
             };
         }
 
+
+
         public static void CreateDireseeker()
         {
+            if (MinerPlugin.direseekerInstalled) AddUnlockComponent();
+
             if (MinerPlugin.fatAcrid.Value) PerroGrande();
 
             CreateProjectiles();
-
-            bodyPrefab = PrefabAPI.InstantiateClone(Resources.Load<GameObject>("Prefabs/CharacterBodies/LemurianBruiserBody"), "DireseekerBody");
-
-            CharacterBody bodyComponent = bodyPrefab.GetComponent<CharacterBody>();
 
             LanguageAPI.Add("DIRESEEKER_BODY_NAME", "Direseeker");
             LanguageAPI.Add("DIRESEEKER_BODY_SUBTITLE", "Track and Kill");
@@ -260,87 +260,93 @@ namespace MinerPlugin
             LanguageAPI.Add("DIRESEEKER_BODY_LORE", "Legends tell of a monstrous beast that once roamed the underground barracks of Petrichor V.\n\nFeared by the bravest of survivors and the nastiest of monsters, the massive beast was unrivaled. It donned blood-red scales, tempered by hellfire. It had burning yellow eyes, with a glare so intense it made the largest of creatures stop dead in their tracks. It had smoldering breath, hot enough to melt metal in an instant.\n\nOnly once stopped by a survivor strong enough to slay Providence himself, it was believed that the beast had finally met its match.\n\n<style=cIsHealth>Until it showed its terrifying face once again.</style>");
             LanguageAPI.Add("DIRESEEKER_BODY_OUTRO_FLAVOR", "..and so it left, in search of new prey.");
 
-            bodyComponent.name = "DireseekerBody";
-            bodyComponent.baseNameToken = "DIRESEEKER_BODY_NAME";
-            bodyComponent.subtitleNameToken = "DIRESEEKER_BODY_SUBTITLE";
-            bodyComponent.baseMoveSpeed = 11f;
-            bodyComponent.baseMaxHealth = 2800f;
-            bodyComponent.levelMaxHealth = 840f;
-            bodyComponent.baseDamage = 20f;
-            bodyComponent.levelDamage = 4f;
-            bodyComponent.isChampion = true;
-            bodyComponent.portraitIcon = Assets.mainAssetBundle.LoadAsset<Sprite>("texDireseekerIcon").texture;
-
             //skills and states
             LoadoutAPI.AddSkill(typeof(EntityStates.Direseeker.SpawnState));
             LoadoutAPI.AddSkill(typeof(EntityStates.Direseeker.ChargeUltraFireball));
             LoadoutAPI.AddSkill(typeof(EntityStates.Direseeker.FireUltraFireball));
 
-            SkillSetup(bodyPrefab);
-
-            var stateMachine = bodyComponent.GetComponentInChildren<EntityStateMachine>();
-            if (stateMachine) stateMachine.initialStateType = new SerializableEntityStateType(typeof(EntityStates.Direseeker.SpawnState));
-
-            //resize
-
-            bodyPrefab.GetComponent<ModelLocator>().modelBaseTransform.gameObject.transform.localScale *= 1.5f;
-            //bodyPrefab.GetComponent<ModelLocator>().modelBaseTransform.gameObject.transform.Translate(new Vector3(0f, 5.6f, 0f));
-
-            foreach (KinematicCharacterMotor kinematicCharacterMotor in bodyPrefab.GetComponentsInChildren<KinematicCharacterMotor>())
+            if (!MinerPlugin.direseekerInstalled)
             {
-                kinematicCharacterMotor.SetCapsuleDimensions(kinematicCharacterMotor.Capsule.radius * 1.5f, kinematicCharacterMotor.Capsule.height * 1.5f, 1.5f);
-            }
+                bodyPrefab = PrefabAPI.InstantiateClone(Resources.Load<GameObject>("Prefabs/CharacterBodies/LemurianBruiserBody"), "DireseekerBody");
 
-            //
+                CharacterBody bodyComponent = bodyPrefab.GetComponent<CharacterBody>();
 
-            CharacterModel model = bodyPrefab.GetComponentInChildren<CharacterModel>();
+                bodyComponent.name = "DireseekerBody";
+                bodyComponent.baseNameToken = "DIRESEEKER_BODY_NAME";
+                bodyComponent.subtitleNameToken = "DIRESEEKER_BODY_SUBTITLE";
+                bodyComponent.baseMoveSpeed = 11f;
+                bodyComponent.baseMaxHealth = 2800f;
+                bodyComponent.levelMaxHealth = 840f;
+                bodyComponent.baseDamage = 20f;
+                bodyComponent.levelDamage = 4f;
+                bodyComponent.isChampion = true;
+                bodyComponent.portraitIcon = Assets.mainAssetBundle.LoadAsset<Sprite>("texDireseekerIcon").texture;
 
-            Material newMat = UnityEngine.Object.Instantiate<Material>(model.baseRendererInfos[0].defaultMaterial);
-            newMat.SetTexture("_MainTex", Assets.mainAssetBundle.LoadAsset<Material>("matDireseeker").GetTexture("_MainTex"));
-            newMat.SetTexture("_EmTex", Assets.mainAssetBundle.LoadAsset<Material>("matDireseeker").GetTexture("_EmissionMap"));
-            newMat.SetFloat("_EmPower", 50f);
+                SkillSetup(bodyPrefab);
 
-            model.baseRendererInfos[0].defaultMaterial = newMat;
+                var stateMachine = bodyComponent.GetComponentInChildren<EntityStateMachine>();
+                if (stateMachine) stateMachine.initialStateType = new SerializableEntityStateType(typeof(EntityStates.Direseeker.SpawnState));
 
-            GameObject horn1 = Assets.mainAssetBundle.LoadAsset<GameObject>("DireHorn").InstantiateClone("DireseekerHorn", false);
-            GameObject horn2 = Assets.mainAssetBundle.LoadAsset<GameObject>("DireHornBroken").InstantiateClone("DireseekerHornBroken", false);
-            //GameObject rageFlame = Assets.mainAssetBundle.LoadAsset<GameObject>("DireseekerRageFlame").InstantiateClone("DireseekerRageFlame", false);
-            GameObject burstFlame = Assets.mainAssetBundle.LoadAsset<GameObject>("DireseekerBurstFlame").InstantiateClone("DireseekerBurstFlame", false);
+                //resize
 
-            ChildLocator childLocator = bodyPrefab.GetComponentInChildren<ChildLocator>();
+                bodyPrefab.GetComponent<ModelLocator>().modelBaseTransform.gameObject.transform.localScale *= 1.5f;
+                //bodyPrefab.GetComponent<ModelLocator>().modelBaseTransform.gameObject.transform.Translate(new Vector3(0f, 5.6f, 0f));
 
-            horn1.transform.SetParent(childLocator.FindChild("Head"));
-            horn1.transform.localPosition = new Vector3(-2.5f, 1, -0.5f);
-            horn1.transform.localRotation = Quaternion.Euler(new Vector3(45, 0, 90));
-            horn1.transform.localScale = new Vector3(100, 100, 100);
+                foreach (KinematicCharacterMotor kinematicCharacterMotor in bodyPrefab.GetComponentsInChildren<KinematicCharacterMotor>())
+                {
+                    kinematicCharacterMotor.SetCapsuleDimensions(kinematicCharacterMotor.Capsule.radius * 1.5f, kinematicCharacterMotor.Capsule.height * 1.5f, 1.5f);
+                }
 
-            horn2.transform.SetParent(childLocator.FindChild("Head"));
-            horn2.transform.localPosition = new Vector3(2.5f, 1, -0.5f);
-            horn2.transform.localRotation = Quaternion.Euler(new Vector3(45, 0, 90));
-            horn2.transform.localScale = new Vector3(100, -100, 100);
+                //
 
-            /*rageFlame.transform.SetParent(childLocator.FindChild("Head"));
-            rageFlame.transform.localPosition = new Vector3(0, 1, 0);
-            rageFlame.transform.localRotation = Quaternion.Euler(new Vector3(270, 180, 0));
-            rageFlame.transform.localScale = new Vector3(5, 5, 5);*/
+                CharacterModel model = bodyPrefab.GetComponentInChildren<CharacterModel>();
 
-            burstFlame.transform.SetParent(childLocator.FindChild("Head"));
-            burstFlame.transform.localPosition = new Vector3(0, 1, 0);
-            burstFlame.transform.localRotation = Quaternion.Euler(new Vector3(270, 180, 0));
-            burstFlame.transform.localScale = new Vector3(5, 5, 5);
+                Material newMat = UnityEngine.Object.Instantiate<Material>(model.baseRendererInfos[0].defaultMaterial);
+                newMat.SetTexture("_MainTex", Assets.mainAssetBundle.LoadAsset<Material>("matDireseeker").GetTexture("_MainTex"));
+                newMat.SetTexture("_EmTex", Assets.mainAssetBundle.LoadAsset<Material>("matDireseeker").GetTexture("_EmissionMap"));
+                newMat.SetFloat("_EmPower", 50f);
 
-            bodyPrefab.AddComponent<DireseekerController>().burstFlame = burstFlame.GetComponent<ParticleSystem>();
+                model.baseRendererInfos[0].defaultMaterial = newMat;
 
-            Shader hotpoo = Resources.Load<Shader>("Shaders/Deferred/hgstandard");
+                GameObject horn1 = Assets.mainAssetBundle.LoadAsset<GameObject>("DireHorn").InstantiateClone("DireseekerHorn", false);
+                GameObject horn2 = Assets.mainAssetBundle.LoadAsset<GameObject>("DireHornBroken").InstantiateClone("DireseekerHornBroken", false);
+                //GameObject rageFlame = Assets.mainAssetBundle.LoadAsset<GameObject>("DireseekerRageFlame").InstantiateClone("DireseekerRageFlame", false);
+                GameObject burstFlame = Assets.mainAssetBundle.LoadAsset<GameObject>("DireseekerBurstFlame").InstantiateClone("DireseekerBurstFlame", false);
 
-            Material hornMat = horn1.GetComponentInChildren<MeshRenderer>().material;
-            hornMat.shader = hotpoo;
+                ChildLocator childLocator = bodyPrefab.GetComponentInChildren<ChildLocator>();
 
-            //add horns
+                horn1.transform.SetParent(childLocator.FindChild("Head"));
+                horn1.transform.localPosition = new Vector3(-2.5f, 1, -0.5f);
+                horn1.transform.localRotation = Quaternion.Euler(new Vector3(45, 0, 90));
+                horn1.transform.localScale = new Vector3(100, 100, 100);
 
-            CharacterModel.RendererInfo[] infos = model.baseRendererInfos;
-            CharacterModel.RendererInfo[] newInfos = new CharacterModel.RendererInfo[]
-            {
+                horn2.transform.SetParent(childLocator.FindChild("Head"));
+                horn2.transform.localPosition = new Vector3(2.5f, 1, -0.5f);
+                horn2.transform.localRotation = Quaternion.Euler(new Vector3(45, 0, 90));
+                horn2.transform.localScale = new Vector3(100, -100, 100);
+
+                /*rageFlame.transform.SetParent(childLocator.FindChild("Head"));
+                rageFlame.transform.localPosition = new Vector3(0, 1, 0);
+                rageFlame.transform.localRotation = Quaternion.Euler(new Vector3(270, 180, 0));
+                rageFlame.transform.localScale = new Vector3(5, 5, 5);*/
+
+                burstFlame.transform.SetParent(childLocator.FindChild("Head"));
+                burstFlame.transform.localPosition = new Vector3(0, 1, 0);
+                burstFlame.transform.localRotation = Quaternion.Euler(new Vector3(270, 180, 0));
+                burstFlame.transform.localScale = new Vector3(5, 5, 5);
+
+                bodyPrefab.AddComponent<DireseekerController>().burstFlame = burstFlame.GetComponent<ParticleSystem>();
+
+                Shader hotpoo = Resources.Load<Shader>("Shaders/Deferred/hgstandard");
+
+                Material hornMat = horn1.GetComponentInChildren<MeshRenderer>().material;
+                hornMat.shader = hotpoo;
+
+                //add horns
+
+                CharacterModel.RendererInfo[] infos = model.baseRendererInfos;
+                CharacterModel.RendererInfo[] newInfos = new CharacterModel.RendererInfo[]
+                {
                 infos[0],
                 new CharacterModel.RendererInfo
                 {
@@ -356,72 +362,73 @@ namespace MinerPlugin
                     defaultShadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On,
                     ignoreOverlays = true
                 }
-            };
-
-            model.baseRendererInfos = newInfos;
-
-            masterPrefab = PrefabAPI.InstantiateClone(Resources.Load<GameObject>("Prefabs/CharacterMasters/LemurianBruiserMaster"), "DireseekerMaster");
-
-            CharacterMaster master = masterPrefab.GetComponent<CharacterMaster>();
-
-            master.bodyPrefab = bodyPrefab;
-            master.isBoss = false;
-
-            BodyCatalog.getAdditionalEntries += delegate (List<GameObject> list)
-            {
-                list.Add(bodyPrefab);
-            };
-
-            MasterCatalog.getAdditionalEntries += delegate (List<GameObject> list)
-            {
-                list.Add(masterPrefab);
-            };
-
-            if (MinerPlugin.enableDireseeker.Value)
-            {
-                CharacterSpawnCard characterSpawnCard = ScriptableObject.CreateInstance<CharacterSpawnCard>();
-                characterSpawnCard.name = "cscDireseeker";
-                characterSpawnCard.prefab = masterPrefab;
-                characterSpawnCard.sendOverNetwork = true;
-                characterSpawnCard.hullSize = HullClassification.BeetleQueen;
-                characterSpawnCard.nodeGraphType = MapNodeGroup.GraphType.Ground;
-                characterSpawnCard.requiredFlags = NodeFlags.None;
-                characterSpawnCard.forbiddenFlags = NodeFlags.TeleporterOK;
-                characterSpawnCard.directorCreditCost = 800;
-                characterSpawnCard.occupyPosition = false;
-                characterSpawnCard.loadout = new SerializableLoadout();
-                characterSpawnCard.noElites = true;
-                characterSpawnCard.forbiddenAsBoss = false;
-
-                DirectorCard card = new DirectorCard
-                {
-                    spawnCard = characterSpawnCard,
-                    selectionWeight = 1,
-                    allowAmbushSpawn = false,
-                    preventOverhead = false,
-                    minimumStageCompletions = 2,
-                    requiredUnlockable = "",
-                    forbiddenUnlockable = "",
-                    spawnDistance = DirectorCore.MonsterSpawnDistance.Close
                 };
 
-                DirectorAPI.DirectorCardHolder direseekerCard = new DirectorAPI.DirectorCardHolder
+                model.baseRendererInfos = newInfos;
+
+                masterPrefab = PrefabAPI.InstantiateClone(Resources.Load<GameObject>("Prefabs/CharacterMasters/LemurianBruiserMaster"), "DireseekerMaster");
+
+                CharacterMaster master = masterPrefab.GetComponent<CharacterMaster>();
+
+                master.bodyPrefab = bodyPrefab;
+                master.isBoss = false;
+
+                BodyCatalog.getAdditionalEntries += delegate (List<GameObject> list)
                 {
-                    Card = card,
-                    MonsterCategory = DirectorAPI.MonsterCategory.Champions,
-                    InteractableCategory = DirectorAPI.InteractableCategory.None
+                    list.Add(bodyPrefab);
                 };
 
-                DirectorAPI.MonsterActions += delegate (List<DirectorAPI.DirectorCardHolder> list, DirectorAPI.StageInfo stage)
+                MasterCatalog.getAdditionalEntries += delegate (List<GameObject> list)
                 {
-                    if (stage.stage == DirectorAPI.Stage.AbyssalDepths)
+                    list.Add(masterPrefab);
+                };
+
+                if (MinerPlugin.enableDireseeker.Value && !MinerPlugin.direseekerInstalled)
+                {
+                    CharacterSpawnCard characterSpawnCard = ScriptableObject.CreateInstance<CharacterSpawnCard>();
+                    characterSpawnCard.name = "cscDireseeker";
+                    characterSpawnCard.prefab = masterPrefab;
+                    characterSpawnCard.sendOverNetwork = true;
+                    characterSpawnCard.hullSize = HullClassification.BeetleQueen;
+                    characterSpawnCard.nodeGraphType = MapNodeGroup.GraphType.Ground;
+                    characterSpawnCard.requiredFlags = NodeFlags.None;
+                    characterSpawnCard.forbiddenFlags = NodeFlags.TeleporterOK;
+                    characterSpawnCard.directorCreditCost = 800;
+                    characterSpawnCard.occupyPosition = false;
+                    characterSpawnCard.loadout = new SerializableLoadout();
+                    characterSpawnCard.noElites = true;
+                    characterSpawnCard.forbiddenAsBoss = false;
+
+                    DirectorCard card = new DirectorCard
                     {
-                        if (!list.Contains(direseekerCard))
+                        spawnCard = characterSpawnCard,
+                        selectionWeight = 1,
+                        allowAmbushSpawn = false,
+                        preventOverhead = false,
+                        minimumStageCompletions = 2,
+                        requiredUnlockable = "",
+                        forbiddenUnlockable = "",
+                        spawnDistance = DirectorCore.MonsterSpawnDistance.Close
+                    };
+
+                    DirectorAPI.DirectorCardHolder direseekerCard = new DirectorAPI.DirectorCardHolder
+                    {
+                        Card = card,
+                        MonsterCategory = DirectorAPI.MonsterCategory.Champions,
+                        InteractableCategory = DirectorAPI.InteractableCategory.None
+                    };
+
+                    DirectorAPI.MonsterActions += delegate (List<DirectorAPI.DirectorCardHolder> list, DirectorAPI.StageInfo stage)
+                    {
+                        if (stage.stage == DirectorAPI.Stage.AbyssalDepths)
                         {
-                            list.Add(direseekerCard);
+                            if (!list.Contains(direseekerCard))
+                            {
+                                list.Add(direseekerCard);
+                            }
                         }
-                    }
-                };
+                    };
+                }
             }
 
             if (MinerPlugin.enableDireseekerSurvivor.Value)
@@ -446,7 +453,7 @@ namespace MinerPlugin
 
                 SkillSetup(survivorPrefab);
 
-                stateMachine = survivorPrefab.GetComponentInChildren<EntityStateMachine>();
+                var stateMachine = survivorPrefab.GetComponentInChildren<EntityStateMachine>();
                 if (stateMachine) stateMachine.initialStateType = new SerializableEntityStateType(typeof(EntityStates.Direseeker.SpawnState));
 
                 //resize
@@ -463,6 +470,11 @@ namespace MinerPlugin
                 //
 
                 CharacterModel model2 = survivorPrefab.GetComponentInChildren<CharacterModel>();
+
+                Material newMat = UnityEngine.Object.Instantiate<Material>(model2.baseRendererInfos[0].defaultMaterial);
+                newMat.SetTexture("_MainTex", Assets.mainAssetBundle.LoadAsset<Material>("matDireseeker").GetTexture("_MainTex"));
+                newMat.SetTexture("_EmTex", Assets.mainAssetBundle.LoadAsset<Material>("matDireseeker").GetTexture("_EmissionMap"));
+                newMat.SetFloat("_EmPower", 50f);
 
                 model2.baseRendererInfos[0].defaultMaterial = newMat;
 
@@ -494,6 +506,11 @@ namespace MinerPlugin
                 burstFlame2.transform.localScale = new Vector3(5, 5, 5);
 
                 survivorPrefab.AddComponent<DireseekerController>().burstFlame = burstFlame2.GetComponent<ParticleSystem>();
+
+                Shader hotpoo = Resources.Load<Shader>("Shaders/Deferred/hgstandard");
+
+                Material hornMat = horn1b.GetComponentInChildren<MeshRenderer>().material;
+                hornMat.shader = hotpoo;
 
                 //add horns
 
@@ -611,8 +628,14 @@ namespace MinerPlugin
                 pickup.pickupName = PickupCatalog.FindPickupIndex("FlameGland").ToString();
                 bodyPrefab.GetComponent<DeathRewards>().bossPickup = new SerializablePickupIndex();
 
-                Debug.Log("direseeker drop is" + (PickupIndex)pickup);
+                //Debug.Log("direseeker drop is" + (PickupIndex)pickup);
             }
+        }
+
+        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+        private static void AddUnlockComponent()
+        {
+            DireseekerMod.Modules.Prefabs.bodyPrefab.AddComponent<MinerUnlockComponent>();
         }
     }
 

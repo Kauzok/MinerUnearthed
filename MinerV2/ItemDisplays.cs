@@ -2670,7 +2670,7 @@ namespace MinerPlugin
             {
                 list.Add(new ItemDisplayRuleSet.NamedRuleGroup
                 {
-                    name = "ATHRMAccursedPotion",
+                    name = "ITEM_ACCURSED_POTION",
                     displayRuleGroup = new DisplayRuleGroup
                     {
                         rules = new ItemDisplayRule[]
@@ -2691,7 +2691,7 @@ namespace MinerPlugin
 
                 list.Add(new ItemDisplayRuleSet.NamedRuleGroup
                 {
-                    name = "ATHRMAlienMagnet",
+                    name = "ITEM_ALIEN_MAGNET",
                     displayRuleGroup = new DisplayRuleGroup
                     {
                         rules = new ItemDisplayRule[]
@@ -2702,7 +2702,7 @@ namespace MinerPlugin
                                 followerPrefab = ItemDisplays.LoadAetheriumDisplay("AlienMagnet"),
                                 childName = "Base",
                                 localPos = new Vector3(0.01f, 0.01f, 0.02f),
-                                localAngles = new Vector3(90, 0, 0),
+                                localAngles = new Vector3(0, 0, 0),
                                 localScale = new Vector3(0.0015f, 0.0015f, 0.0015f),
                                 limbMask = LimbFlags.None
                             }
@@ -2712,7 +2712,7 @@ namespace MinerPlugin
 
                 list.Add(new ItemDisplayRuleSet.NamedRuleGroup
                 {
-                    name = "ATHRMVoidheart",
+                    name = "ITEM_VOID_HEART",
                     displayRuleGroup = new DisplayRuleGroup
                     {
                         rules = new ItemDisplayRule[]
@@ -2733,7 +2733,7 @@ namespace MinerPlugin
 
                 list.Add(new ItemDisplayRuleSet.NamedRuleGroup
                 {
-                    name = "ATHRMSharkTeeth",
+                    name = "ITEM_SHARK_TEETH",
                     displayRuleGroup = new DisplayRuleGroup
                     {
                         rules = new ItemDisplayRule[]
@@ -2754,7 +2754,7 @@ namespace MinerPlugin
 
                 list.Add(new ItemDisplayRuleSet.NamedRuleGroup
                 {
-                    name = "ATHRMBloodSoakedShield",
+                    name = "ITEM_BLOOD_SOAKED_SHIELD",
                     displayRuleGroup = new DisplayRuleGroup
                     {
                         rules = new ItemDisplayRule[]
@@ -2775,7 +2775,7 @@ namespace MinerPlugin
 
                 list.Add(new ItemDisplayRuleSet.NamedRuleGroup
                 {
-                    name = "ATHRMInspiringDrone",
+                    name = "ITEM_INSPIRING_DRONE",
                     displayRuleGroup = new DisplayRuleGroup
                     {
                         rules = new ItemDisplayRule[]
@@ -2796,7 +2796,7 @@ namespace MinerPlugin
 
                 list.Add(new ItemDisplayRuleSet.NamedRuleGroup
                 {
-                    name = "ATHRMFeatheredPlume",
+                    name = "ITEM_FEATHERED_PLUME",
                     displayRuleGroup = new DisplayRuleGroup
                     {
                         rules = new ItemDisplayRule[]
@@ -2817,7 +2817,7 @@ namespace MinerPlugin
 
                 list.Add(new ItemDisplayRuleSet.NamedRuleGroup
                 {
-                    name = "ATHRMShieldingCore",
+                    name = "ITEM_SHIELDING_CORE",
                     displayRuleGroup = new DisplayRuleGroup
                     {
                         rules = new ItemDisplayRule[]
@@ -2838,7 +2838,7 @@ namespace MinerPlugin
 
                 list.Add(new ItemDisplayRuleSet.NamedRuleGroup
                 {
-                    name = "ATHRMUnstableDesign",
+                    name = "ITEM_UNSTABLE_DESIGN",
                     displayRuleGroup = new DisplayRuleGroup
                     {
                         rules = new ItemDisplayRule[]
@@ -2859,7 +2859,7 @@ namespace MinerPlugin
 
                 list.Add(new ItemDisplayRuleSet.NamedRuleGroup
                 {
-                    name = "ATHRMWeightedAnklet",
+                    name = "ITEM_WEIGHTED_ANKLET",
                     displayRuleGroup = new DisplayRuleGroup
                     {
                         rules = new ItemDisplayRule[]
@@ -2880,7 +2880,7 @@ namespace MinerPlugin
 
                 list.Add(new ItemDisplayRuleSet.NamedRuleGroup
                 {
-                    name = "ATHRMBlasterSword",
+                    name = "ITEM_BLASTER_SWORD",
                     displayRuleGroup = new DisplayRuleGroup
                     {
                         rules = new ItemDisplayRule[]
@@ -2911,7 +2911,7 @@ namespace MinerPlugin
 
                 list.Add(new ItemDisplayRuleSet.NamedRuleGroup
                 {
-                    name = "ATHRMWitchesRing",
+                    name = "ITEM_WITCHES_RING",
                     displayRuleGroup = new DisplayRuleGroup
                     {
                         rules = new ItemDisplayRule[]
@@ -2929,10 +2929,10 @@ namespace MinerPlugin
                         }
                     }
                 });
-
-                list.Add(new ItemDisplayRuleSet.NamedRuleGroup
+                
+                list2.Add(new ItemDisplayRuleSet.NamedRuleGroup
                 {
-                    name = "ATHRMAccursedPotion",
+                    name = "EQUIPMENT_JAR_OF_RESHAPING",
                     displayRuleGroup = new DisplayRuleGroup
                     {
                         rules = new ItemDisplayRule[]
@@ -2940,11 +2940,11 @@ namespace MinerPlugin
                             new ItemDisplayRule
                             {
                                 ruleType = ItemDisplayRuleType.ParentedPrefab,
-                                followerPrefab = ItemDisplays.LoadAetheriumDisplay("AccursedPotion"),
+                                followerPrefab = ItemDisplays.LoadAetheriumDisplay("JarOfReshaping"),
                                 childName = "Pelvis",
-                                localPos = new Vector3(0.02f, 0.025f, 0),
-                                localAngles = new Vector3(0, 0, 0),
-                                localScale = new Vector3(0.05f, 0.05f, 0.05f),
+                                localPos = new Vector3(0.0003f, 0, 0),
+                                localAngles = new Vector3(0, 270, 0),
+                                localScale = new Vector3(0.0005f, 0.0005f, 0.0005f),
                                 limbMask = LimbFlags.None
                             }
                         }
@@ -3213,7 +3213,7 @@ namespace MinerPlugin
                 case "AccursedPotion":
                     return Aetherium.Items.AccursedPotion.ItemBodyModelPrefab;
                 case "AlienMagnet":
-                    return Aetherium.Items.AlienMagnet.ItemBodyModelPrefab;
+                    return Aetherium.Items.AlienMagnet.ItemFollowerPrefab;
                 case "BlasterSword":
                     return Aetherium.Items.BlasterSword.ItemBodyModelPrefab;
                 case "BloodSoakedShield":
@@ -3222,6 +3222,8 @@ namespace MinerPlugin
                     return Aetherium.Items.FeatheredPlume.ItemBodyModelPrefab;
                 case "InspiringDrone":
                     return Aetherium.Items.InspiringDrone.ItemFollowerPrefab;
+                case "JarOfReshaping":
+                    return Aetherium.Equipment.JarOfReshaping.ItemBodyModelPrefab;
                 case "SharkTeeth":
                     return Aetherium.Items.SharkTeeth.ItemBodyModelPrefab;
                 case "ShieldingCore":

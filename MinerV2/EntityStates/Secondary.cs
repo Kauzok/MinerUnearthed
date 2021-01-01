@@ -163,28 +163,28 @@ namespace EntityStates.Miner
 
             if (NetworkServer.active) base.characterBody.AddBuff(BuffIndex.HiddenInvincibility);
 
-            blastAttack = new BlastAttack
-            {
-                radius = 10f,
-                procCoefficient = 1,
-                position = aimRay.origin,
-                attacker = base.gameObject,
-                crit = Util.CheckRoll(base.characterBody.crit, base.characterBody.master),
-                baseDamage = base.characterBody.damage * DrillCharge.damageCoefficient,
-                falloffModel = BlastAttack.FalloffModel.None,
-                baseForce = 3f,
-                damageType = DamageType.Generic,
-                attackerFiltering = AttackerFiltering.NeverHit,
-            };
-            blastAttack.teamIndex = TeamComponent.GetObjectTeam(blastAttack.attacker);
-
-            effectData = new EffectData();
-            effectData.scale = 1.5f;
-            effectData.color = new Color32(234, 234, 127, 100);
+            Util.PlaySound(MinerPlugin.Sounds.DrillCharge, base.gameObject);
 
             if (base.isAuthority)
             {
-                Util.PlaySound(MinerPlugin.Sounds.DrillCharge, base.gameObject);
+                blastAttack = new BlastAttack
+                {
+                    radius = 10f,
+                    procCoefficient = 1,
+                    position = aimRay.origin,
+                    attacker = base.gameObject,
+                    crit = Util.CheckRoll(base.characterBody.crit, base.characterBody.master),
+                    baseDamage = base.characterBody.damage * DrillCharge.damageCoefficient,
+                    falloffModel = BlastAttack.FalloffModel.None,
+                    baseForce = 3f,
+                    damageType = DamageType.Generic,
+                    attackerFiltering = AttackerFiltering.NeverHit,
+                };
+                blastAttack.teamIndex = TeamComponent.GetObjectTeam(blastAttack.attacker);
+
+                effectData = new EffectData();
+                effectData.scale = 1.5f;
+                effectData.color = new Color32(234, 234, 127, 100);
 
                 base.characterMotor.velocity += 75 * aimRay.direction;
             }
@@ -216,31 +216,34 @@ namespace EntityStates.Miner
         {
             base.FixedUpdate();
 
-            Ray aimRay = base.GetAimRay();
-            blastAttack.position = aimRay.origin;
-            effectData.origin = aimRay.origin;
-
-            if (base.fixedAge >= this.duration && base.isAuthority)
+            if (base.isAuthority)
             {
-                this.outer.SetNextStateToMain();
-                return;
+                Ray aimRay = base.GetAimRay();
+                this.blastAttack.position = aimRay.origin;
+                this.effectData.origin = aimRay.origin;
+
+                if (base.fixedAge >= this.duration && base.isAuthority)
+                {
+                    this.outer.SetNextStateToMain();
+                    return;
+                }
+
+                float boost = charged * (.8f + (.2f * base.attackSpeedStat));
+                int roundDown = Mathf.FloorToInt(boost);
+                int scale = Mathf.Max(2, 40 - roundDown);
+
+                if (this.frameCounter % scale == 0)
+                {
+                    BlastAttack.Result result = blastAttack.Fire();
+                    int hitCount = result.hitCount;
+
+                    //if (this.styleComponent) this.styleComponent.AddStyle(hitCount * DrillCharge.styleCoefficient);
+
+                    EffectManager.SpawnEffect(this.explodePrefab, effectData, false);
+                }
+
+                this.frameCounter++;
             }
-
-            float boost = charged * (.8f + (.2f * base.attackSpeedStat));
-            int roundDown = Mathf.FloorToInt(boost);
-            int scale = Mathf.Max(2, 40 - roundDown);
-
-            if (frameCounter % scale == 0)
-            {
-                BlastAttack.Result result = blastAttack.Fire();
-                int hitCount = result.hitCount;
-
-                //if (this.styleComponent) this.styleComponent.AddStyle(hitCount * DrillCharge.styleCoefficient);
-
-                EffectManager.SpawnEffect(explodePrefab, effectData, false);
-            }
-
-            frameCounter++;
         }
 
         public override InterruptPriority GetMinimumInterruptPriority()

@@ -34,7 +34,7 @@ namespace EntityStates.Miner
             this.animator = base.GetModelAnimator();
             //this.styleComponent = base.GetComponent<StyleSystem.StyleComponent>();
             base.StartAimMode(0.5f + this.duration, false);
-            base.PlayAnimation("Gesture, Override", "Crush", "Crush.playbackRate", this.duration);
+            base.PlayCrossfade("Gesture, Override", "Crush", "Crush.playbackRate", this.duration, 0.05f);
 
             HitBoxGroup hitBoxGroup = null;
             Transform modelTransform = base.GetModelTransform();

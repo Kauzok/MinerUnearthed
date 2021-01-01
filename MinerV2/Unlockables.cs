@@ -9,10 +9,6 @@ namespace MinerPlugin
     {
         public static void RegisterUnlockables()
         {
-            LanguageAPI.Add("MINER_UNLOCKABLE_ACHIEVEMENT_NAME", "Adrenaline Rush");
-            LanguageAPI.Add("MINER_UNLOCKABLE_ACHIEVEMENT_DESC", "Open a Legendary Chest.");
-            LanguageAPI.Add("MINER_UNLOCKABLE_UNLOCKABLE_NAME", "Adrenaline Rush");
-
             LanguageAPI.Add("MINER_MONSOONUNLOCKABLE_ACHIEVEMENT_NAME", "Miner: Mastery");
             LanguageAPI.Add("MINER_MONSOONUNLOCKABLE_ACHIEVEMENT_DESC", "As Miner, beat the game or obliterate on Monsoon.");
             LanguageAPI.Add("MINER_MONSOONUNLOCKABLE_UNLOCKABLE_NAME", "Miner: Mastery");
@@ -41,7 +37,24 @@ namespace MinerPlugin
             LanguageAPI.Add("MINER_BLACKSMITHUNLOCKABLE_ACHIEVEMENT_DESC", "As Miner, find a smithing tool on the planet.");
             LanguageAPI.Add("MINER_BLACKSMITHUNLOCKABLE_UNLOCKABLE_NAME", "Miner: Tempered");
 
-            UnlockablesAPI.AddUnlockable<Achievements.MinerUnlockAchievement>(true);
+
+            if (MinerPlugin.direseekerInstalled)
+            {
+                LanguageAPI.Add("MINER_UNLOCKABLE_ACHIEVEMENT_NAME", "Forged in Flames");
+                LanguageAPI.Add("MINER_UNLOCKABLE_ACHIEVEMENT_DESC", "Defeat the unique guardian of Abyssal Depths.");
+                LanguageAPI.Add("MINER_UNLOCKABLE_UNLOCKABLE_NAME", "Forged in Flames");
+
+                UnlockablesAPI.AddUnlockable<Achievements.MinerAltUnlockAchievement>(true);
+            }
+            else
+            {
+                LanguageAPI.Add("MINER_UNLOCKABLE_ACHIEVEMENT_NAME", "Adrenaline Rush");
+                LanguageAPI.Add("MINER_UNLOCKABLE_ACHIEVEMENT_DESC", "Open a Legendary Chest.");
+                LanguageAPI.Add("MINER_UNLOCKABLE_UNLOCKABLE_NAME", "Adrenaline Rush");
+
+                UnlockablesAPI.AddUnlockable<Achievements.MinerUnlockAchievement>(true);
+            }
+
             UnlockablesAPI.AddUnlockable<Achievements.MasteryAchievement>(true);
             UnlockablesAPI.AddUnlockable<Achievements.TundraAchievement>(true);
             UnlockablesAPI.AddUnlockable<Achievements.PupleAchievement>(true);
@@ -86,6 +99,36 @@ namespace MinerPlugin.Achievements
             base.OnUninstall();
 
             On.RoR2.ChestBehavior.Open -= this.Check;
+        }
+    }
+
+    public class MinerAltUnlockAchievement : ModdedUnlockableAndAchievement<CustomSpriteProvider>
+    {
+        public override String AchievementIdentifier { get; } = "MINER_UNLOCKABLE_ACHIEVEMENT_ID";
+        public override String UnlockableIdentifier { get; } = "MINER_UNLOCKABLE_REWARD_ID";
+        public override String PrerequisiteUnlockableIdentifier { get; } = "MINER_UNLOCKABLE_PREREQ_ID";
+        public override String AchievementNameToken { get; } = "MINER_UNLOCKABLE_ACHIEVEMENT_NAME";
+        public override String AchievementDescToken { get; } = "MINER_UNLOCKABLE_ACHIEVEMENT_DESC";
+        public override String UnlockableNameToken { get; } = "MINER_UNLOCKABLE_UNLOCKABLE_NAME";
+        protected override CustomSpriteProvider SpriteProvider { get; } = new CustomSpriteProvider("@Miner:Assets/Miner/Icons/texMinerAchievement.png");
+
+        private void CheckDeath(Run run)
+        {
+            base.Grant();
+        }
+
+        public override void OnInstall()
+        {
+            base.OnInstall();
+
+            MinerUnlockComponent.OnDeath += CheckDeath;
+        }
+
+        public override void OnUninstall()
+        {
+            base.OnUninstall();
+
+            MinerUnlockComponent.OnDeath -= CheckDeath;
         }
     }
 

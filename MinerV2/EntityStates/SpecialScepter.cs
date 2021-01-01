@@ -14,10 +14,10 @@ namespace EntityStates.Miner
 
         private bool hasFallen;
         private float duration;
-        public GameObject hitEffectPrefab = Resources.Load<GameObject>("prefabs/effects/impacteffects/MissileExplosionVFX");
-        public GameObject tracerEffectPrefab = Resources.Load<GameObject>("prefabs/effects/tracers/tracerembers");
-        public GameObject smokeEffectPrefab = Resources.Load<GameObject>("prefabs/effects/muzzleflashes/muzzleflashLoader");
-        public GameObject flashEffectPrefab = Resources.Load<GameObject>("prefabs/effects/muzzleflashes/muzzleflashfire");
+        public GameObject hitEffectPrefab = Resources.Load<GameObject>("Prefabs/Effects/ImpactEffects/MissileExplosionVFX");
+        public GameObject tracerEffectPrefab = Resources.Load<GameObject>("Prefabs/Effects/Tracers/TracerEmbers");
+        public GameObject smokeEffectPrefab = Resources.Load<GameObject>("Prefabs/Effects/MuzzleFlashes/MuzzleFlashLoader");
+        public GameObject flashEffectPrefab = Resources.Load<GameObject>("Prefabs/Effects/MuzzleFlashes/MuzzleFlashFire");
 
         private Quaternion major = Quaternion.FromToRotation(Vector3.forward, Vector3.down);
         private ParticleSystem cometParticle;
@@ -28,6 +28,8 @@ namespace EntityStates.Miner
             this.duration = this.baseDuration;
             this.hasFallen = false;
             this.cometParticle = base.GetModelChildLocator().FindChild("CometEffect").GetComponentInChildren<ParticleSystem>();
+
+            base.characterBody.bodyFlags |= CharacterBody.BodyFlags.IgnoreFallDamage;
 
             if (base.isAuthority)
             {
@@ -66,7 +68,7 @@ namespace EntityStates.Miner
 
             if (this.cometParticle) this.cometParticle.Stop();
 
-            if (NetworkServer.active) base.characterBody.RemoveBuff(BuffIndex.HiddenInvincibility);
+            base.characterBody.bodyFlags &= ~CharacterBody.BodyFlags.IgnoreFallDamage;
 
             base.characterMotor.velocity *= 0.1f;
 
@@ -87,11 +89,6 @@ namespace EntityStates.Miner
                 this.FireProjectiles();
 
                 base.characterMotor.velocity.y = -100f;
-            }
-
-            if (this.hasFallen && NetworkServer.active)
-            {
-                if (!base.HasBuff(BuffIndex.HiddenInvincibility)) base.characterBody.AddBuff(BuffIndex.HiddenInvincibility);
             }
 
             if (base.fixedAge >= this.duration && base.isAuthority && base.isGrounded)

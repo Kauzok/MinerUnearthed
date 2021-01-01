@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 3661148805
+CRC: 2034855235
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 4e5371ff4a87f2e0f94e3c806cd5d746
+    Hash: 3673ad0c10f5735cd39c46e1bd4616fa
   TypeTreeHash:
     serializedVersion: 2
     Hash: 8615316d04f527ccc888cdd43c6e8e6d
@@ -67,6 +67,8 @@ Assets:
 - Assets/Miner/Animations/DrillChargeShort.anim
 - Assets/Miner/VFX/matDrillCharge.mat
 - Assets/Miner/CrushIcon.png
+- Assets/Miner/Textures/texDripMinerEmission.png
+- Assets/Miner/Animations/DrillBreak.anim
 - Assets/Miner/Textures/texBlacksmithEmission.png
 - Assets/Miner/Animations/RunL.anim
 - Assets/Miner/Materials/matMiner.mat
@@ -110,7 +112,6 @@ Assets:
 - Assets/Miner/Textures/texMinerSteveEmission.png
 - Assets/Miner/VFX/texMinerLighting.png
 - Assets/Miner/VFX/texMinerSwing.png
-- Assets/Miner/BlacksmithMesh.mesh
 - Assets/Miner/Icons/texMoltenAchievement.png
 - Assets/Miner/Animations/ToTheStarsStart.anim
 - Assets/Miner/Animations/ImpactMask.mask
@@ -137,7 +138,9 @@ Assets:
 - Assets/Miner/MinerSwingEmpowered.prefab
 - Assets/Miner/Animations/FallingCometStart.anim
 - Assets/Miner/Animations/Idle.anim
+- Assets/Miner/Textures/texDripMiner.png
 - Assets/Miner/BlacksmithAnvil.prefab
+- Assets/Miner/Animations/AscendNew.anim
 - Assets/Miner/Animations/ToTheStarsEnd.anim
 - Assets/Miner/Animations/DrillChargeHorizontal.anim
 - Assets/Miner/Animations/AimPitch.anim
@@ -154,12 +157,15 @@ Assets:
 - Assets/Miner/Textures/texMinerSteve.png
 - Assets/Miner/VFX/matMinerShockwave.mat
 - Assets/Miner/Direseeker/FBX/DireHornBroken.fbx
+- Assets/Miner/Animations/DescendNew.anim
 - Assets/Miner/Animations/FallingCometEnd.anim
 - Assets/Miner/Icons/texBlacksmithAchievement.png
 - Assets/Miner/Animations/animMinerTest.controller
 - Assets/Miner/Animations/AimMask.mask
 - Assets/Miner/VFX/matMinerSpark.mat
 - Assets/Miner/Animations/GestureMask.mask
+- Assets/Miner/BlacksmithMesh.mesh
+- Assets/Miner/DripMesh.mesh
 - Assets/Miner/Textures/texMinerPupleEmission.png
 - Assets/Miner/Animations/RestLoop.anim
 - Assets/Miner/Materials/matMinerIron.mat
@@ -167,6 +173,7 @@ Assets:
 - Assets/Miner/Animations/DrillChargeUp.anim
 - Assets/Miner/Animations/DrillChargeDown.anim
 - Assets/Miner/Materials/matBlacksmith.mat
+- Assets/Miner/Icons/texDripSkin.png
 - Assets/Miner/VFX/texMinerSpark.png
 - Assets/Miner/VFX/MinerSwingMesh.asset
 - Assets/Miner/ToTheStarsScepterIcon.png
@@ -197,6 +204,7 @@ Assets:
 - Assets/Miner/Animations/BackblastUp.anim
 - Assets/Miner/Animations/RunB.anim
 - Assets/Miner/mdlMiner.prefab
+- Assets/Miner/Materials/matDripMiner.mat
 - Assets/Miner/Textures/texMiner.png
 - Assets/Miner/Icons/texSecondaryAchievement.png
 - Assets/Miner/Animations/RunF.anim

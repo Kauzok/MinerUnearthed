@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.1062
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MinerV2", "MinerV2\MinerV2.csproj", "{4A262754-E45A-4A57-8E04-9DCF75D5D2C1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DiggerUnearthed", "MinerV2\DiggerUnearthed.csproj", "{4A262754-E45A-4A57-8E04-9DCF75D5D2C1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

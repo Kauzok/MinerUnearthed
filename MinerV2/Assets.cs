@@ -31,6 +31,7 @@ namespace MinerPlugin
 
         public static Mesh tundraMesh;
         public static Mesh blacksmithMesh;
+        public static Mesh dripMesh;
         public static Mesh steveMesh;
 
         public static GameObject swingFX;
@@ -43,7 +44,7 @@ namespace MinerPlugin
         {
             if (mainAssetBundle == null)
             {
-                using (var assetStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("MinerV2.miner"))
+                using (var assetStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("DiggerUnearthed.miner"))
                 {
                     mainAssetBundle = AssetBundle.LoadFromStream(assetStream);
                     var provider = new AssetBundleResourcesProvider("@Miner", mainAssetBundle);
@@ -51,14 +52,14 @@ namespace MinerPlugin
                 }
             }
 
-            using (Stream manifestResourceStream2 = Assembly.GetExecutingAssembly().GetManifestResourceStream("MinerV2.MinerBank.bnk"))
+            using (Stream manifestResourceStream2 = Assembly.GetExecutingAssembly().GetManifestResourceStream("DiggerUnearthed.DiggerBank.bnk"))
             {
                 byte[] array = new byte[manifestResourceStream2.Length];
                 manifestResourceStream2.Read(array, 0, array.Length);
                 SoundAPI.SoundBanks.Add(array);
             }
 
-            using (Stream manifestResourceStream2 = Assembly.GetExecutingAssembly().GetManifestResourceStream("MinerV2.MinerV2.bnk"))
+            using (Stream manifestResourceStream2 = Assembly.GetExecutingAssembly().GetManifestResourceStream("DiggerUnearthed.MinerV2.bnk"))
             {
                 byte[] array = new byte[manifestResourceStream2.Length];
                 manifestResourceStream2.Read(array, 0, array.Length);
@@ -73,7 +74,7 @@ namespace MinerPlugin
             blacksmithAnvil.GetComponentInChildren<MeshRenderer>().material.shader = Resources.Load<Shader>("Shaders/Deferred/hgstandard");
             blacksmithAnvil.gameObject.layer = LayerIndex.world.intVal;
 
-            charPortrait = mainAssetBundle.LoadAsset<Sprite>("texMinerIcon").texture;
+            charPortrait = mainAssetBundle.LoadAsset<Texture>("texMinerIcon");
 
             iconP = mainAssetBundle.LoadAsset<Sprite>("GoldRushIcon");
             icon1 = mainAssetBundle.LoadAsset<Sprite>("CrushIcon");
@@ -90,6 +91,7 @@ namespace MinerPlugin
 
             tundraMesh = mainAssetBundle.LoadAsset<Mesh>("TundraMesh");
             blacksmithMesh = mainAssetBundle.LoadAsset<Mesh>("BlacksmithMesh");
+            dripMesh = mainAssetBundle.LoadAsset<Mesh>("DripMesh");
             steveMesh = mainAssetBundle.LoadAsset<Mesh>("SteveMesh");
 
             swingFX = LoadEffect("MinerSwing", "", mainAssetBundle);
