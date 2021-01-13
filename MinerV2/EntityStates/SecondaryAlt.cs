@@ -3,7 +3,7 @@ using System;
 using UnityEngine;
 using UnityEngine.Networking;
 
-namespace EntityStates.Miner
+namespace EntityStates.Digger
 {
     public class DrillBreakStart : BaseSkillState
     {
@@ -45,7 +45,7 @@ namespace EntityStates.Miner
             }
 
             base.PlayAnimation("Gesture, Override", "DrillChargeStart");
-            Util.PlaySound(MinerPlugin.Sounds.DrillChargeStart, base.gameObject);
+            Util.PlaySound(DiggerPlugin.Sounds.DrillChargeStart, base.gameObject);
 
             Transform modelTransform = base.GetModelTransform();
             if (modelTransform)
@@ -117,7 +117,7 @@ namespace EntityStates.Miner
 
             if (NetworkServer.active) base.characterBody.AddBuff(BuffIndex.HiddenInvincibility);
 
-            Util.PlaySound(MinerPlugin.Sounds.DrillCharge, base.gameObject);
+            Util.PlaySound(DiggerPlugin.Sounds.DrillCharge, base.gameObject);
             base.characterMotor.velocity += 75 * aimRay.direction;
 
             HitBoxGroup hitBoxGroup = null;
@@ -136,7 +136,7 @@ namespace EntityStates.Miner
             this.attack.teamIndex = base.GetTeam();
             this.attack.damage = DrillBreak.damageCoefficient * this.damageStat;
             this.attack.procCoefficient = 1;
-            this.attack.hitEffectPrefab = MinerPlugin.Assets.heavyHitFX;
+            this.attack.hitEffectPrefab = DiggerPlugin.Assets.heavyHitFX;
             this.attack.forceVector = Vector3.zero;
             this.attack.pushAwayForce = 1f;
             this.attack.hitBoxGroup = hitBoxGroup;
@@ -148,7 +148,7 @@ namespace EntityStates.Miner
                 effectData.origin = base.transform.position;
                 effectData.scale = 8;
 
-                EffectManager.SpawnEffect(MinerPlugin.MinerPlugin.backblastEffect, effectData, true);
+                EffectManager.SpawnEffect(DiggerPlugin.DiggerPlugin.backblastEffect, effectData, true);
             }
 
             if (modelTransform)
@@ -190,7 +190,7 @@ namespace EntityStates.Miner
             {
                 if (this.attack.Fire())
                 {
-                    Util.PlayScaledSound(MinerPlugin.Sounds.Hit, base.gameObject, 0.5f);
+                    Util.PlayScaledSound(DiggerPlugin.Sounds.Hit, base.gameObject, 0.5f);
 
                     base.characterMotor.velocity = Vector3.zero;
 
@@ -217,7 +217,7 @@ namespace EntityStates.Miner
                     effectData.origin = base.characterBody.corePosition;
                     effectData.scale = 6;
 
-                    EffectManager.SpawnEffect(MinerPlugin.MinerPlugin.backblastEffect, effectData, false);
+                    EffectManager.SpawnEffect(DiggerPlugin.DiggerPlugin.backblastEffect, effectData, false);
 
                     base.PlayAnimation("FullBody, Override", "Flip", "Flip.playbackRate", 0.4f);
 

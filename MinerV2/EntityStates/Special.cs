@@ -3,7 +3,7 @@ using RoR2;
 using UnityEngine;
 using KinematicCharacterController;
 
-namespace EntityStates.Miner
+namespace EntityStates.Digger
 {
     public class ToTheStars : BaseSkillState
     {
@@ -101,7 +101,7 @@ namespace EntityStates.Miner
                 EffectManager.SpawnEffect(flashEffectPrefab, effectData, true);
             }
 
-            Util.PlaySound(MinerPlugin.Sounds.ToTheStars, base.gameObject);
+            Util.PlaySound(DiggerPlugin.Sounds.ToTheStars, base.gameObject);
 
             base.gameObject.layer = LayerIndex.defaultLayer.intVal;
             base.characterMotor.Motor.RebuildCollidableLayers();

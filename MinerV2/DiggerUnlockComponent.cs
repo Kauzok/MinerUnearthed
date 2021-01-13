@@ -2,9 +2,9 @@
 using System;
 using UnityEngine;
 
-namespace MinerPlugin
+namespace DiggerPlugin
 {
-    public class MinerUnlockComponent : MonoBehaviour
+    public class DiggerUnlockComponent : MonoBehaviour
     {
         private HealthComponent healthComponent;
 

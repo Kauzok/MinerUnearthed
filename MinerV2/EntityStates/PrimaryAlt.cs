@@ -3,11 +3,11 @@ using UnityEngine;
 using System;
 using UnityEngine.Networking;
 
-namespace EntityStates.Miner
+namespace EntityStates.Digger
 {
     public class Gouge : BaseSkillState
     {
-        public static float damageCoefficient = MinerPlugin.MinerPlugin.gougeDamage.Value;
+        public static float damageCoefficient = DiggerPlugin.DiggerPlugin.gougeDamage.Value;
         public float baseDuration = 1f;
         public static float attackRecoil = 0.5f;
         public static float hitHopVelocity = 5f;
@@ -60,8 +60,8 @@ namespace EntityStates.Miner
             this.attack.teamIndex = base.GetTeam();
             this.attack.damage = Gouge.damageCoefficient * this.damageStat;
             this.attack.procCoefficient = 1;
-            if (this.isSlash) this.attack.hitEffectPrefab = MinerPlugin.Assets.slashFX;
-            else this.attack.hitEffectPrefab = MinerPlugin.Assets.hitFX;
+            if (this.isSlash) this.attack.hitEffectPrefab = DiggerPlugin.Assets.slashFX;
+            else this.attack.hitEffectPrefab = DiggerPlugin.Assets.hitFX;
             this.attack.forceVector = Vector3.zero;
             this.attack.pushAwayForce = 1f;
             this.attack.hitBoxGroup = hitBoxGroup;
@@ -78,7 +78,7 @@ namespace EntityStates.Miner
             if (!this.hasFired)
             {
                 this.hasFired = true;
-                Util.PlayScaledSound(MinerPlugin.Sounds.Swing, base.gameObject, this.attackSpeedStat);
+                Util.PlayScaledSound(DiggerPlugin.Sounds.Swing, base.gameObject, this.attackSpeedStat);
 
                 if (base.isAuthority)
                 {
@@ -86,8 +86,8 @@ namespace EntityStates.Miner
                     if (this.swingIndex == 0) muzzleString = "SwingRight";
                     else muzzleString = "SwingLeft";
 
-                    GameObject effectPrefab = MinerPlugin.Assets.swingFX;
-                    if (base.characterBody.GetBuffCount(MinerPlugin.MinerPlugin.goldRush) >= 0.8f * MinerPlugin.MinerPlugin.adrenalineCap) effectPrefab = MinerPlugin.Assets.empoweredSwingFX;
+                    GameObject effectPrefab = DiggerPlugin.Assets.swingFX;
+                    if (base.characterBody.GetBuffCount(DiggerPlugin.DiggerPlugin.goldRush) >= 0.8f * DiggerPlugin.DiggerPlugin.adrenalineCap) effectPrefab = DiggerPlugin.Assets.empoweredSwingFX;
 
                     EffectManager.SimpleMuzzleFlash(effectPrefab, base.gameObject, muzzleString, true);
 
@@ -98,7 +98,7 @@ namespace EntityStates.Miner
                     if (this.attack.Fire())
                     {
                         if (this.isSlash) Util.PlaySound(EntityStates.Merc.GroundLight.hitSoundString, base.gameObject);
-                        else Util.PlaySound(MinerPlugin.Sounds.Hit, base.gameObject);
+                        else Util.PlaySound(DiggerPlugin.Sounds.Hit, base.gameObject);
                         //if (this.styleComponent) this.styleComponent.AddStyle(Gouge.styleCoefficient);
 
                         if (!this.hasHopped)

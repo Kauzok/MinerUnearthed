@@ -2,7 +2,7 @@
 using UnityEngine;
 using System;
 
-namespace EntityStates.Miner
+namespace EntityStates.Digger
 {
     public class BaseEmote : BaseState
     {
@@ -82,7 +82,7 @@ namespace EntityStates.Miner
                 effectData.scale = 32;
 
                 EffectManager.SpawnEffect(Resources.Load<GameObject>("Prefabs/Effects/OmniEffect/OmniExplosionVFX"), effectData, false);
-                Util.PlaySound(MinerPlugin.Sounds.ToTheStarsExplosion, base.gameObject);
+                Util.PlaySound(DiggerPlugin.Sounds.ToTheStarsExplosion, base.gameObject);
             }
         }
 
@@ -112,19 +112,19 @@ namespace EntityStates.Miner
             //emote cancels
             if (base.isAuthority && base.characterMotor.isGrounded)
             {
-                if (Input.GetKeyDown(MinerPlugin.MinerPlugin.restKeybind.Value))
+                if (Input.GetKeyDown(DiggerPlugin.DiggerPlugin.restKeybind.Value))
                 {
                     flag = false;
                     this.outer.SetInterruptState(EntityState.Instantiate(new SerializableEntityStateType(typeof(Rest))), InterruptPriority.Any);
                     return;
                 }
-                else if (Input.GetKeyDown(MinerPlugin.MinerPlugin.tauntKeybind.Value))
+                else if (Input.GetKeyDown(DiggerPlugin.DiggerPlugin.tauntKeybind.Value))
                 {
                     flag = false;
                     this.outer.SetInterruptState(EntityState.Instantiate(new SerializableEntityStateType(typeof(Taunt))), InterruptPriority.Any);
                     return;
                 }
-                else if (Input.GetKeyDown(MinerPlugin.MinerPlugin.jokeKeybind.Value))
+                else if (Input.GetKeyDown(DiggerPlugin.DiggerPlugin.jokeKeybind.Value))
                 {
                     flag = false;
                     this.outer.SetInterruptState(EntityState.Instantiate(new SerializableEntityStateType(typeof(Joke))), InterruptPriority.Any);

@@ -3,7 +3,7 @@ using R2API;
 using RoR2;
 using R2API.Utils;
 
-namespace MinerPlugin
+namespace DiggerPlugin
 {
     public static class Unlockables
     {
@@ -26,7 +26,7 @@ namespace MinerPlugin
             LanguageAPI.Add("MINER_CRUSHUNLOCKABLE_UNLOCKABLE_NAME", "Miner: Pillaged Gold");
 
             LanguageAPI.Add("MINER_CRACKUNLOCKABLE_ACHIEVEMENT_NAME", "Miner: Junkie");
-            LanguageAPI.Add("MINER_CRACKUNLOCKABLE_ACHIEVEMENT_DESC", "As Miner, gain " + MinerPlugin.maxAdrenaline.Value + " stacks of Adrenaline.");
+            LanguageAPI.Add("MINER_CRACKUNLOCKABLE_ACHIEVEMENT_DESC", "As Miner, gain " + DiggerPlugin.maxAdrenaline.Value + " stacks of Adrenaline.");
             LanguageAPI.Add("MINER_CRACKUNLOCKABLE_UNLOCKABLE_NAME", "Miner: Junkie");
 
             LanguageAPI.Add("MINER_CAVEINUNLOCKABLE_ACHIEVEMENT_NAME", "Miner: Compacted");
@@ -38,13 +38,13 @@ namespace MinerPlugin
             LanguageAPI.Add("MINER_BLACKSMITHUNLOCKABLE_UNLOCKABLE_NAME", "Miner: Tempered");
 
 
-            if (MinerPlugin.direseekerInstalled)
+            if (DiggerPlugin.direseekerInstalled)
             {
                 LanguageAPI.Add("MINER_UNLOCKABLE_ACHIEVEMENT_NAME", "Forged in Flames");
                 LanguageAPI.Add("MINER_UNLOCKABLE_ACHIEVEMENT_DESC", "Defeat the unique guardian of Abyssal Depths.");
                 LanguageAPI.Add("MINER_UNLOCKABLE_UNLOCKABLE_NAME", "Forged in Flames");
 
-                UnlockablesAPI.AddUnlockable<Achievements.MinerAltUnlockAchievement>(true);
+                UnlockablesAPI.AddUnlockable<Achievements.DiggerAltUnlockAchievement>(true);
             }
             else
             {
@@ -52,7 +52,7 @@ namespace MinerPlugin
                 LanguageAPI.Add("MINER_UNLOCKABLE_ACHIEVEMENT_DESC", "Open a Legendary Chest.");
                 LanguageAPI.Add("MINER_UNLOCKABLE_UNLOCKABLE_NAME", "Adrenaline Rush");
 
-                UnlockablesAPI.AddUnlockable<Achievements.MinerUnlockAchievement>(true);
+                UnlockablesAPI.AddUnlockable<Achievements.DiggerUnlockAchievement>(true);
             }
 
             UnlockablesAPI.AddUnlockable<Achievements.MasteryAchievement>(true);
@@ -66,11 +66,11 @@ namespace MinerPlugin
     }
 }
 
-namespace MinerPlugin.Achievements
+namespace DiggerPlugin.Achievements
 {
     [R2APISubmoduleDependency(nameof(UnlockablesAPI))]
 
-    public class MinerUnlockAchievement : ModdedUnlockableAndAchievement<CustomSpriteProvider>
+    public class DiggerUnlockAchievement : ModdedUnlockableAndAchievement<CustomSpriteProvider>
     {
         public override String AchievementIdentifier { get; } = "MINER_UNLOCKABLE_ACHIEVEMENT_ID";
         public override String UnlockableIdentifier { get; } = "MINER_UNLOCKABLE_REWARD_ID";
@@ -102,7 +102,7 @@ namespace MinerPlugin.Achievements
         }
     }
 
-    public class MinerAltUnlockAchievement : ModdedUnlockableAndAchievement<CustomSpriteProvider>
+    public class DiggerAltUnlockAchievement : ModdedUnlockableAndAchievement<CustomSpriteProvider>
     {
         public override String AchievementIdentifier { get; } = "MINER_UNLOCKABLE_ACHIEVEMENT_ID";
         public override String UnlockableIdentifier { get; } = "MINER_UNLOCKABLE_REWARD_ID";
@@ -121,14 +121,14 @@ namespace MinerPlugin.Achievements
         {
             base.OnInstall();
 
-            MinerUnlockComponent.OnDeath += CheckDeath;
+            DiggerUnlockComponent.OnDeath += CheckDeath;
         }
 
         public override void OnUninstall()
         {
             base.OnUninstall();
 
-            MinerUnlockComponent.OnDeath -= CheckDeath;
+            DiggerUnlockComponent.OnDeath -= CheckDeath;
         }
     }
 
@@ -211,14 +211,14 @@ namespace MinerPlugin.Achievements
         {
             base.OnInstall();
 
-            EntityStates.Miner.MinerMain.rallypoint += Check;
+            EntityStates.Digger.DiggerMain.rallypoint += Check;
         }
 
         public override void OnUninstall()
         {
             base.OnUninstall();
 
-            EntityStates.Miner.MinerMain.rallypoint -= Check;
+            EntityStates.Digger.DiggerMain.rallypoint -= Check;
         }
     }
 
@@ -249,14 +249,14 @@ namespace MinerPlugin.Achievements
         {
             base.OnInstall();
 
-            EntityStates.Miner.MinerMain.SecretAchieved += Check;
+            EntityStates.Digger.DiggerMain.SecretAchieved += Check;
         }
 
         public override void OnUninstall()
         {
             base.OnUninstall();
 
-            EntityStates.Miner.MinerMain.SecretAchieved -= Check;
+            EntityStates.Digger.DiggerMain.SecretAchieved -= Check;
         }
     }
 
@@ -283,7 +283,7 @@ namespace MinerPlugin.Achievements
                 {
                     if (report.attackerBodyIndex == BodyCatalog.FindBodyIndex("MinerBody") && report.victimBodyIndex == BodyCatalog.FindBodyIndex("TitanGoldBody"))
                     {
-                        if (report.victimBody.GetBuffCount(MinerPlugin.cleave) >= 12f && base.meetsBodyRequirement)
+                        if (report.victimBody.GetBuffCount(DiggerPlugin.cleave) >= 12f && base.meetsBodyRequirement)
                         {
                             base.Grant();
                         }
@@ -331,14 +331,14 @@ namespace MinerPlugin.Achievements
         {
             base.OnInstall();
 
-            EntityStates.Miner.MinerMain.JunkieAchieved += Check;
+            EntityStates.Digger.DiggerMain.JunkieAchieved += Check;
         }
 
         public override void OnUninstall()
         {
             base.OnUninstall();
 
-            EntityStates.Miner.MinerMain.JunkieAchieved -= Check;
+            EntityStates.Digger.DiggerMain.JunkieAchieved -= Check;
         }
     }
 
@@ -366,14 +366,14 @@ namespace MinerPlugin.Achievements
         {
             base.OnInstall();
 
-            EntityStates.Miner.BackBlast.Compacted += Check;
+            EntityStates.Digger.BackBlast.Compacted += Check;
         }
 
         public override void OnUninstall()
         {
             base.OnUninstall();
 
-            EntityStates.Miner.BackBlast.Compacted -= Check;
+            EntityStates.Digger.BackBlast.Compacted -= Check;
         }
     }
 

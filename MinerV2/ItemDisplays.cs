@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
-namespace MinerPlugin
+namespace DiggerPlugin
 {
     public static class ItemDisplays
     {
@@ -18,7 +18,7 @@ namespace MinerPlugin
 
         public static void RegisterDisplays()
         {
-            GameObject bodyPrefab = MinerPlugin.characterPrefab;
+            GameObject bodyPrefab = DiggerPlugin.characterPrefab;
 
             GameObject model = bodyPrefab.GetComponentInChildren<ModelLocator>().modelTransform.gameObject;
             CharacterModel characterModel = model.GetComponent<CharacterModel>();
@@ -2666,7 +2666,7 @@ namespace MinerPlugin
 
             //aetherium displays
             #region Aetherium
-            if (MinerPlugin.aetheriumInstalled)
+            if (DiggerPlugin.aetheriumInstalled)
             {
                 list.Add(new ItemDisplayRuleSet.NamedRuleGroup
                 {
@@ -2955,7 +2955,7 @@ namespace MinerPlugin
 
             //sivsitems displays
             #region SivsItems
-            if (MinerPlugin.sivsItemsInstalled)
+            if (DiggerPlugin.sivsItemsInstalled)
             {
                 list.Add(new ItemDisplayRuleSet.NamedRuleGroup
                 {

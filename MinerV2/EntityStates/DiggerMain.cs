@@ -1,12 +1,12 @@
-﻿using MinerPlugin;
+﻿using DiggerPlugin;
 using RoR2;
 using System;
 using UnityEngine;
 using UnityEngine.Networking;
 
-namespace EntityStates.Miner
+namespace EntityStates.Digger
 {
-    public class MinerMain : GenericCharacterMain
+    public class DiggerMain : GenericCharacterMain
     {
         //public static float passiveStyleCoefficient = 0.4f;
         public static float maxEmission = 25f;
@@ -52,7 +52,7 @@ namespace EntityStates.Miner
                 else if (base.characterBody.skinIndex == 4) this.isMainSkin = true;
             }
 
-            this.adrenalineCap = MinerPlugin.MinerPlugin.adrenalineCap;
+            this.adrenalineCap = DiggerPlugin.DiggerPlugin.adrenalineCap;
             //this.styleComponent = base.GetComponent<StyleSystem.StyleComponent>();
             this.adrenalineParticles = base.GetComponent<AdrenalineParticleTimer>();
 
@@ -68,17 +68,17 @@ namespace EntityStates.Miner
 
             if (base.isAuthority && base.characterMotor.isGrounded)
             {
-                if (Input.GetKeyDown(MinerPlugin.MinerPlugin.restKeybind.Value))
+                if (Input.GetKeyDown(DiggerPlugin.DiggerPlugin.restKeybind.Value))
                 {
                     this.outer.SetInterruptState(EntityState.Instantiate(new SerializableEntityStateType(typeof(Rest))), InterruptPriority.Any);
                     return;
                 }
-                else if (Input.GetKeyDown(MinerPlugin.MinerPlugin.tauntKeybind.Value))
+                else if (Input.GetKeyDown(DiggerPlugin.DiggerPlugin.tauntKeybind.Value))
                 {
                     this.outer.SetInterruptState(EntityState.Instantiate(new SerializableEntityStateType(typeof(Taunt))), InterruptPriority.Any);
                     return;
                 }
-                else if (Input.GetKeyDown(MinerPlugin.MinerPlugin.jokeKeybind.Value))
+                else if (Input.GetKeyDown(DiggerPlugin.DiggerPlugin.jokeKeybind.Value))
                 {
                     this.outer.SetInterruptState(EntityState.Instantiate(new SerializableEntityStateType(typeof(Joke))), InterruptPriority.Any);
                     return;
@@ -97,7 +97,7 @@ namespace EntityStates.Miner
 
             this.adrenalineGainBuffer -= Time.fixedDeltaTime;
             if (this.adrenalineGainBuffer <= 0 && NetworkServer.active) this.UpdatePassiveBuff();
-            else this.buffCounter = base.GetBuffCount(MinerPlugin.MinerPlugin.goldRush);
+            else this.buffCounter = base.GetBuffCount(DiggerPlugin.DiggerPlugin.goldRush);
 
             if (this.animator)
             {
@@ -125,7 +125,7 @@ namespace EntityStates.Miner
 
         private void UpdatePassiveBuff()
         {
-            int currentCount = base.characterBody.GetBuffCount(MinerPlugin.MinerPlugin.goldRush);
+            int currentCount = base.characterBody.GetBuffCount(DiggerPlugin.DiggerPlugin.goldRush);
             int newMoney = (int)base.characterBody.master.money;
 
             if (this.moneyTracker < newMoney)
@@ -140,10 +140,10 @@ namespace EntityStates.Miner
 
         private void RefreshExistingStacks(int currentCount)
         {
-            base.characterBody.ClearTimedBuffs(MinerPlugin.MinerPlugin.goldRush);
+            base.characterBody.ClearTimedBuffs(DiggerPlugin.DiggerPlugin.goldRush);
             for (int i = 0; i < currentCount; i++)
             {
-                if (base.characterBody.GetBuffCount(MinerPlugin.MinerPlugin.goldRush) <= this.adrenalineCap) base.characterBody.AddTimedBuff(MinerPlugin.MinerPlugin.goldRush, 5);
+                if (base.characterBody.GetBuffCount(DiggerPlugin.DiggerPlugin.goldRush) <= this.adrenalineCap) base.characterBody.AddTimedBuff(DiggerPlugin.DiggerPlugin.goldRush, 5);
             }
         }
 
@@ -155,10 +155,10 @@ namespace EntityStates.Miner
 
             for (int i = 1; i <= numStacks; i++)
             {
-                if (base.characterBody.GetBuffCount(MinerPlugin.MinerPlugin.goldRush) <= this.adrenalineCap) base.characterBody.AddTimedBuff(MinerPlugin.MinerPlugin.goldRush, 5);
+                if (base.characterBody.GetBuffCount(DiggerPlugin.DiggerPlugin.goldRush) <= this.adrenalineCap) base.characterBody.AddTimedBuff(DiggerPlugin.DiggerPlugin.goldRush, 5);
             }
 
-            //if (this.styleComponent) this.styleComponent.AddStyle(MinerMain.passiveStyleCoefficient);
+            //if (this.styleComponent) this.styleComponent.AddStyle(DiggerMain.passiveStyleCoefficient);
 
             if (this.adrenalineParticles)
             {
@@ -174,11 +174,11 @@ namespace EntityStates.Miner
             {
                 for (int i = 1; i < buffCounter * .5; i++)
                 {
-                    if (base.characterBody.GetBuffCount(MinerPlugin.MinerPlugin.goldRush) <= this.adrenalineCap) base.characterBody.AddTimedBuff(MinerPlugin.MinerPlugin.goldRush, 1);
+                    if (base.characterBody.GetBuffCount(DiggerPlugin.DiggerPlugin.goldRush) <= this.adrenalineCap) base.characterBody.AddTimedBuff(DiggerPlugin.DiggerPlugin.goldRush, 1);
                 }
             }
 
-            this.buffCounter = base.characterBody.GetBuffCount(MinerPlugin.MinerPlugin.goldRush);
+            this.buffCounter = base.characterBody.GetBuffCount(DiggerPlugin.DiggerPlugin.goldRush);
 
             if (this.adrenalineParticles)
             {
@@ -192,7 +192,7 @@ namespace EntityStates.Miner
         {
             if (this.isMainSkin && this.bodyMat)
             {
-                float emValue = Util.Remap(this.adrenalineSmooth, 0, this.adrenalineCap, MinerMain.minEmission, MinerMain.maxEmission);
+                float emValue = Util.Remap(this.adrenalineSmooth, 0, this.adrenalineCap, DiggerMain.minEmission, DiggerMain.maxEmission);
                 Color emColor = Color.white;
 
                 if (this.adrenalineSmooth <= 0.5f * this.adrenalineCap)

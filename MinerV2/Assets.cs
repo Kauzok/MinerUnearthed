@@ -5,7 +5,7 @@ using System.IO;
 using UnityEngine.Networking;
 using RoR2;
 
-namespace MinerPlugin
+namespace DiggerPlugin
 {
     public static class Assets
     {

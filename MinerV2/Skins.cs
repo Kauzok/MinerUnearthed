@@ -6,7 +6,7 @@ using R2API.Utils;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace MinerPlugin
+namespace DiggerPlugin
 {
     public static class Skins
     {
@@ -31,7 +31,7 @@ namespace MinerPlugin
 
         public static void RegisterSkins()
         {
-            GameObject bodyPrefab = MinerPlugin.characterPrefab;
+            GameObject bodyPrefab = DiggerPlugin.characterPrefab;
 
             GameObject model = bodyPrefab.GetComponentInChildren<ModelLocator>().modelTransform.gameObject;
             CharacterModel characterModel = model.GetComponent<CharacterModel>();
@@ -527,7 +527,7 @@ namespace MinerPlugin
                 blacksmithSkin
             };
 
-            if (MinerPlugin.extraSkins.Value)
+            if (DiggerPlugin.extraSkins.Value)
             {
                 skinDefs.Add(dripSkin);
                 skinDefs.Add(steveSkin);

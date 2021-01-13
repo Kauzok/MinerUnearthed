@@ -2,11 +2,11 @@
 using UnityEngine;
 using System;
 
-namespace EntityStates.Miner
+namespace EntityStates.Digger
 {
     public class Crush : BaseSkillState
     {
-        public static float damageCoefficient = MinerPlugin.MinerPlugin.crushDamage.Value;
+        public static float damageCoefficient = DiggerPlugin.DiggerPlugin.crushDamage.Value;
         public float baseDuration = 0.65f;
         public static float attackRecoil = 0.75f;
         public static float hitHopVelocity = 5f;
@@ -67,7 +67,7 @@ namespace EntityStates.Miner
             if (!this.hasFired)
             {
                 this.hasFired = true;
-                Util.PlaySound(MinerPlugin.Sounds.Crush, base.gameObject);
+                Util.PlaySound(DiggerPlugin.Sounds.Crush, base.gameObject);
 
                 if (base.isAuthority)
                 {

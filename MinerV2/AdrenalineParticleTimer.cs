@@ -1,11 +1,11 @@
 ﻿using UnityEngine;
 using static UnityEngine.ParticleSystem;
 
-namespace MinerPlugin {
+namespace DiggerPlugin {
 
     public class AdrenalineParticleTimer : MonoBehaviour {
 
-        private float maxEmission = 400, adrenViewMax = MinerPlugin.adrenalineCap;
+        private float maxEmission = 400, adrenViewMax = DiggerPlugin.adrenalineCap;
         private float minSpeed = 1f, maxSpeed = 5f;
         private float minSpread = 0.35f, maxSpread = 0.47f;
         private float minRadius = 0.15f, maxRadius = 0.34f;

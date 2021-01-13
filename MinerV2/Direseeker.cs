@@ -13,7 +13,7 @@ using System.Text;
 using UnityEngine;
 using UnityEngine.Networking;
 
-namespace MinerPlugin
+namespace DiggerPlugin
 {
     public static class Direseeker
     {
@@ -170,7 +170,7 @@ namespace MinerPlugin
         {
             foreach (GenericSkill obj in sx.GetComponentsInChildren<GenericSkill>())
             {
-                MinerPlugin.DestroyImmediate(obj);
+                DiggerPlugin.DestroyImmediate(obj);
             }
 
             SkillLocator skillLocator = sx.GetComponentInChildren<SkillLocator>();
@@ -248,9 +248,9 @@ namespace MinerPlugin
 
         public static void CreateDireseeker()
         {
-            if (MinerPlugin.direseekerInstalled) AddUnlockComponent();
+            if (DiggerPlugin.direseekerInstalled) AddUnlockComponent();
 
-            if (MinerPlugin.fatAcrid.Value) PerroGrande();
+            if (DiggerPlugin.fatAcrid.Value) PerroGrande();
 
             CreateProjectiles();
 
@@ -265,7 +265,7 @@ namespace MinerPlugin
             LoadoutAPI.AddSkill(typeof(EntityStates.Direseeker.ChargeUltraFireball));
             LoadoutAPI.AddSkill(typeof(EntityStates.Direseeker.FireUltraFireball));
 
-            if (!MinerPlugin.direseekerInstalled)
+            if (!DiggerPlugin.direseekerInstalled)
             {
                 bodyPrefab = PrefabAPI.InstantiateClone(Resources.Load<GameObject>("Prefabs/CharacterBodies/LemurianBruiserBody"), "DireseekerBody");
 
@@ -383,7 +383,7 @@ namespace MinerPlugin
                     list.Add(masterPrefab);
                 };
 
-                if (MinerPlugin.enableDireseeker.Value && !MinerPlugin.direseekerInstalled)
+                if (DiggerPlugin.enableDireseeker.Value && !DiggerPlugin.direseekerInstalled)
                 {
                     CharacterSpawnCard characterSpawnCard = ScriptableObject.CreateInstance<CharacterSpawnCard>();
                     characterSpawnCard.name = "cscDireseeker";
@@ -431,7 +431,7 @@ namespace MinerPlugin
                 }
             }
 
-            if (MinerPlugin.enableDireseekerSurvivor.Value)
+            if (DiggerPlugin.enableDireseekerSurvivor.Value)
             {
                 survivorPrefab = PrefabAPI.InstantiateClone(Resources.Load<GameObject>("Prefabs/CharacterBodies/LemurianBruiserBody"), "DireseekerPlayerBody");
 
@@ -569,7 +569,7 @@ namespace MinerPlugin
 
         public static void LateSetup()
         {
-            if (MinerPlugin.sivsItemsInstalled)
+            if (DiggerPlugin.sivsItemsInstalled)
             {
                 AddBossPickup();
             }
@@ -580,7 +580,7 @@ namespace MinerPlugin
             GameObject model = survivorPrefab.GetComponentInChildren<ModelLocator>().modelTransform.gameObject;
             CharacterModel characterModel = model.GetComponent<CharacterModel>();
 
-            if (model.GetComponent<ModelSkinController>()) MinerPlugin.Destroy(model.GetComponent<ModelSkinController>());
+            if (model.GetComponent<ModelSkinController>()) DiggerPlugin.Destroy(model.GetComponent<ModelSkinController>());
 
             ModelSkinController skinController = model.AddComponent<ModelSkinController>();
             ChildLocator childLocator = model.GetComponent<ChildLocator>();
@@ -622,7 +622,7 @@ namespace MinerPlugin
         [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
         private static void AddBossPickup()
         {
-            if (MinerPlugin.enableDireseeker.Value)
+            if (DiggerPlugin.enableDireseeker.Value)
             {
                 var pickup = new SerializablePickupIndex();
                 pickup.pickupName = PickupCatalog.FindPickupIndex("FlameGland").ToString();
@@ -635,7 +635,7 @@ namespace MinerPlugin
         [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
         private static void AddUnlockComponent()
         {
-            DireseekerMod.Modules.Prefabs.bodyPrefab.AddComponent<MinerUnlockComponent>();
+            DireseekerMod.Modules.Prefabs.bodyPrefab.AddComponent<DiggerUnlockComponent>();
         }
     }
 

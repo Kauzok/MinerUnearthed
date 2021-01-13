@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
-namespace EntityStates.Miner
+namespace EntityStates.Digger
 {
     public class CaveIn : BaseSkillState
     {
@@ -22,7 +22,7 @@ namespace EntityStates.Miner
             this.duration = this.baseDuration;
             this.childLocator = base.GetModelChildLocator();
 
-            Util.PlaySound(MinerPlugin.Sounds.Backblast, base.gameObject);
+            Util.PlaySound(DiggerPlugin.Sounds.Backblast, base.gameObject);
             base.StartAimMode(0.8f, true);
 
             base.characterMotor.disableAirControlUntilCollision = false;
@@ -53,7 +53,7 @@ namespace EntityStates.Miner
                 effectData.origin = theSpot;
                 effectData.scale = 15;
 
-                EffectManager.SpawnEffect(MinerPlugin.MinerPlugin.backblastEffect, effectData, false);
+                EffectManager.SpawnEffect(DiggerPlugin.DiggerPlugin.backblastEffect, effectData, false);
 
                 base.characterMotor.velocity = -80 * aimRay.direction;
 

@@ -4,7 +4,7 @@ using UnityEngine;
 using KinematicCharacterController;
 using UnityEngine.Networking;
 
-namespace EntityStates.Miner
+namespace EntityStates.Digger
 {
     public class FallingComet : BaseSkillState
     {
@@ -102,7 +102,7 @@ namespace EntityStates.Miner
         private void FireBlast()
         {
             base.PlayAnimation("FullBody, Override", "BufferEmpty");
-            Util.PlayScaledSound(MinerPlugin.Sounds.ToTheStarsExplosion, base.gameObject, 0.5f);
+            Util.PlayScaledSound(DiggerPlugin.Sounds.ToTheStarsExplosion, base.gameObject, 0.5f);
 
             if (base.isAuthority)
             {
@@ -124,7 +124,7 @@ namespace EntityStates.Miner
                 effectData.origin = base.characterBody.footPosition;
                 effectData.scale = 20;
 
-                EffectManager.SpawnEffect(MinerPlugin.MinerPlugin.backblastEffect, effectData, false);
+                EffectManager.SpawnEffect(DiggerPlugin.DiggerPlugin.backblastEffect, effectData, false);
             }
         }
 
@@ -136,7 +136,7 @@ namespace EntityStates.Miner
 
                 if (this.cometParticle) this.cometParticle.Play();
 
-                Util.PlayScaledSound(MinerPlugin.Sounds.ToTheStars, base.gameObject, 0.5f);
+                Util.PlayScaledSound(DiggerPlugin.Sounds.ToTheStars, base.gameObject, 0.5f);
 
                 base.gameObject.layer = LayerIndex.defaultLayer.intVal;
                 base.characterMotor.Motor.RebuildCollidableLayers();

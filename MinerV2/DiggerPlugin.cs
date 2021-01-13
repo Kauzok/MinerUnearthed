@@ -9,11 +9,11 @@ using RoR2.Skills;
 using UnityEngine;
 using UnityEngine.Networking;
 using KinematicCharacterController;
-using EntityStates.Miner;
+using EntityStates.Digger;
 using BepInEx.Configuration;
 using System.Runtime.CompilerServices;
 
-namespace MinerPlugin
+namespace DiggerPlugin
 {
     [BepInDependency("com.bepis.r2api", BepInDependency.DependencyFlags.HardDependency)]
     [BepInDependency("com.rob.Aatrox", BepInDependency.DependencyFlags.SoftDependency)]
@@ -22,7 +22,7 @@ namespace MinerPlugin
     [BepInDependency("com.KomradeSpectre.Aetherium", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("com.Sivelos.SivsItems", BepInDependency.DependencyFlags.SoftDependency)]
     [NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod, VersionStrictness.EveryoneNeedSameModVersion)]
-    [BepInPlugin(MODUID, "MinerUnearthed", "1.4.4")]
+    [BepInPlugin(MODUID, "DiggerUnearthed", "1.4.4")]
     [R2APISubmoduleDependency(new string[]
     {
         "PrefabAPI",
@@ -36,9 +36,9 @@ namespace MinerPlugin
         "ResourcesAPI"
     })]
 
-    public class MinerPlugin : BaseUnityPlugin
+    public class DiggerPlugin : BaseUnityPlugin
     {
-        public const string MODUID = "com.rob.MinerUnearthed";
+        public const string MODUID = "com.rob.DiggerUnearthed";
 
         public const string characterName = "Miner";
         public const string characterSubtitle = "Destructive Drug Addict";
@@ -63,7 +63,7 @@ namespace MinerPlugin
                 "\n''<color=#8990A7>-//////-</color>omething's happening to the ship. Cargo flying out. Lost the artifact. Lost everything. . . . Lost everythi<color=#8990A7>-//-</color>.''" +
                 "\n\nThe audio journal's screen sparks and pops, leaving you in complete darkness, complemented by the deafening silence brought about by the ominous last words of the miner.";
 
-        public static MinerPlugin instance;
+        public static DiggerPlugin instance;
 
         public static GameObject characterPrefab;
         public static GameObject characterDisplay;
@@ -112,13 +112,13 @@ namespace MinerPlugin
         public static ConfigEntry<KeyCode> tauntKeybind;
         public static ConfigEntry<KeyCode> jokeKeybind;
 
-        public MinerPlugin()
+        public DiggerPlugin()
         {
-            awake += MinerPlugin_Load;
-            start += MinerPlugin_LoadStart;
+            awake += DiggerPlugin_Load;
+            start += DiggerPlugin_LoadStart;
         }
 
-        private void MinerPlugin_Load()
+        private void DiggerPlugin_Load()
         {
             instance = this;
 
@@ -165,7 +165,7 @@ namespace MinerPlugin
             Hook();
         }
 
-        private void MinerPlugin_LoadStart()
+        private void DiggerPlugin_LoadStart()
         {
             if (styleUI.Value && BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("com.rob.Aatrox"))
             {
@@ -190,7 +190,7 @@ namespace MinerPlugin
 
         public void Awake()
         {
-            Action awake = MinerPlugin.awake;
+            Action awake = DiggerPlugin.awake;
             if (awake == null)
             {
                 return;
@@ -199,7 +199,7 @@ namespace MinerPlugin
         }
         public void Start()
         {
-            Action start = MinerPlugin.start;
+            Action start = DiggerPlugin.start;
             if (start == null)
             {
                 return;
@@ -258,7 +258,7 @@ namespace MinerPlugin
                 eliteIndex = EliteIndex.None
             };
             CustomBuff goldRush = new CustomBuff(goldRushDef);
-            MinerPlugin.goldRush = BuffAPI.Add(goldRush);
+            DiggerPlugin.goldRush = BuffAPI.Add(goldRush);
 
             BuffDef cleaveDef = new BuffDef
             {
@@ -270,7 +270,7 @@ namespace MinerPlugin
                 eliteIndex = EliteIndex.None
             };
             CustomBuff cleave = new CustomBuff(cleaveDef);
-            MinerPlugin.cleave = BuffAPI.Add(cleave);
+            DiggerPlugin.cleave = BuffAPI.Add(cleave);
         }
 
         private void Hook()
@@ -589,14 +589,14 @@ namespace MinerPlugin
             bodyComponent.currentVehicle = null;
             bodyComponent.skinIndex = 0U;
 
-            LoadoutAPI.AddSkill(typeof(MinerMain));
+            LoadoutAPI.AddSkill(typeof(DiggerMain));
             LoadoutAPI.AddSkill(typeof(BaseEmote));
             LoadoutAPI.AddSkill(typeof(Rest));
             LoadoutAPI.AddSkill(typeof(Taunt));
             LoadoutAPI.AddSkill(typeof(Joke));
 
             var stateMachine = bodyComponent.GetComponent<EntityStateMachine>();
-            stateMachine.mainStateType = new SerializableEntityStateType(typeof(MinerMain));
+            stateMachine.mainStateType = new SerializableEntityStateType(typeof(DiggerMain));
 
             CharacterMotor characterMotor = characterPrefab.GetComponent<CharacterMotor>();
             characterMotor.walkSpeedPenaltyCoefficient = 1f;

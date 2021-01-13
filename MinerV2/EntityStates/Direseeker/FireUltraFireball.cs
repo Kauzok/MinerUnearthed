@@ -1,4 +1,4 @@
-﻿using MinerPlugin;
+﻿using DiggerPlugin;
 using RoR2;
 using RoR2.Projectile;
 using UnityEngine;
@@ -61,7 +61,7 @@ namespace EntityStates.Direseeker
 
                     Vector3 forward = Util.ApplySpread(aimRay.direction, 0f, 0f, 1f, 1f, bonusYaw, 0f);
 
-                    ProjectileManager.instance.FireProjectile(MinerPlugin.Direseeker.fireballPrefab, aimRay.origin, Util.QuaternionSafeLookRotation(forward), base.gameObject, this.damageStat * FireUltraFireball.damageCoefficient, FireUltraFireball.force, base.RollCrit(), DamageColorIndex.Default, null, speedOverride);
+                    ProjectileManager.instance.FireProjectile(DiggerPlugin.Direseeker.fireballPrefab, aimRay.origin, Util.QuaternionSafeLookRotation(forward), base.gameObject, this.damageStat * FireUltraFireball.damageCoefficient, FireUltraFireball.force, base.RollCrit(), DamageColorIndex.Default, null, speedOverride);
                     this.projectilesFired++;
                 }
             }

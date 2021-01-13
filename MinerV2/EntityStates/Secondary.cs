@@ -3,7 +3,7 @@ using RoR2;
 using UnityEngine;
 using UnityEngine.Networking;
 
-namespace EntityStates.Miner
+namespace EntityStates.Digger
 {
     public class DrillChargeStart : BaseSkillState
     {
@@ -60,7 +60,7 @@ namespace EntityStates.Miner
             }
 
             base.PlayAnimation("Gesture, Override", "DrillChargeStart");
-            Util.PlaySound(MinerPlugin.Sounds.DrillChargeStart, base.gameObject);
+            Util.PlaySound(DiggerPlugin.Sounds.DrillChargeStart, base.gameObject);
         }
 
         public override void OnExit()
@@ -100,7 +100,7 @@ namespace EntityStates.Miner
 
     public class DrillCharge : BaseSkillState
     {
-        public static float damageCoefficient = MinerPlugin.MinerPlugin.drillChargeDamage.Value;
+        public static float damageCoefficient = DiggerPlugin.DiggerPlugin.drillChargeDamage.Value;
         public float baseDuration = 0.4f;
         public static float styleCoefficient = 0.4f;
 
@@ -163,7 +163,7 @@ namespace EntityStates.Miner
 
             if (NetworkServer.active) base.characterBody.AddBuff(BuffIndex.HiddenInvincibility);
 
-            Util.PlaySound(MinerPlugin.Sounds.DrillCharge, base.gameObject);
+            Util.PlaySound(DiggerPlugin.Sounds.DrillCharge, base.gameObject);
 
             if (base.isAuthority)
             {
