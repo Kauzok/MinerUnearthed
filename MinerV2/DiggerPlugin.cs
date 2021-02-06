@@ -226,7 +226,7 @@ namespace DiggerPlugin
 
             gougeDamage = base.Config.Bind<float>(new ConfigDefinition("03 - Gouge", "Damage"), 2.75f, new ConfigDescription("Damage coefficient", null, Array.Empty<object>()));
 
-            crushDamage = base.Config.Bind<float>(new ConfigDefinition("04 - Crush", "Demage"), 3.0f, new ConfigDescription("Damage coefficient", null, Array.Empty<object>()));
+            crushDamage = base.Config.Bind<float>(new ConfigDefinition("04 - Crush", "Demage"), 3.2f, new ConfigDescription("Damage coefficient", null, Array.Empty<object>()));
 
             drillChargeDamage = base.Config.Bind<float>(new ConfigDefinition("05 - Drill Charge", "Damage"), 1.8f, new ConfigDescription("Damage coefficient per hit", null, Array.Empty<object>()));
             drillChargeCooldown = base.Config.Bind<float>(new ConfigDefinition("05 - Drill Charge", "Cooldown"), 7f, new ConfigDescription("Base cooldown", null, Array.Empty<object>()));

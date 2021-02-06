@@ -7,7 +7,7 @@ namespace EntityStates.Digger
     public class Crush : BaseSkillState
     {
         public static float damageCoefficient = DiggerPlugin.DiggerPlugin.crushDamage.Value;
-        public float baseDuration = 0.69f;
+        public float baseDuration = 0.72f;
         public static float attackRecoil = 0.75f;
         public static float hitHopVelocity = 5f;
         public static float styleCoefficient = 0.7f;
