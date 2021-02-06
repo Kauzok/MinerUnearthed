@@ -140,7 +140,7 @@ namespace EntityStates.Digger
 
                     EffectData effectData = new EffectData();
                     effectData.origin = swingCenter.position;
-                    effectData.scale = attackRadius * 1.69f;
+                    effectData.scale = attackRadius * 2.69f;
                     EffectManager.SpawnEffect(explodePrefab, effectData, false);
 
                     effectData.scale = 0.1f;
