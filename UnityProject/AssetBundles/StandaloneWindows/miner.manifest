@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 2034855235
+CRC: 2193217602
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 3673ad0c10f5735cd39c46e1bd4616fa
+    Hash: fcc05df9ebff033aa44c6d88da4605c1
   TypeTreeHash:
     serializedVersion: 2
     Hash: 8615316d04f527ccc888cdd43c6e8e6d
@@ -138,6 +138,7 @@ Assets:
 - Assets/Miner/MinerSwingEmpowered.prefab
 - Assets/Miner/Animations/FallingCometStart.anim
 - Assets/Miner/Animations/Idle.anim
+- Assets/Miner/MinerSwingaltAlt.prefab
 - Assets/Miner/Textures/texDripMiner.png
 - Assets/Miner/BlacksmithAnvil.prefab
 - Assets/Miner/Animations/AscendNew.anim

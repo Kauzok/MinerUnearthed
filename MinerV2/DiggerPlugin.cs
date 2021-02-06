@@ -83,6 +83,7 @@ namespace DiggerPlugin
         public static float adrenalineCap;
 
         public static GameObject backblastEffect;
+        public static GameObject crushExplosionEffect;
 
         public static SkillDef scepterSpecialSkillDef;
 
@@ -207,6 +208,7 @@ namespace DiggerPlugin
             start();
         }
 
+        //shit is right
         private void ConfigShit()
         {
             forceUnlock = base.Config.Bind<bool>(new ConfigDefinition("01 - General Settings", "Force Unlock"), false, new ConfigDescription("Unlocks the Miner by default", null, Array.Empty<object>()));
@@ -224,7 +226,7 @@ namespace DiggerPlugin
 
             gougeDamage = base.Config.Bind<float>(new ConfigDefinition("03 - Gouge", "Damage"), 2.75f, new ConfigDescription("Damage coefficient", null, Array.Empty<object>()));
 
-            crushDamage = base.Config.Bind<float>(new ConfigDefinition("04 - Crush", "Damage"), 2.25f, new ConfigDescription("Damage coefficient", null, Array.Empty<object>()));
+            crushDamage = base.Config.Bind<float>(new ConfigDefinition("04 - Crush", "Demage"), 3.0f, new ConfigDescription("Damage coefficient", null, Array.Empty<object>()));
 
             drillChargeDamage = base.Config.Bind<float>(new ConfigDefinition("05 - Drill Charge", "Damage"), 1.8f, new ConfigDescription("Damage coefficient per hit", null, Array.Empty<object>()));
             drillChargeCooldown = base.Config.Bind<float>(new ConfigDefinition("05 - Drill Charge", "Cooldown"), 7f, new ConfigDescription("Base cooldown", null, Array.Empty<object>()));
@@ -244,6 +246,18 @@ namespace DiggerPlugin
             backblastEffect.GetComponent<VFXAttributes>().vfxPriority = VFXAttributes.VFXPriority.Always;
 
             EffectAPI.AddEffect(backblastEffect);
+
+            crushExplosionEffect = PrefabAPI.InstantiateClone(Resources.Load<GameObject>("prefabs/effects/omnieffect/OmniExplosionVFX"), "MinerBackblastEffect", true);
+
+            if (!crushExplosionEffect.GetComponent<EffectComponent>()) backblastEffect.AddComponent<EffectComponent>();
+            if (!crushExplosionEffect.GetComponent<VFXAttributes>()) backblastEffect.AddComponent<VFXAttributes>();
+            if (!crushExplosionEffect.GetComponent<NetworkIdentity>()) backblastEffect.AddComponent<NetworkIdentity>();
+
+            crushExplosionEffect.GetComponent<VFXAttributes>().vfxPriority = VFXAttributes.VFXPriority.Always;
+            crushExplosionEffect.GetComponent<EffectComponent>().applyScale = true;
+            crushExplosionEffect.GetComponent<EffectComponent>().parentToReferencedTransform = true;
+
+            EffectAPI.AddEffect(crushExplosionEffect);
         }
 
         private void RegisterBuffs()

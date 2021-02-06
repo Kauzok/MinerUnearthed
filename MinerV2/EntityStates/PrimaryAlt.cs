@@ -75,14 +75,14 @@ namespace EntityStates.Digger
 
         public void FireAttack()
         {
-            if (!this.hasFired)
-            {
+
+            if (!this.hasFired) {
+
                 this.hasFired = true;
                 Util.PlayScaledSound(DiggerPlugin.Sounds.Swing, base.gameObject, this.attackSpeedStat);
 
-                if (base.isAuthority)
-                {
-                    string muzzleString = null;
+                if (base.isAuthority) {
+                    string muzzleString;
                     if (this.swingIndex == 0) muzzleString = "SwingRight";
                     else muzzleString = "SwingLeft";
 
@@ -92,31 +92,28 @@ namespace EntityStates.Digger
                     EffectManager.SimpleMuzzleFlash(effectPrefab, base.gameObject, muzzleString, true);
 
                     base.AddRecoil(-1f * Gouge.attackRecoil, -2f * Gouge.attackRecoil, -0.5f * Gouge.attackRecoil, 0.5f * Gouge.attackRecoil);
+                }
+            }
 
-                    base.GetModelChildLocator().FindChild("SwingCenter").transform.localScale = Vector3.one * Gouge.attackRadius;
+            if (base.isAuthority) {
 
-                    if (this.attack.Fire())
-                    {
-                        if (this.isSlash) Util.PlaySound(EntityStates.Merc.GroundLight.hitSoundString, base.gameObject);
-                        else Util.PlaySound(DiggerPlugin.Sounds.Hit, base.gameObject);
-                        //if (this.styleComponent) this.styleComponent.AddStyle(Gouge.styleCoefficient);
+                if (this.attack.Fire()) {
+                    if (this.isSlash) Util.PlaySound(EntityStates.Merc.GroundLight.hitSoundString, base.gameObject);
+                    else Util.PlaySound(DiggerPlugin.Sounds.Hit, base.gameObject);
+                    //if (this.styleComponent) this.styleComponent.AddStyle(Gouge.styleCoefficient);
 
-                        if (!this.hasHopped)
-                        {
-                            if (base.characterMotor && !base.characterMotor.isGrounded)
-                            {
-                                base.SmallHop(base.characterMotor, Gouge.hitHopVelocity);
-                            }
-
-                            this.hasHopped = true;
+                    if (!this.hasHopped) {
+                        if (base.characterMotor && !base.characterMotor.isGrounded) {
+                            base.SmallHop(base.characterMotor, Gouge.hitHopVelocity);
                         }
 
-                        if (!this.inHitPause)
-                        {
-                            this.hitStopCachedState = base.CreateHitStopCachedState(base.characterMotor, this.animator, "Swing.playbackRate");
-                            this.hitPauseTimer = (0.6f * Merc.GroundLight.hitPauseDuration) / this.attackSpeedStat;
-                            this.inHitPause = true;
-                        }
+                        this.hasHopped = true;
+                    }
+
+                    if (!this.inHitPause) {
+                        this.hitStopCachedState = base.CreateHitStopCachedState(base.characterMotor, this.animator, "Swing.playbackRate");
+                        this.hitPauseTimer = (0.6f * Merc.GroundLight.hitPauseDuration) / this.attackSpeedStat;
+                        this.inHitPause = true;
                     }
                 }
             }
@@ -143,8 +140,8 @@ namespace EntityStates.Digger
                 if (base.characterMotor) base.characterMotor.velocity = Vector3.zero;
                 if (this.animator) this.animator.SetFloat("Swing.playbackRate", 0f);
             }
-
-            if (this.stopwatch >= this.duration * 0.2f)
+            
+            if (this.stopwatch >= this.duration * 0.2f && (!this.hasFired || this.stopwatch <= this.duration * 0.569f))
             {
                 this.FireAttack();
             }

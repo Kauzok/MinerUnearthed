@@ -7,7 +7,7 @@ namespace EntityStates.Digger
     public class Crush : BaseSkillState
     {
         public static float damageCoefficient = DiggerPlugin.DiggerPlugin.crushDamage.Value;
-        public float baseDuration = 0.65f;
+        public float baseDuration = 0.69f;
         public static float attackRecoil = 0.75f;
         public static float hitHopVelocity = 5f;
         public static float styleCoefficient = 0.7f;
@@ -62,76 +62,85 @@ namespace EntityStates.Digger
             base.OnExit();
         }
 
-        public void FireAttack()
+        public void FireAttack() 
         {
-            if (!this.hasFired)
+
+            float speedScale = 0.7f * (Mathf.Sqrt(3.5f * base.attackSpeedStat));
+            float attackRadius = 1.1f * Mathf.Sqrt(speedScale - 0.31f);
+
+            if (base.isAuthority)
+            {
+
+                base.GetModelChildLocator().FindChild("SwingCenter").transform.localScale = Vector3.one * attackRadius;
+
+                if (this.attack.Fire()) 
+                {
+                    //if (this.styleComponent) this.styleComponent.AddStyle(Crush.styleCoefficient);
+
+                    if (!this.hasHopped) 
+                    {
+                        if (base.characterMotor && !base.characterMotor.isGrounded) 
+                        {
+                            base.SmallHop(base.characterMotor, Crush.hitHopVelocity);
+                        }
+
+                        this.hasHopped = true;
+                    }
+
+                    if (!this.inHitPause) 
+                    {
+                        this.hitStopCachedState = base.CreateHitStopCachedState(base.characterMotor, this.animator, "Crush.playbackRate");
+                        this.hitPauseTimer = (0.6f * Merc.GroundLight.hitPauseDuration) / this.attackSpeedStat;
+                        this.inHitPause = true;
+                    }
+                }
+
+            }
+
+
+            if (!this.hasFired) 
             {
                 this.hasFired = true;
                 Util.PlaySound(DiggerPlugin.Sounds.Crush, base.gameObject);
 
-                if (base.isAuthority)
+                base.AddRecoil(-1f * Crush.attackRecoil * speedScale, 
+                               -2f * Crush.attackRecoil * speedScale, 
+                               -0.5f * Crush.attackRecoil * speedScale, 
+                               0.5f * Crush.attackRecoil * speedScale); 
+                if (base.isAuthority) 
                 {
-                    base.AddRecoil(-1f * Crush.attackRecoil, -2f * Crush.attackRecoil, -0.5f * Crush.attackRecoil, 0.5f * Crush.attackRecoil);
-                    //int hitCount = 0;
                     Ray aimRay = base.GetAimRay();
 
-                    float theta = Vector3.Angle(new Vector3(0, -1, 0), aimRay.direction);
-                    theta = Mathf.Min(theta, 90);
-                    Vector3 theSpot = aimRay.origin + ((1 + (theta / 30)) * aimRay.direction);
+                    //float theta = Vector3.Angle(new Vector3(0, -1, 0), aimRay.direction);
+                    //theta = Mathf.Min(theta, 90);
+                    //Vector3 theSpot = aimRay.origin + ((1 + (theta / 30)) * aimRay.direction);
 
-                    Vector2 move = new Vector2(characterMotor.moveDirection.x, characterMotor.moveDirection.z);
-                    Vector2 aim = new Vector2(aimRay.direction.x, aimRay.direction.z);
-                    float forward = Vector2.Dot(move, aim.normalized);
-                    Vector2 aimO = new Vector2(aimRay.direction.z, -1 * aimRay.direction.x);
-                    float right = Vector2.Dot(move, aimO.normalized);
+                    //nerdy math written by a nerd
+                    //Vector2 move = new Vector2(characterMotor.moveDirection.x, characterMotor.moveDirection.z);
+                    //Vector2 aim = new Vector2(aimRay.direction.x, aimRay.direction.z);
+                    //float forward = Vector2.Dot(move, aim.normalized);
+                    //Vector2 aimO = new Vector2(aimRay.direction.z, -1 * aimRay.direction.x);
+                    //float right = Vector2.Dot(move, aimO.normalized);
 
-                    float speedScale = 0.7f * (Mathf.Sqrt(3.5f * base.attackSpeedStat));
+                    //BlastAttack blastAttack = new BlastAttack();
+                    //blastAttack.radius = attackRadius;
+                    //blastAttack.procCoefficient = 1f;
+                    //blastAttack.position = theSpot;
+                    //blastAttack.attacker = base.gameObject;
+                    //blastAttack.crit = this.RollCrit();
+                    //blastAttack.baseDamage = base.characterBody.damage * Crush.damageCoefficient;
+                    //blastAttack.falloffModel = BlastAttack.FalloffModel.SweetSpot;
+                    //blastAttack.baseForce = 3f;
+                    //blastAttack.teamIndex = TeamComponent.GetObjectTeam(blastAttack.attacker);
+                    //blastAttack.damageType = DamageType.Generic;
+                    //blastAttack.attackerFiltering = AttackerFiltering.NeverHit;
+                    //BlastAttack.Result result = blastAttack.Fire();
 
-                    float attackRadius = 1.1f * Mathf.Sqrt(speedScale - 0.31f);
-
-                    /*BlastAttack blastAttack = new BlastAttack();
-                    blastAttack.radius = attackRadius;
-                    blastAttack.procCoefficient = 1f;
-                    blastAttack.position = theSpot;
-                    blastAttack.attacker = base.gameObject;
-                    blastAttack.crit = this.RollCrit();
-                    blastAttack.baseDamage = base.characterBody.damage * Crush.damageCoefficient;
-                    blastAttack.falloffModel = BlastAttack.FalloffModel.SweetSpot;
-                    blastAttack.baseForce = 3f;
-                    blastAttack.teamIndex = TeamComponent.GetObjectTeam(blastAttack.attacker);
-                    blastAttack.damageType = DamageType.Generic;
-                    blastAttack.attackerFiltering = AttackerFiltering.NeverHit;
-                    BlastAttack.Result result = blastAttack.Fire();*/
-                    //hitCount = result.hitCount;
-
-                    base.GetModelChildLocator().FindChild("SwingCenter").transform.localScale = Vector3.one * attackRadius;
-
-                    if (this.attack.Fire())
-                    {
-                        //if (this.styleComponent) this.styleComponent.AddStyle(Crush.styleCoefficient);
-
-                        if (!this.hasHopped)
-                        {
-                            if (base.characterMotor && !base.characterMotor.isGrounded)
-                            {
-                                base.SmallHop(base.characterMotor, Crush.hitHopVelocity);
-                            }
-
-                            this.hasHopped = true;
-                        }
-
-                        if (!this.inHitPause)
-                        {
-                            this.hitStopCachedState = base.CreateHitStopCachedState(base.characterMotor, this.animator, "Crush.playbackRate");
-                            this.hitPauseTimer = (0.6f * Merc.GroundLight.hitPauseDuration) / this.attackSpeedStat;
-                            this.inHitPause = true;
-                        }
-                    }
+                    Transform swingCenter = base.GetModelChildLocator().FindChild("CrushMuzzleExplosion").transform;
 
                     EffectData effectData = new EffectData();
-                    effectData.origin = theSpot;
-                    effectData.scale = speedScale * 0.75f;
-                    //EffectManager.SpawnEffect(slashPrefab, effectData, false);
+                    effectData.origin = swingCenter.position;
+                    effectData.scale = attackRadius * 1.69f;
                     EffectManager.SpawnEffect(explodePrefab, effectData, false);
 
                     effectData.scale = 0.1f;
@@ -141,11 +150,15 @@ namespace EntityStates.Digger
                     effectData.origin = aimRay.origin + left;
                     EffectManager.SpawnEffect(swingPrefab, effectData, false);
 
-                    /*if (hitCount >= 7 && CompactedAchieved != null)
-                    {
-                        Action<Run> action = CompactedAchieved;
-                        action(Run.instance);
-                    }*/
+                    //I have been defeated
+                    //fuck you
+                    //base.GetModelChildLocator().FindChild("CrushMuzzleExplosion").transform.localScale = Vector3.one * attackRadius;
+
+                    //EffectManager.SimpleMuzzleFlash(DiggerPlugin.DiggerPlugin.crushExplosionEffect, base.gameObject, "CrushMuzzleExplosion", true);
+                    //GameObject effectPrefab = DiggerPlugin.Assets.crushFX; 
+                    //EffectManager.SimpleMuzzleFlash(effectPrefab, base.gameObject, "CrushMuzzleLeft", true);
+                    //EffectManager.SimpleMuzzleFlash(effectPrefab, base.gameObject, "CrushMuzzleRight", true);
+
                 }
             }
         }
@@ -172,7 +185,7 @@ namespace EntityStates.Digger
                 if (this.animator) this.animator.SetFloat("Crush.playbackRate", 0f);
             }
 
-            if (this.stopwatch >= this.duration * 0.125f)
+            if (this.stopwatch >= this.duration * 0.3f && (!this.hasFired || this.stopwatch <= this.duration * 0.59f))
             {
                 this.FireAttack();
             }

@@ -35,6 +35,7 @@ namespace DiggerPlugin
         public static Mesh steveMesh;
 
         public static GameObject swingFX;
+        public static GameObject crushSwingFX;
         public static GameObject empoweredSwingFX;
         public static GameObject hitFX;
         public static GameObject slashFX;
@@ -95,13 +96,14 @@ namespace DiggerPlugin
             steveMesh = mainAssetBundle.LoadAsset<Mesh>("SteveMesh");
 
             swingFX = LoadEffect("MinerSwing", "", mainAssetBundle);
+            crushSwingFX = LoadEffect("MinerSwingAltAlt", "", mainAssetBundle, true);
             empoweredSwingFX = LoadEffect("MinerSwingEmpowered", "", mainAssetBundle);
             hitFX = LoadEffect("ImpactMinerSwing", "", mainAssetBundle);
             slashFX = LoadEffect("ImpactMinerSlash", "", mainAssetBundle);
             heavyHitFX = LoadEffect("ImpactMinerHeavy", "", mainAssetBundle);
         }
 
-        private static GameObject LoadEffect(string resourceName, string soundName, AssetBundle bundle)
+        private static GameObject LoadEffect(string resourceName, string soundName, AssetBundle bundle, bool applyScale = false)
         {
             GameObject newEffect = bundle.LoadAsset<GameObject>(resourceName);
 
@@ -109,7 +111,7 @@ namespace DiggerPlugin
             newEffect.AddComponent<NetworkIdentity>();
             newEffect.AddComponent<VFXAttributes>().vfxPriority = VFXAttributes.VFXPriority.Always;
             var effect = newEffect.AddComponent<EffectComponent>();
-            effect.applyScale = false;
+            effect.applyScale = applyScale;
             effect.effectIndex = EffectIndex.Invalid;
             effect.parentToReferencedTransform = true;
             effect.positionAtReferencedTransform = true;
