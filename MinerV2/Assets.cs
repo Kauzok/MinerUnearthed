@@ -4,6 +4,8 @@ using UnityEngine;
 using System.IO;
 using UnityEngine.Networking;
 using RoR2;
+using RoR2.Audio;
+using System.Collections.Generic;
 
 namespace DiggerPlugin
 {
@@ -31,6 +33,7 @@ namespace DiggerPlugin
 
         public static Mesh tundraMesh;
         public static Mesh blacksmithMesh;
+        public static Mesh grandMasteryMesh;
         public static Mesh dripMesh;
         public static Mesh steveMesh;
 
@@ -40,6 +43,8 @@ namespace DiggerPlugin
         public static GameObject hitFX;
         public static GameObject slashFX;
         public static GameObject heavyHitFX;
+
+        public static NetworkSoundEventDef pickHitEventDef;
 
         public static void PopulateAssets()
         {
@@ -78,8 +83,8 @@ namespace DiggerPlugin
             charPortrait = mainAssetBundle.LoadAsset<Texture>("texMinerIcon");
 
             iconP = mainAssetBundle.LoadAsset<Sprite>("GoldRushIcon");
-            icon1 = mainAssetBundle.LoadAsset<Sprite>("CrushIcon");
-            icon1B = mainAssetBundle.LoadAsset<Sprite>("GougeIcon");
+            icon1 = mainAssetBundle.LoadAsset<Sprite>("GougeIcon");
+            icon1B = mainAssetBundle.LoadAsset<Sprite>("CrushIcon");
             icon2 = mainAssetBundle.LoadAsset<Sprite>("DrillChargeIcon");
             icon2B = mainAssetBundle.LoadAsset<Sprite>("DrillBreakIcon");
             icon3 = mainAssetBundle.LoadAsset<Sprite>("BackblastIcon");
@@ -92,6 +97,7 @@ namespace DiggerPlugin
 
             tundraMesh = mainAssetBundle.LoadAsset<Mesh>("TundraMesh");
             blacksmithMesh = mainAssetBundle.LoadAsset<Mesh>("BlacksmithMesh");
+            grandMasteryMesh = mainAssetBundle.LoadAsset<Mesh>("meshMinerGM");
             dripMesh = mainAssetBundle.LoadAsset<Mesh>("DripMesh");
             steveMesh = mainAssetBundle.LoadAsset<Mesh>("SteveMesh");
 
@@ -101,6 +107,22 @@ namespace DiggerPlugin
             hitFX = LoadEffect("ImpactMinerSwing", "", mainAssetBundle);
             slashFX = LoadEffect("ImpactMinerSlash", "", mainAssetBundle);
             heavyHitFX = LoadEffect("ImpactMinerHeavy", "", mainAssetBundle);
+
+            pickHitEventDef = CreateNetworkSoundEventDef(Sounds.Hit);
+        }
+
+        internal static NetworkSoundEventDef CreateNetworkSoundEventDef(string eventName)
+        {
+            NetworkSoundEventDef networkSoundEventDef = ScriptableObject.CreateInstance<NetworkSoundEventDef>();
+            networkSoundEventDef.akId = AkSoundEngine.GetIDFromString(eventName);
+            networkSoundEventDef.eventName = eventName;
+
+            NetworkSoundEventCatalog.getSoundEventDefs += delegate (List<NetworkSoundEventDef> list)
+            {
+                list.Add(networkSoundEventDef);
+            };
+
+            return networkSoundEventDef;
         }
 
         private static GameObject LoadEffect(string resourceName, string soundName, AssetBundle bundle, bool applyScale = false)

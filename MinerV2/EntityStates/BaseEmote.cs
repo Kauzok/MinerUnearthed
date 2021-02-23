@@ -18,11 +18,14 @@ namespace EntityStates.Digger
         private Animator animator;
         private ChildLocator childLocator;
 
+        public LocalUser localUser;
+
         public override void OnEnter()
         {
             base.OnEnter();
             this.animator = base.GetModelAnimator();
             this.childLocator = base.GetModelChildLocator();
+            this.localUser = LocalUserManager.readOnlyLocalUsersList[0];
 
             base.characterBody.hideCrosshair = true;
 
@@ -112,23 +115,23 @@ namespace EntityStates.Digger
             //emote cancels
             if (base.isAuthority && base.characterMotor.isGrounded)
             {
-                if (Input.GetKeyDown(DiggerPlugin.DiggerPlugin.restKeybind.Value))
+                if (!this.localUser.isUIFocused)
                 {
-                    flag = false;
-                    this.outer.SetInterruptState(EntityState.Instantiate(new SerializableEntityStateType(typeof(Rest))), InterruptPriority.Any);
-                    return;
-                }
-                else if (Input.GetKeyDown(DiggerPlugin.DiggerPlugin.tauntKeybind.Value))
-                {
-                    flag = false;
-                    this.outer.SetInterruptState(EntityState.Instantiate(new SerializableEntityStateType(typeof(Taunt))), InterruptPriority.Any);
-                    return;
-                }
-                else if (Input.GetKeyDown(DiggerPlugin.DiggerPlugin.jokeKeybind.Value))
-                {
-                    flag = false;
-                    this.outer.SetInterruptState(EntityState.Instantiate(new SerializableEntityStateType(typeof(Joke))), InterruptPriority.Any);
-                    return;
+                    if (Input.GetKeyDown(DiggerPlugin.DiggerPlugin.restKeybind.Value))
+                    {
+                        this.outer.SetInterruptState(EntityState.Instantiate(new SerializableEntityStateType(typeof(Rest))), InterruptPriority.Any);
+                        return;
+                    }
+                    else if (Input.GetKeyDown(DiggerPlugin.DiggerPlugin.tauntKeybind.Value))
+                    {
+                        this.outer.SetInterruptState(EntityState.Instantiate(new SerializableEntityStateType(typeof(Taunt))), InterruptPriority.Any);
+                        return;
+                    }
+                    else if (Input.GetKeyDown(DiggerPlugin.DiggerPlugin.jokeKeybind.Value))
+                    {
+                        this.outer.SetInterruptState(EntityState.Instantiate(new SerializableEntityStateType(typeof(Joke))), InterruptPriority.Any);
+                        return;
+                    }
                 }
             }
 

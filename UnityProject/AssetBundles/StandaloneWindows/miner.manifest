@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 2193217602
+CRC: 1578661175
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: fcc05df9ebff033aa44c6d88da4605c1
+    Hash: 43e67cb2943c0b3b662f6eebda3d4b59
   TypeTreeHash:
     serializedVersion: 2
     Hash: 8615316d04f527ccc888cdd43c6e8e6d
@@ -89,6 +89,7 @@ Assets:
 - Assets/Miner/Animations/DrillChargeStart.anim
 - Assets/Miner/Textures/texMinerTundraEmission.png
 - Assets/Miner/Direseeker/DireHorn.prefab
+- Assets/Miner/meshMinerGM.mesh
 - Assets/Miner/Textures/texMinerMolten.png
 - Assets/Miner/VFX/matMinerImpact2.mat
 - Assets/Miner/Direseeker/texDireseeker.png
@@ -107,6 +108,7 @@ Assets:
 - Assets/Miner/Icons/texTundraAchievement.png
 - Assets/Miner/Animations/LightImpact.anim
 - Assets/Miner/Direseeker/texDireseekerEmission.png
+- Assets/Miner/Materials/matMinerGM.mat
 - Assets/Miner/Animations/Ascend.anim
 - Assets/Miner/Materials/matMinerTundra.mat
 - Assets/Miner/Textures/texMinerSteveEmission.png
@@ -116,6 +118,7 @@ Assets:
 - Assets/Miner/Animations/ToTheStarsStart.anim
 - Assets/Miner/Animations/ImpactMask.mask
 - Assets/Miner/Animations/Jump.anim
+- Assets/Miner/Textures/texMinerGrandMasteryEmission.PNG
 - Assets/Miner/Animations/DrillChargeVertiEnd.anim
 - Assets/Miner/BackblastIcon.png
 - Assets/Miner/VFX/matMinerImpact.mat
@@ -189,6 +192,7 @@ Assets:
 - Assets/Miner/VFX/texMinerShockwave.png
 - Assets/Miner/ImpactMinerSlash.prefab
 - Assets/Miner/Textures/texMinerIron.png
+- Assets/Miner/Materials/texMinerGrandMastery.PNG
 - Assets/Miner/VFX/matComet.mat
 - Assets/Miner/VFX/matMinerSlash.mat
 - Assets/Miner/Textures/texMinerDiamondEmission.png
@@ -206,6 +210,7 @@ Assets:
 - Assets/Miner/Animations/RunB.anim
 - Assets/Miner/mdlMiner.prefab
 - Assets/Miner/Materials/matDripMiner.mat
+- Assets/Miner/Icons/texGrandMasteryAchievement.png
 - Assets/Miner/Textures/texMiner.png
 - Assets/Miner/Icons/texSecondaryAchievement.png
 - Assets/Miner/Animations/RunF.anim

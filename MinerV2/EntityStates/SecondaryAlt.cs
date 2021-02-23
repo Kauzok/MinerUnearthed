@@ -141,6 +141,7 @@ namespace EntityStates.Digger
             this.attack.pushAwayForce = 1f;
             this.attack.hitBoxGroup = hitBoxGroup;
             this.attack.isCrit = base.RollCrit();
+            this.attack.impactSound = DiggerPlugin.Assets.pickHitEventDef.index;
 
             if (base.isAuthority)
             {
@@ -171,6 +172,8 @@ namespace EntityStates.Digger
                 base.characterBody.AddTimedBuff(BuffIndex.HiddenInvincibility, 0.5f);
             }
 
+            base.PlayAnimation("FullBody, Override", "DrillChargeShortEnd");
+
             base.OnExit();
         }
 
@@ -181,7 +184,6 @@ namespace EntityStates.Digger
             if (base.fixedAge >= this.duration && base.isAuthority)
             {
                 if (!base.characterMotor.disableAirControlUntilCollision) base.characterMotor.velocity *= 0.4f;
-                base.PlayAnimation("FullBody, Override", "DrillChargeShortEnd");
                 this.outer.SetNextStateToMain();
                 return;
             }
@@ -190,8 +192,6 @@ namespace EntityStates.Digger
             {
                 if (this.attack.Fire())
                 {
-                    Util.PlayScaledSound(DiggerPlugin.Sounds.Hit, base.gameObject, 0.5f);
-
                     base.characterMotor.velocity = Vector3.zero;
 
                     if (base.characterMotor && !base.characterMotor.isGrounded)

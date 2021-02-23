@@ -37,6 +37,9 @@ namespace DiggerPlugin
             LanguageAPI.Add("MINER_BLACKSMITHUNLOCKABLE_ACHIEVEMENT_DESC", "As Miner, find a smithing tool on the planet.");
             LanguageAPI.Add("MINER_BLACKSMITHUNLOCKABLE_UNLOCKABLE_NAME", "Miner: Tempered");
 
+            LanguageAPI.Add("MINER_TYPHOONUNLOCKABLE_ACHIEVEMENT_NAME", "Miner: Grand Mastery");
+            LanguageAPI.Add("MINER_TYPHOONUNLOCKABLE_ACHIEVEMENT_DESC", "As Miner, beat the game or obliterate on Typhoon.");
+            LanguageAPI.Add("MINER_TYPHOONUNLOCKABLE_UNLOCKABLE_NAME", "Miner: Grand Mastery");
 
             if (DiggerPlugin.direseekerInstalled)
             {
@@ -62,6 +65,7 @@ namespace DiggerPlugin
             UnlockablesAPI.AddUnlockable<Achievements.CrackHammerAchievement>(true);
             UnlockablesAPI.AddUnlockable<Achievements.CaveInAchievement>(true);
             UnlockablesAPI.AddUnlockable<Achievements.BlacksmithAchievement>(true);
+            if (DiggerPlugin.starstormInstalled) UnlockablesAPI.AddUnlockable<Achievements.GrandMasteryAchievement>(true);
         }
     }
 }
@@ -160,6 +164,57 @@ namespace DiggerPlugin.Achievements
                 DifficultyDef difficultyDef = DifficultyCatalog.GetDifficultyDef(runReport.ruleBook.FindDifficulty());
 
                 if (difficultyDef != null && difficultyDef.countsAsHardMode)
+                {
+                    if (base.meetsBodyRequirement)
+                    {
+                        base.Grant();
+                    }
+                }
+            }
+        }
+
+        public override void OnInstall()
+        {
+            base.OnInstall();
+
+            Run.onClientGameOverGlobal += this.ClearCheck;
+        }
+
+        public override void OnUninstall()
+        {
+            base.OnUninstall();
+
+            Run.onClientGameOverGlobal -= this.ClearCheck;
+        }
+    }
+
+    public class GrandMasteryAchievement : ModdedUnlockableAndAchievement<CustomSpriteProvider>
+    {
+        public override String AchievementIdentifier { get; } = "MINER_TYPHOONUNLOCKABLE_ACHIEVEMENT_ID";
+        public override String UnlockableIdentifier { get; } = "MINER_TYPHOONUNLOCKABLE_REWARD_ID";
+        public override String PrerequisiteUnlockableIdentifier { get; } = "MINER_TYPHOONUNLOCKABLE_PREREQ_ID";
+        public override String AchievementNameToken { get; } = "MINER_TYPHOONUNLOCKABLE_ACHIEVEMENT_NAME";
+        public override String AchievementDescToken { get; } = "MINER_TYPHOONUNLOCKABLE_ACHIEVEMENT_DESC";
+        public override String UnlockableNameToken { get; } = "MINER_TYPHOONUNLOCKABLE_UNLOCKABLE_NAME";
+        protected override CustomSpriteProvider SpriteProvider { get; } = new CustomSpriteProvider("@Miner:Assets/Miner/Icons/texGrandMasteryAchievement.png");
+
+        public override int LookUpRequiredBodyIndex()
+        {
+            return BodyCatalog.FindBodyIndex("MinerBody");
+        }
+
+        public void ClearCheck(Run run, RunReport runReport)
+        {
+            if (run is null) return;
+            if (runReport is null) return;
+
+            if (!runReport.gameEnding) return;
+
+            if (runReport.gameEnding.isWin)
+            {
+                DifficultyDef difficultyDef = DifficultyCatalog.GetDifficultyDef(runReport.ruleBook.FindDifficulty());
+
+                if (difficultyDef != null && difficultyDef.nameToken == "DIFFICULTY_TYPHOON_NAME")
                 {
                     if (base.meetsBodyRequirement)
                     {

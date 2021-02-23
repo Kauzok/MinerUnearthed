@@ -21,8 +21,9 @@ namespace DiggerPlugin
     [BepInDependency("com.ThinkInvisible.ClassicItems", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("com.KomradeSpectre.Aetherium", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("com.Sivelos.SivsItems", BepInDependency.DependencyFlags.SoftDependency)]
+    [BepInDependency("com.TeamMoonstorm.Starstorm2", BepInDependency.DependencyFlags.SoftDependency)]
     [NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod, VersionStrictness.EveryoneNeedSameModVersion)]
-    [BepInPlugin(MODUID, "DiggerUnearthed", "1.4.4")]
+    [BepInPlugin(MODUID, "DiggerUnearthed", "1.5.0")]
     [R2APISubmoduleDependency(new string[]
     {
         "PrefabAPI",
@@ -91,6 +92,8 @@ namespace DiggerPlugin
         public static bool direseekerInstalled = false;
         public static bool aetheriumInstalled = false;
         public static bool sivsItemsInstalled = false;
+        public static bool starstormInstalled = false;
+        public static uint blacksmithSkinIndex = 4;
 
         public static ConfigEntry<bool> forceUnlock;
         public static ConfigEntry<float> maxAdrenaline;
@@ -125,6 +128,12 @@ namespace DiggerPlugin
 
             ConfigShit();
             Assets.PopulateAssets();
+
+            if (BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("com.TeamMoonstorm.Starstorm2"))
+            {
+                starstormInstalled = true;
+                blacksmithSkinIndex++;
+            }
 
             CreateDisplayPrefab();
             CreatePrefab();
@@ -247,11 +256,11 @@ namespace DiggerPlugin
 
             EffectAPI.AddEffect(backblastEffect);
 
-            crushExplosionEffect = PrefabAPI.InstantiateClone(Resources.Load<GameObject>("prefabs/effects/omnieffect/OmniExplosionVFX"), "MinerBackblastEffect", true);
+            crushExplosionEffect = PrefabAPI.InstantiateClone(Resources.Load<GameObject>("prefabs/effects/omnieffect/OmniExplosionVFX"), "DiggerCrushExplosionEffect", true);
 
-            if (!crushExplosionEffect.GetComponent<EffectComponent>()) backblastEffect.AddComponent<EffectComponent>();
-            if (!crushExplosionEffect.GetComponent<VFXAttributes>()) backblastEffect.AddComponent<VFXAttributes>();
-            if (!crushExplosionEffect.GetComponent<NetworkIdentity>()) backblastEffect.AddComponent<NetworkIdentity>();
+            if (!crushExplosionEffect.GetComponent<EffectComponent>()) crushExplosionEffect.AddComponent<EffectComponent>();
+            if (!crushExplosionEffect.GetComponent<VFXAttributes>()) crushExplosionEffect.AddComponent<VFXAttributes>();
+            if (!crushExplosionEffect.GetComponent<NetworkIdentity>()) crushExplosionEffect.AddComponent<NetworkIdentity>();
 
             crushExplosionEffect.GetComponent<VFXAttributes>().vfxPriority = VFXAttributes.VFXPriority.Always;
             crushExplosionEffect.GetComponent<EffectComponent>().applyScale = true;

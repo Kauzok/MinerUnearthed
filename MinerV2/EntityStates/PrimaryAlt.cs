@@ -39,7 +39,7 @@ namespace EntityStates.Digger
             //this.styleComponent = base.GetComponent<StyleSystem.StyleComponent>();
             base.StartAimMode(0.5f + this.duration, false);
 
-            if (base.characterBody.skinIndex == 4 && this.swingIndex == 0) this.isSlash = true;
+            if (base.characterBody.skinIndex == DiggerPlugin.DiggerPlugin.blacksmithSkinIndex && this.swingIndex == 0) this.isSlash = true;
             else this.isSlash = false;
 
             HitBoxGroup hitBoxGroup = null;
@@ -66,6 +66,8 @@ namespace EntityStates.Digger
             this.attack.pushAwayForce = 1f;
             this.attack.hitBoxGroup = hitBoxGroup;
             this.attack.isCrit = base.RollCrit();
+            this.attack.impactSound = DiggerPlugin.Assets.pickHitEventDef.index;
+            if (this.isSlash) this.attack.impactSound = Resources.Load<NetworkSoundEventDef>("NetworkSoundEventDefs/nseMercSwordImpact").index;
         }
 
         public override void OnExit()
@@ -75,13 +77,13 @@ namespace EntityStates.Digger
 
         public void FireAttack()
         {
-
-            if (!this.hasFired) {
-
+            if (!this.hasFired)
+            {
                 this.hasFired = true;
                 Util.PlayScaledSound(DiggerPlugin.Sounds.Swing, base.gameObject, this.attackSpeedStat);
 
-                if (base.isAuthority) {
+                if (base.isAuthority)
+                {
                     string muzzleString;
                     if (this.swingIndex == 0) muzzleString = "SwingRight";
                     else muzzleString = "SwingLeft";
@@ -95,22 +97,24 @@ namespace EntityStates.Digger
                 }
             }
 
-            if (base.isAuthority) {
-
-                if (this.attack.Fire()) {
-                    if (this.isSlash) Util.PlaySound(EntityStates.Merc.GroundLight.hitSoundString, base.gameObject);
-                    else Util.PlaySound(DiggerPlugin.Sounds.Hit, base.gameObject);
+            if (base.isAuthority)
+            {
+                if (this.attack.Fire())
+                {
                     //if (this.styleComponent) this.styleComponent.AddStyle(Gouge.styleCoefficient);
 
-                    if (!this.hasHopped) {
-                        if (base.characterMotor && !base.characterMotor.isGrounded) {
+                    if (!this.hasHopped)
+                    {
+                        if (base.characterMotor && !base.characterMotor.isGrounded)
+                        {
                             base.SmallHop(base.characterMotor, Gouge.hitHopVelocity);
                         }
 
                         this.hasHopped = true;
                     }
 
-                    if (!this.inHitPause) {
+                    if (!this.inHitPause)
+                    {
                         this.hitStopCachedState = base.CreateHitStopCachedState(base.characterMotor, this.animator, "Swing.playbackRate");
                         this.hitPauseTimer = (0.6f * Merc.GroundLight.hitPauseDuration) / this.attackSpeedStat;
                         this.inHitPause = true;
