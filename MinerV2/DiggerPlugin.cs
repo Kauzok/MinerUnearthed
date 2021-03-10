@@ -18,12 +18,12 @@ namespace DiggerPlugin
     [BepInDependency("com.bepis.r2api", BepInDependency.DependencyFlags.HardDependency)]
     [BepInDependency("com.rob.Aatrox", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("com.rob.Direseeker", BepInDependency.DependencyFlags.SoftDependency)]
-    [BepInDependency("com.ThinkInvisible.ClassicItems", BepInDependency.DependencyFlags.SoftDependency)]
+    [BepInDependency("com.DestroyedClone.AncientScepter", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("com.KomradeSpectre.Aetherium", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("com.Sivelos.SivsItems", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("com.TeamMoonstorm.Starstorm2", BepInDependency.DependencyFlags.SoftDependency)]
     [NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod, VersionStrictness.EveryoneNeedSameModVersion)]
-    [BepInPlugin(MODUID, "DiggerUnearthed", "1.5.0")]
+    [BepInPlugin(MODUID, "DiggerUnearthed", "1.5.1")]
     [R2APISubmoduleDependency(new string[]
     {
         "PrefabAPI",
@@ -156,7 +156,7 @@ namespace DiggerPlugin
                 sivsItemsInstalled = true;
             }
             //scepter stuff- dll won't compile without a reference to TILER2 and ClassicItems
-            if (BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("com.ThinkInvisible.ClassicItems"))
+            if (BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("com.DestroyedClone.AncientScepter"))
             {
                 ScepterSkillSetup();
                 ScepterSetup();
@@ -189,7 +189,7 @@ namespace DiggerPlugin
         [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
         private void ScepterSetup()
         {
-            ThinkInvisible.ClassicItems.Scepter_V2.instance.RegisterScepterSkill(scepterSpecialSkillDef, "MinerBody", SkillSlot.Special, 0);
+            AncientScepter.AncientScepterItem.instance.RegisterScepterSkill(scepterSpecialSkillDef, "MinerBody", SkillSlot.Special, 0);
         }
 
         [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]

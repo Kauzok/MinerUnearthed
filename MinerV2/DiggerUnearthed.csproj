@@ -26,6 +26,9 @@
     <Reference Include="Aetherium">
       <HintPath>..\..\..\..\Downloads\risky\Aetherium\Aetherium.dll</HintPath>
     </Reference>
+    <Reference Include="AncientScepter">
+      <HintPath>..\..\AncientScepter\AncientScepter\obj\Debug\netstandard2.0\AncientScepter.dll</HintPath>
+    </Reference>
     <Reference Include="Assembly-CSharp">
       <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\Assembly-CSharp.dll</HintPath>
     </Reference>
@@ -37,9 +40,6 @@
     </Reference>
     <Reference Include="BepInEx.Preloader">
       <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\BepInEx.Preloader.dll</HintPath>
-    </Reference>
-    <Reference Include="ClassicItems">
-      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\ClassicItems.dll</HintPath>
     </Reference>
     <Reference Include="DireseekerMod">
       <HintPath>..\..\Direseeker\DireseekerMod\DireseekerMod\bin\Debug\netstandard2.0\DireseekerMod.dll</HintPath>
@@ -112,9 +112,6 @@
     </Reference>
     <Reference Include="System.Xml.XPath.XDocument">
       <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\System.Xml.XPath.XDocument.dll</HintPath>
-    </Reference>
-    <Reference Include="TILER2">
-      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\TILER2.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Postprocessing.Runtime">
       <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\Unity.Postprocessing.Runtime.dll</HintPath>
