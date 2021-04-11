@@ -54,7 +54,7 @@ namespace EntityStates.Digger
             }
 
             base.PlayAnimation("FullBody, Override", "FallingCometStart", "ToTheStars.playbackRate", 1f);
-            Util.PlayScaledSound(Croco.Leap.leapSoundString, base.gameObject, 0.75f);
+            Util.PlayAttackSpeedSound(Croco.Leap.leapSoundString, base.gameObject, 0.75f);
         }
 
         public override void OnExit()
@@ -102,7 +102,7 @@ namespace EntityStates.Digger
         private void FireBlast()
         {
             base.PlayAnimation("FullBody, Override", "BufferEmpty");
-            Util.PlayScaledSound(DiggerPlugin.Sounds.ToTheStarsExplosion, base.gameObject, 0.5f);
+            Util.PlayAttackSpeedSound(DiggerPlugin.Sounds.ToTheStarsExplosion, base.gameObject, 0.5f);
 
             if (base.isAuthority)
             {
@@ -136,7 +136,7 @@ namespace EntityStates.Digger
 
                 if (this.cometParticle) this.cometParticle.Play();
 
-                Util.PlayScaledSound(DiggerPlugin.Sounds.ToTheStars, base.gameObject, 0.5f);
+                Util.PlayAttackSpeedSound(DiggerPlugin.Sounds.ToTheStars, base.gameObject, 0.5f);
 
                 base.gameObject.layer = LayerIndex.defaultLayer.intVal;
                 base.characterMotor.Motor.RebuildCollidableLayers();

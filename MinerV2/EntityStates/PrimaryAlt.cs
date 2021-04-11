@@ -80,7 +80,7 @@ namespace EntityStates.Digger
             if (!this.hasFired)
             {
                 this.hasFired = true;
-                Util.PlayScaledSound(DiggerPlugin.Sounds.Swing, base.gameObject, this.attackSpeedStat);
+                Util.PlayAttackSpeedSound(DiggerPlugin.Sounds.Swing, base.gameObject, this.attackSpeedStat);
 
                 if (base.isAuthority)
                 {
@@ -89,7 +89,7 @@ namespace EntityStates.Digger
                     else muzzleString = "SwingLeft";
 
                     GameObject effectPrefab = DiggerPlugin.Assets.swingFX;
-                    if (base.characterBody.GetBuffCount(DiggerPlugin.DiggerPlugin.goldRush) >= 0.8f * DiggerPlugin.DiggerPlugin.adrenalineCap) effectPrefab = DiggerPlugin.Assets.empoweredSwingFX;
+                    if (base.characterBody.GetBuffCount(DiggerPlugin.Buffs.goldRushBuff) >= 0.8f * DiggerPlugin.DiggerPlugin.adrenalineCap) effectPrefab = DiggerPlugin.Assets.empoweredSwingFX;
 
                     EffectManager.SimpleMuzzleFlash(effectPrefab, base.gameObject, muzzleString, true);
 

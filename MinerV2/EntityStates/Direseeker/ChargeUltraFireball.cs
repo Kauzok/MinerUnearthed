@@ -17,7 +17,7 @@ namespace EntityStates.Direseeker
             this.duration = ChargeUltraFireball.baseDuration / this.attackSpeedStat;
             UnityEngine.Object modelAnimator = base.GetModelAnimator();
             Transform modelTransform = base.GetModelTransform();
-            Util.PlayScaledSound(EntityStates.LemurianBruiserMonster.ChargeMegaFireball.attackString, base.gameObject, this.attackSpeedStat);
+            Util.PlayAttackSpeedSound(EntityStates.LemurianBruiserMonster.ChargeMegaFireball.attackString, base.gameObject, this.attackSpeedStat);
 
             if (modelTransform)
             {

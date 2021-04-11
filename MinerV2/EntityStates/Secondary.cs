@@ -161,7 +161,7 @@ namespace EntityStates.Digger
             else base.PlayAnimation("FullBody, Override", "DrillChargeShort");
 
 
-            if (NetworkServer.active) base.characterBody.AddBuff(BuffIndex.HiddenInvincibility);
+            if (NetworkServer.active) base.characterBody.AddBuff(RoR2Content.Buffs.HiddenInvincibility);
 
             Util.PlaySound(DiggerPlugin.Sounds.DrillCharge, base.gameObject);
 
@@ -194,8 +194,8 @@ namespace EntityStates.Digger
         {
             if (NetworkServer.active)
             {
-                base.characterBody.RemoveBuff(BuffIndex.HiddenInvincibility);
-                base.characterBody.AddTimedBuff(BuffIndex.HiddenInvincibility, 0.5f);
+                base.characterBody.RemoveBuff(RoR2Content.Buffs.HiddenInvincibility);
+                base.characterBody.AddTimedBuff(RoR2Content.Buffs.HiddenInvincibility, 0.5f);
             }
 
             if (!base.characterMotor.disableAirControlUntilCollision) base.characterMotor.velocity *= 0.4f;

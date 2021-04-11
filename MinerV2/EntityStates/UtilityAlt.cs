@@ -29,7 +29,7 @@ namespace EntityStates.Digger
 
             base.PlayAnimation("FullBody, Override", "CaveIn");
 
-            if (NetworkServer.active) base.characterBody.AddBuff(BuffIndex.HiddenInvincibility);
+            if (NetworkServer.active) base.characterBody.AddBuff(RoR2Content.Buffs.HiddenInvincibility);
 
             if (base.isAuthority)
             {
@@ -111,8 +111,8 @@ namespace EntityStates.Digger
         {
             if (NetworkServer.active)
             {
-                base.characterBody.RemoveBuff(BuffIndex.HiddenInvincibility);
-                base.characterBody.AddTimedBuff(BuffIndex.HiddenInvincibility, 0.5f);
+                base.characterBody.RemoveBuff(RoR2Content.Buffs.HiddenInvincibility);
+                base.characterBody.AddTimedBuff(RoR2Content.Buffs.HiddenInvincibility, 0.5f);
 
                 //no succ
                 Ray aimRay = base.GetAimRay();
@@ -179,7 +179,7 @@ namespace EntityStates.Digger
             this.duration = this.baseDuration;
             if (base.isAuthority)
             {
-                base.characterBody.AddBuff(BuffIndex.HiddenInvincibility);
+                base.characterBody.AddBuff(RoR2Content.Buffs.HiddenInvincibility);
 
                 blastAttack = new BlastAttack();
                 blastAttack.radius = 25f;
@@ -211,8 +211,8 @@ namespace EntityStates.Digger
         }
         public override void OnExit()
         {
-            base.characterBody.RemoveBuff(BuffIndex.HiddenInvincibility);
-            base.characterBody.AddTimedBuff(BuffIndex.HiddenInvincibility, 0.5f * 0.5f);
+            base.characterBody.RemoveBuff(RoR2Content.Buffs.HiddenInvincibility);
+            base.characterBody.AddTimedBuff(RoR2Content.Buffs.HiddenInvincibility, 0.5f * 0.5f);
 
             blastAttack.radius = 5f;
             blastAttack.Fire();

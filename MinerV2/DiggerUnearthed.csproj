@@ -30,7 +30,7 @@
       <HintPath>..\..\AncientScepter\AncientScepter\obj\Debug\netstandard2.0\AncientScepter.dll</HintPath>
     </Reference>
     <Reference Include="Assembly-CSharp">
-      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\Assembly-CSharp.dll</HintPath>
+      <HintPath>..\..\MonsterVariants\MonsterVariants\bin\Debug\netstandard2.0\Assembly-CSharp.dll</HintPath>
     </Reference>
     <Reference Include="BepInEx">
       <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\BepInEx.dll</HintPath>
@@ -54,7 +54,7 @@
       <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\HGUnityUtils.dll</HintPath>
     </Reference>
     <Reference Include="MMHOOK_Assembly-CSharp">
-      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\MMHOOK_Assembly-CSharp.dll</HintPath>
+      <HintPath>..\..\MonsterVariants\MonsterVariants\bin\Debug\netstandard2.0\MMHOOK_Assembly-CSharp.dll</HintPath>
     </Reference>
     <Reference Include="Mono.Cecil">
       <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\Mono.Cecil.dll</HintPath>
@@ -78,7 +78,7 @@
       <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\MonoMod.Utils.dll</HintPath>
     </Reference>
     <Reference Include="R2API">
-      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\R2API.dll</HintPath>
+      <HintPath>..\..\MonsterVariants\MonsterVariants\bin\Debug\netstandard2.0\R2API.dll</HintPath>
     </Reference>
     <Reference Include="Rewired_Core">
       <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\Rewired_Core.dll</HintPath>

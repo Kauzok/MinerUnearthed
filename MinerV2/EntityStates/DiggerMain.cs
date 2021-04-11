@@ -75,17 +75,17 @@ namespace EntityStates.Digger
                 {
                     if (Input.GetKeyDown(DiggerPlugin.DiggerPlugin.restKeybind.Value))
                     {
-                        this.outer.SetInterruptState(EntityState.Instantiate(new SerializableEntityStateType(typeof(Rest))), InterruptPriority.Any);
+                        this.outer.SetInterruptState(new Rest(), InterruptPriority.Any);
                         return;
                     }
                     else if (Input.GetKeyDown(DiggerPlugin.DiggerPlugin.tauntKeybind.Value))
                     {
-                        this.outer.SetInterruptState(EntityState.Instantiate(new SerializableEntityStateType(typeof(Taunt))), InterruptPriority.Any);
+                        this.outer.SetInterruptState(new Taunt(), InterruptPriority.Any);
                         return;
                     }
                     else if (Input.GetKeyDown(DiggerPlugin.DiggerPlugin.jokeKeybind.Value))
                     {
-                        this.outer.SetInterruptState(EntityState.Instantiate(new SerializableEntityStateType(typeof(Joke))), InterruptPriority.Any);
+                        this.outer.SetInterruptState(new Joke(), InterruptPriority.Any);
                         return;
                     }
                 }
@@ -103,7 +103,7 @@ namespace EntityStates.Digger
 
             this.adrenalineGainBuffer -= Time.fixedDeltaTime;
             if (this.adrenalineGainBuffer <= 0 && NetworkServer.active) this.UpdatePassiveBuff();
-            else this.buffCounter = base.GetBuffCount(DiggerPlugin.DiggerPlugin.goldRush);
+            else this.buffCounter = base.GetBuffCount(DiggerPlugin.Buffs.goldRushBuff);
 
             if (this.animator)
             {
@@ -131,7 +131,7 @@ namespace EntityStates.Digger
 
         private void UpdatePassiveBuff()
         {
-            int currentCount = base.characterBody.GetBuffCount(DiggerPlugin.DiggerPlugin.goldRush);
+            int currentCount = base.characterBody.GetBuffCount(DiggerPlugin.Buffs.goldRushBuff);
             int newMoney = (int)base.characterBody.master.money;
 
             if (this.moneyTracker < newMoney)
@@ -146,10 +146,10 @@ namespace EntityStates.Digger
 
         private void RefreshExistingStacks(int currentCount)
         {
-            base.characterBody.ClearTimedBuffs(DiggerPlugin.DiggerPlugin.goldRush);
+            base.characterBody.ClearTimedBuffs(DiggerPlugin.Buffs.goldRushBuff);
             for (int i = 0; i < currentCount; i++)
             {
-                if (base.characterBody.GetBuffCount(DiggerPlugin.DiggerPlugin.goldRush) <= this.adrenalineCap) base.characterBody.AddTimedBuff(DiggerPlugin.DiggerPlugin.goldRush, 5);
+                if (base.characterBody.GetBuffCount(DiggerPlugin.Buffs.goldRushBuff) <= this.adrenalineCap) base.characterBody.AddTimedBuff(DiggerPlugin.Buffs.goldRushBuff, 5);
             }
         }
 
@@ -161,7 +161,7 @@ namespace EntityStates.Digger
 
             for (int i = 1; i <= numStacks; i++)
             {
-                if (base.characterBody.GetBuffCount(DiggerPlugin.DiggerPlugin.goldRush) <= this.adrenalineCap) base.characterBody.AddTimedBuff(DiggerPlugin.DiggerPlugin.goldRush, 5);
+                if (base.characterBody.GetBuffCount(DiggerPlugin.Buffs.goldRushBuff) <= this.adrenalineCap) base.characterBody.AddTimedBuff(DiggerPlugin.Buffs.goldRushBuff, 5);
             }
 
             //if (this.styleComponent) this.styleComponent.AddStyle(DiggerMain.passiveStyleCoefficient);
@@ -180,11 +180,11 @@ namespace EntityStates.Digger
             {
                 for (int i = 1; i < buffCounter * .5; i++)
                 {
-                    if (base.characterBody.GetBuffCount(DiggerPlugin.DiggerPlugin.goldRush) <= this.adrenalineCap) base.characterBody.AddTimedBuff(DiggerPlugin.DiggerPlugin.goldRush, 1);
+                    if (base.characterBody.GetBuffCount(DiggerPlugin.Buffs.goldRushBuff) <= this.adrenalineCap) base.characterBody.AddTimedBuff(DiggerPlugin.Buffs.goldRushBuff, 1);
                 }
             }
 
-            this.buffCounter = base.characterBody.GetBuffCount(DiggerPlugin.DiggerPlugin.goldRush);
+            this.buffCounter = base.characterBody.GetBuffCount(DiggerPlugin.Buffs.goldRushBuff);
 
             if (this.adrenalineParticles)
             {

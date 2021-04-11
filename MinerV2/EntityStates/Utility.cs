@@ -38,7 +38,7 @@ namespace EntityStates.Digger
                 base.PlayAnimation("FullBody, Override", "Backblast");
             }
 
-            if (NetworkServer.active) base.characterBody.AddBuff(BuffIndex.HiddenInvincibility);
+            if (NetworkServer.active) base.characterBody.AddBuff(RoR2Content.Buffs.HiddenInvincibility);
 
             if (base.isAuthority)
             {
@@ -74,8 +74,8 @@ namespace EntityStates.Digger
         {
             if (NetworkServer.active)
             {
-                base.characterBody.RemoveBuff(BuffIndex.HiddenInvincibility);
-                base.characterBody.AddTimedBuff(BuffIndex.HiddenInvincibility, 0.5f);
+                base.characterBody.RemoveBuff(RoR2Content.Buffs.HiddenInvincibility);
+                base.characterBody.AddTimedBuff(RoR2Content.Buffs.HiddenInvincibility, 0.5f);
             }
 
             base.characterMotor.velocity *= 0.1f;

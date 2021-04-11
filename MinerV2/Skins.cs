@@ -82,7 +82,6 @@ namespace DiggerPlugin
             skinDefInfo.NameToken = "MINERBODY_DEFAULT_SKIN_NAME";
             skinDefInfo.RendererInfos = characterModel.baseRendererInfos;
             skinDefInfo.RootObject = model;
-            skinDefInfo.UnlockableName = "";
 
             CharacterModel.RendererInfo[] rendererInfos = skinDefInfo.RendererInfos;
             CharacterModel.RendererInfo[] array = new CharacterModel.RendererInfo[rendererInfos.Length];
@@ -163,7 +162,6 @@ namespace DiggerPlugin
             moltenSkinDefInfo.NameToken = "MINERBODY_MOLTEN_SKIN_NAME";
             moltenSkinDefInfo.RendererInfos = characterModel.baseRendererInfos;
             moltenSkinDefInfo.RootObject = model;
-            moltenSkinDefInfo.UnlockableName = "MINER_MONSOONUNLOCKABLE_REWARD_ID";
 
             rendererInfos = skinDefInfo.RendererInfos;
             array = new CharacterModel.RendererInfo[rendererInfos.Length];
@@ -206,7 +204,6 @@ namespace DiggerPlugin
             pupleSkinDefInfo.NameToken = "MINERBODY_PUPLE_SKIN_NAME";
             pupleSkinDefInfo.RendererInfos = characterModel.baseRendererInfos;
             pupleSkinDefInfo.RootObject = model;
-            pupleSkinDefInfo.UnlockableName = "MINER_PUPLEUNLOCKABLE_REWARD_ID";
 
             rendererInfos = skinDefInfo.RendererInfos;
             array = new CharacterModel.RendererInfo[rendererInfos.Length];
@@ -249,7 +246,6 @@ namespace DiggerPlugin
             tundraSkinDefInfo.NameToken = "MINERBODY_TUNDRA_SKIN_NAME";
             tundraSkinDefInfo.RendererInfos = characterModel.baseRendererInfos;
             tundraSkinDefInfo.RootObject = model;
-            tundraSkinDefInfo.UnlockableName = "MINER_TUNDRAUNLOCKABLE_REWARD_ID";
 
             rendererInfos = skinDefInfo.RendererInfos;
             array = new CharacterModel.RendererInfo[rendererInfos.Length];
@@ -292,7 +288,6 @@ namespace DiggerPlugin
             grandMasterySkinDefInfo.NameToken = "MINERBODY_TYPHOON_SKIN_NAME";
             grandMasterySkinDefInfo.RendererInfos = characterModel.baseRendererInfos;
             grandMasterySkinDefInfo.RootObject = model;
-            grandMasterySkinDefInfo.UnlockableName = "MINER_TYPHOONUNLOCKABLE_REWARD_ID";
 
             rendererInfos = skinDefInfo.RendererInfos;
             array = new CharacterModel.RendererInfo[rendererInfos.Length];
@@ -335,7 +330,6 @@ namespace DiggerPlugin
             ironSkinDefInfo.NameToken = "MINERBODY_IRON_SKIN_NAME";
             ironSkinDefInfo.RendererInfos = characterModel.baseRendererInfos;
             ironSkinDefInfo.RootObject = model;
-            ironSkinDefInfo.UnlockableName = "";
 
             rendererInfos = skinDefInfo.RendererInfos;
             array = new CharacterModel.RendererInfo[rendererInfos.Length];
@@ -377,7 +371,6 @@ namespace DiggerPlugin
             goldSkinDefInfo.NameToken = "MINERBODY_GOLD_SKIN_NAME";
             goldSkinDefInfo.RendererInfos = characterModel.baseRendererInfos;
             goldSkinDefInfo.RootObject = model;
-            goldSkinDefInfo.UnlockableName = "";
 
             rendererInfos = skinDefInfo.RendererInfos;
             array = new CharacterModel.RendererInfo[rendererInfos.Length];
@@ -420,7 +413,6 @@ namespace DiggerPlugin
             diamondSkinDefInfo.NameToken = "MINERBODY_DIAMOND_SKIN_NAME";
             diamondSkinDefInfo.RendererInfos = characterModel.baseRendererInfos;
             diamondSkinDefInfo.RootObject = model;
-            diamondSkinDefInfo.UnlockableName = "";
 
             rendererInfos = skinDefInfo.RendererInfos;
             array = new CharacterModel.RendererInfo[rendererInfos.Length];
@@ -463,7 +455,6 @@ namespace DiggerPlugin
             blacksmithSkinDefInfo.NameToken = "MINERBODY_BLACKSMITH_SKIN_NAME";
             blacksmithSkinDefInfo.RendererInfos = characterModel.baseRendererInfos;
             blacksmithSkinDefInfo.RootObject = model;
-            blacksmithSkinDefInfo.UnlockableName = "MINER_BLACKSMITHUNLOCKABLE_REWARD_ID";
 
             rendererInfos = skinDefInfo.RendererInfos;
             array = new CharacterModel.RendererInfo[rendererInfos.Length];
@@ -506,7 +497,6 @@ namespace DiggerPlugin
             dripSkinDefInfo.NameToken = "MINERBODY_DRIP_SKIN_NAME";
             dripSkinDefInfo.RendererInfos = characterModel.baseRendererInfos;
             dripSkinDefInfo.RootObject = model;
-            dripSkinDefInfo.UnlockableName = "";
 
             rendererInfos = skinDefInfo.RendererInfos;
             array = new CharacterModel.RendererInfo[rendererInfos.Length];
@@ -549,7 +539,6 @@ namespace DiggerPlugin
             steveSkinDefInfo.NameToken = "MINERBODY_STEVE_SKIN_NAME";
             steveSkinDefInfo.RendererInfos = characterModel.baseRendererInfos;
             steveSkinDefInfo.RootObject = model;
-            steveSkinDefInfo.UnlockableName = "";
 
             rendererInfos = skinDefInfo.RendererInfos;
             array = new CharacterModel.RendererInfo[rendererInfos.Length];

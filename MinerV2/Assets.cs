@@ -46,6 +46,8 @@ namespace DiggerPlugin
 
         public static NetworkSoundEventDef pickHitEventDef;
 
+        public static List<NetworkSoundEventDef> networkSoundEventDefs = new List<NetworkSoundEventDef>();
+
         public static void PopulateAssets()
         {
             if (mainAssetBundle == null)
@@ -117,10 +119,7 @@ namespace DiggerPlugin
             networkSoundEventDef.akId = AkSoundEngine.GetIDFromString(eventName);
             networkSoundEventDef.eventName = eventName;
 
-            NetworkSoundEventCatalog.getSoundEventDefs += delegate (List<NetworkSoundEventDef> list)
-            {
-                list.Add(networkSoundEventDef);
-            };
+            networkSoundEventDefs.Add(networkSoundEventDef);
 
             return networkSoundEventDef;
         }

@@ -34,7 +34,7 @@ namespace EntityStates.Digger
             }
 
             base.PlayAnimation("FullBody, Override", "ToTheStarsStart", "ToTheStars.playbackRate", 1f);
-            Util.PlayScaledSound(EntityStates.Commando.CombatDodge.dodgeSoundString, base.gameObject, 1.8f);
+            Util.PlayAttackSpeedSound(EntityStates.Commando.CombatDodge.dodgeSoundString, base.gameObject, 1.8f);
         }
 
         public override void OnExit()

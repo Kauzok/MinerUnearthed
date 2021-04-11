@@ -119,17 +119,17 @@ namespace EntityStates.Digger
                 {
                     if (Input.GetKeyDown(DiggerPlugin.DiggerPlugin.restKeybind.Value))
                     {
-                        this.outer.SetInterruptState(EntityState.Instantiate(new SerializableEntityStateType(typeof(Rest))), InterruptPriority.Any);
+                        this.outer.SetInterruptState(new Rest(), InterruptPriority.Any);
                         return;
                     }
                     else if (Input.GetKeyDown(DiggerPlugin.DiggerPlugin.tauntKeybind.Value))
                     {
-                        this.outer.SetInterruptState(EntityState.Instantiate(new SerializableEntityStateType(typeof(Taunt))), InterruptPriority.Any);
+                        this.outer.SetInterruptState(new Taunt(), InterruptPriority.Any);
                         return;
                     }
                     else if (Input.GetKeyDown(DiggerPlugin.DiggerPlugin.jokeKeybind.Value))
                     {
-                        this.outer.SetInterruptState(EntityState.Instantiate(new SerializableEntityStateType(typeof(Joke))), InterruptPriority.Any);
+                        this.outer.SetInterruptState(new Joke(), InterruptPriority.Any);
                         return;
                     }
                 }

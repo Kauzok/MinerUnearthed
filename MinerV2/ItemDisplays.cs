@@ -18,6 +18,8 @@ namespace DiggerPlugin
 
         public static void RegisterDisplays()
         {
+            return;
+
             GameObject bodyPrefab = DiggerPlugin.characterPrefab;
 
             GameObject model = bodyPrefab.GetComponentInChildren<ModelLocator>().modelTransform.gameObject;
@@ -2954,6 +2956,7 @@ namespace DiggerPlugin
             #endregion
 
             //sivsitems displays
+            /*
             #region SivsItems
             if (DiggerPlugin.sivsItemsInstalled)
             {
@@ -3126,7 +3129,7 @@ namespace DiggerPlugin
                 });
             }
             #endregion
-
+            */
 
             //apply displays here
 
@@ -3150,6 +3153,7 @@ namespace DiggerPlugin
 
         private static void PopulateDisplays()
         {
+            /*
             ItemDisplayRuleSet itemDisplayRuleSet = Resources.Load<GameObject>("Prefabs/CharacterBodies/CommandoBody").GetComponent<ModelLocator>().modelTransform.GetComponent<CharacterModel>().itemDisplayRuleSet;
 
             capacitorPrefab = PrefabAPI.InstantiateClone(itemDisplayRuleSet.FindEquipmentDisplayRuleGroup("Lightning").rules[0].followerPrefab, "DisplayMinerLightning", true);
@@ -3202,6 +3206,7 @@ namespace DiggerPlugin
                     }
                 }
             }
+            */
         }
 
 
@@ -3240,7 +3245,7 @@ namespace DiggerPlugin
             return null;
         }
 
-        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+        /*[MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
         private static GameObject LoadSivDisplay(string name)
         {
             switch (name)
@@ -3263,6 +3268,6 @@ namespace DiggerPlugin
                     return SivsItemsRoR2.Tentacle.displayPrefab;
             }
             return null;
-        }
+        }*/
     }
 }

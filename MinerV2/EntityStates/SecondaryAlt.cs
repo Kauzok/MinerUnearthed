@@ -115,7 +115,7 @@ namespace EntityStates.Digger
             base.PlayAnimation("FullBody, Override", "DrillChargeShort");
             //base.PlayAnimation("FullBody, Override", "DrillBreak", "DrillBreak.playbackRate", this.duration * 1.5f);
 
-            if (NetworkServer.active) base.characterBody.AddBuff(BuffIndex.HiddenInvincibility);
+            if (NetworkServer.active) base.characterBody.AddBuff(RoR2Content.Buffs.HiddenInvincibility);
 
             Util.PlaySound(DiggerPlugin.Sounds.DrillCharge, base.gameObject);
             base.characterMotor.velocity += 75 * aimRay.direction;
@@ -168,8 +168,8 @@ namespace EntityStates.Digger
         {
             if (NetworkServer.active)
             {
-                base.characterBody.RemoveBuff(BuffIndex.HiddenInvincibility);
-                base.characterBody.AddTimedBuff(BuffIndex.HiddenInvincibility, 0.5f);
+                base.characterBody.RemoveBuff(RoR2Content.Buffs.HiddenInvincibility);
+                base.characterBody.AddTimedBuff(RoR2Content.Buffs.HiddenInvincibility, 0.5f);
             }
 
             base.PlayAnimation("FullBody, Override", "DrillChargeShortEnd");

@@ -12,6 +12,11 @@ using KinematicCharacterController;
 using EntityStates.Digger;
 using BepInEx.Configuration;
 using System.Runtime.CompilerServices;
+using System.Security;
+using System.Security.Permissions;
+
+[module: UnverifiableCode]
+[assembly: SecurityPermission(SecurityAction.RequestMinimum, SkipVerification = true)]
 
 namespace DiggerPlugin
 {
@@ -23,7 +28,7 @@ namespace DiggerPlugin
     [BepInDependency("com.Sivelos.SivsItems", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("com.TeamMoonstorm.Starstorm2", BepInDependency.DependencyFlags.SoftDependency)]
     [NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod, VersionStrictness.EveryoneNeedSameModVersion)]
-    [BepInPlugin(MODUID, "DiggerUnearthed", "1.5.1")]
+    [BepInPlugin(MODUID, "DiggerUnearthed", "1.5.2")]
     [R2APISubmoduleDependency(new string[]
     {
         "PrefabAPI",
@@ -69,13 +74,15 @@ namespace DiggerPlugin
         public static GameObject characterPrefab;
         public static GameObject characterDisplay;
 
+        public static List<GameObject> bodyPrefabs = new List<GameObject>();
+        public static List<GameObject> masterPrefabs = new List<GameObject>();
+        public static List<GameObject> projectilePrefabs = new List<GameObject>();
+        public static List<SurvivorDef> survivorDefs = new List<SurvivorDef>();
+
         public GameObject doppelganger;
 
         public static event Action awake;
         public static event Action start;
-
-        public static BuffIndex goldRush;
-        public static BuffIndex cleave;
 
         public static readonly Color characterColor = new Color(0.956862745f, 0.874509803f, 0.603921568f);
 
@@ -165,7 +172,7 @@ namespace DiggerPlugin
             ItemDisplays.RegisterDisplays();
             Unlockables.RegisterUnlockables();
             RegisterEffects();
-            RegisterBuffs();
+            Buffs.RegisterBuffs();
             CreateDoppelganger();
 
             Direseeker.CreateDireseeker();
@@ -173,6 +180,8 @@ namespace DiggerPlugin
             //the il is broken and idk how to fix, sorry
             //ILHook();
             Hook();
+
+            new ContentPacks().CreateContentPack();
         }
 
         private void DiggerPlugin_LoadStart()
@@ -269,33 +278,6 @@ namespace DiggerPlugin
             EffectAPI.AddEffect(crushExplosionEffect);
         }
 
-        private void RegisterBuffs()
-        {
-            BuffDef goldRushDef = new BuffDef
-            {
-                name = "Gold Rush",
-                iconPath = "Textures/BuffIcons/texBuffOnFireIcon",
-                buffColor = characterColor,
-                canStack = true,
-                isDebuff = false,
-                eliteIndex = EliteIndex.None
-            };
-            CustomBuff goldRush = new CustomBuff(goldRushDef);
-            DiggerPlugin.goldRush = BuffAPI.Add(goldRush);
-
-            BuffDef cleaveDef = new BuffDef
-            {
-                name = "Cleave",
-                iconPath = "Textures/BuffIcons/texBuffPulverizeIcon",
-                buffColor = characterColor,
-                canStack = true,
-                isDebuff = true,
-                eliteIndex = EliteIndex.None
-            };
-            CustomBuff cleave = new CustomBuff(cleaveDef);
-            DiggerPlugin.cleave = BuffAPI.Add(cleave);
-        }
-
         private void Hook()
         {
             On.RoR2.CharacterBody.RecalculateStats += CharacterBody_RecalculateStats;
@@ -323,6 +305,7 @@ namespace DiggerPlugin
 
         private void HealthComponent_TakeDamage(On.RoR2.HealthComponent.orig_TakeDamage orig, HealthComponent self, DamageInfo info)
         {
+            bool isCleaving = false;
             if (info.attacker)
             {
                 CharacterBody cb = info.attacker.GetComponent<CharacterBody>();
@@ -331,12 +314,17 @@ namespace DiggerPlugin
                     if (cb.baseNameToken == "MINER_NAME" && info.damageType.HasFlag(DamageType.ApplyMercExpose))
                     {
                         info.damageType = DamageType.Generic;
-                        if (self.body) self.body.AddTimedBuff(cleave, 2.5f * info.procCoefficient);
+                        isCleaving = true;
                     }
                 }
             }
 
             orig(self, info);
+
+            if (isCleaving && !info.rejected)
+            {
+                if (self.body) self.body.AddTimedBuff(Buffs.cleaveBuff, 2.5f * info.procCoefficient);
+            }
         }
 
         private void CharacterBody_RecalculateStats(On.RoR2.CharacterBody.orig_RecalculateStats orig, CharacterBody self)
@@ -344,18 +332,18 @@ namespace DiggerPlugin
             orig(self);
             if (self)
             {
-                if (self.HasBuff(goldRush))
+                if (self.HasBuff(Buffs.goldRushBuff))
                 {
-                    int count = self.GetBuffCount(goldRush);
-                    Reflection.SetPropertyValue<float>(self, "attackSpeed", self.attackSpeed + (count * 0.1f));
-                    Reflection.SetPropertyValue<float>(self, "moveSpeed", self.moveSpeed + (count * 0.15f));
-                    Reflection.SetPropertyValue<float>(self, "regen", self.regen + (count * 0.25f));
+                    int count = self.GetBuffCount(Buffs.goldRushBuff);
+                    self.attackSpeed += (count * 0.1f);
+                    self.moveSpeed += (count * 0.15f);
+                    self.regen += (count * 0.25f);
                 }
 
-                if (self.HasBuff(cleave))
+                if (self.HasBuff(Buffs.cleaveBuff))
                 {
-                    int count = self.GetBuffCount(cleave);
-                    Reflection.SetPropertyValue<float>(self, "armor", self.armor - (count * 3f));
+                    int count = self.GetBuffCount(Buffs.cleaveBuff);
+                    self.armor -= (count * 3f);
                 }
             }
         }
@@ -574,7 +562,6 @@ namespace DiggerPlugin
             characterDirection.turnSpeed = 720f;
 
             CharacterBody bodyComponent = characterPrefab.GetComponent<CharacterBody>();
-            bodyComponent.bodyIndex = -1;
             bodyComponent.name = "MinerBody";
             bodyComponent.baseNameToken = "MINER_NAME";
             bodyComponent.subtitleNameToken = "MINER_SUBTITLE";
@@ -611,6 +598,7 @@ namespace DiggerPlugin
             bodyComponent.isChampion = false;
             bodyComponent.currentVehicle = null;
             bodyComponent.skinIndex = 0U;
+            bodyComponent.bodyColor = characterColor;
 
             LoadoutAPI.AddSkill(typeof(DiggerMain));
             LoadoutAPI.AddSkill(typeof(BaseEmote));
@@ -876,42 +864,31 @@ namespace DiggerPlugin
             characterDisplay.AddComponent<NetworkIdentity>();
 
             string unlockString = "";
-            if (!forceUnlock.Value) unlockString = "MINER_UNLOCKABLE_REWARD_ID";//"MINER_CHARACTERUNLOCKABLE_REWARD_ID"
+            if (!forceUnlock.Value) unlockString = "MINER_UNLOCKABLE_REWARD_ID";
 
-            SurvivorDef survivorDef = new SurvivorDef
-            {
-                name = "MINER_NAME",
-                unlockableName = unlockString,
-                descriptionToken = "MINER_DESCRIPTION",
-                primaryColor = characterColor,
-                bodyPrefab = characterPrefab,
-                displayPrefab = characterDisplay,
-                outroFlavorToken = "MINER_OUTRO_FLAVOR"
-            };
-
-            SurvivorAPI.AddSurvivor(survivorDef);
+            SurvivorDef survivorDef = ScriptableObject.CreateInstance<SurvivorDef>();
+            survivorDef.displayNameToken = "MINER_NAME";
+            survivorDef.unlockableDef = null;
+            survivorDef.descriptionToken = "MINER_DESCRIPTION";
+            survivorDef.primaryColor = characterColor;
+            survivorDef.bodyPrefab = characterPrefab;
+            survivorDef.displayPrefab = characterDisplay;
+            survivorDef.outroFlavorToken = "MINER_OUTRO_FLAVOR";
+            survivorDef.hidden = false;
+            survivorDef.desiredSortPosition = 17f;
 
             SkillSetup();
 
-            BodyCatalog.getAdditionalEntries += delegate (List<GameObject> list)
-            {
-                list.Add(characterPrefab);
-            };
-
-            characterPrefab.tag = "Player";
+            bodyPrefabs.Add(characterPrefab);
+            survivorDefs.Add(survivorDef);
         }
 
         private void CreateDoppelganger()
         {
             doppelganger = PrefabAPI.InstantiateClone(Resources.Load<GameObject>("Prefabs/CharacterMasters/MercMonsterMaster"), "MinerMonsterMaster");
+            doppelganger.GetComponent<CharacterMaster>().bodyPrefab = characterPrefab;
 
-            MasterCatalog.getAdditionalEntries += delegate (List<GameObject> list)
-            {
-                list.Add(doppelganger);
-            };
-
-            CharacterMaster component = doppelganger.GetComponent<CharacterMaster>();
-            component.bodyPrefab = characterPrefab;
+            masterPrefabs.Add(doppelganger);
         }
 
         private void SkillSetup()
@@ -961,13 +938,12 @@ namespace DiggerPlugin
             mySkillDef.canceledFromSprinting = false;
             mySkillDef.fullRestockOnAssign = true;
             mySkillDef.interruptPriority = InterruptPriority.Any;
-            mySkillDef.isBullets = false;
+            mySkillDef.resetCooldownTimerOnUse = false;
             mySkillDef.isCombatSkill = true;
             mySkillDef.mustKeyPress = false;
-            mySkillDef.noSprint = false;
+            mySkillDef.cancelSprintingOnActivation = false;
             mySkillDef.rechargeStock = 1;
             mySkillDef.requiredStock = 1;
-            mySkillDef.shootDelay = 0.5f;
             mySkillDef.stockToConsume = 1;
             mySkillDef.icon = Assets.icon1;
             mySkillDef.skillDescriptionToken = "MINER_PRIMARY_GOUGE_DESCRIPTION";
@@ -990,7 +966,6 @@ namespace DiggerPlugin
             skillFamily.variants[0] = new SkillFamily.Variant
             {
                 skillDef = mySkillDef,
-                unlockableName = "",
                 viewableNode = new ViewablesCatalog.Node(mySkillDef.skillNameToken, false, null)
             };
 
@@ -1010,13 +985,12 @@ namespace DiggerPlugin
             mySkillDef.canceledFromSprinting = false;
             mySkillDef.fullRestockOnAssign = true;
             mySkillDef.interruptPriority = InterruptPriority.Any;
-            mySkillDef.isBullets = false;
+            mySkillDef.resetCooldownTimerOnUse = false;
             mySkillDef.isCombatSkill = true;
             mySkillDef.mustKeyPress = false;
-            mySkillDef.noSprint = false;
+            mySkillDef.cancelSprintingOnActivation = false;
             mySkillDef.rechargeStock = 1;
             mySkillDef.requiredStock = 1;
-            mySkillDef.shootDelay = 0.5f;
             mySkillDef.stockToConsume = 1;
             mySkillDef.icon = Assets.icon1B;
             mySkillDef.skillDescriptionToken = "MINER_PRIMARY_CRUSH_DESCRIPTION";
@@ -1032,7 +1006,6 @@ namespace DiggerPlugin
             skillFamily.variants[skillFamily.variants.Length - 1] = new SkillFamily.Variant
             {
                 skillDef = mySkillDef,
-                unlockableName = "MINER_CRUSHUNLOCKABLE_REWARD_ID",
                 viewableNode = new ViewablesCatalog.Node(mySkillDef.skillNameToken, false, null)
             };
         }
@@ -1056,14 +1029,13 @@ namespace DiggerPlugin
             mySkillDef.canceledFromSprinting = false;
             mySkillDef.fullRestockOnAssign = true;
             mySkillDef.interruptPriority = InterruptPriority.Skill;
-            mySkillDef.isBullets = false;
+            mySkillDef.resetCooldownTimerOnUse = false;
             mySkillDef.isCombatSkill = true;
             mySkillDef.mustKeyPress = true;
-            mySkillDef.noSprint = false;
+            mySkillDef.cancelSprintingOnActivation = false;
             mySkillDef.forceSprintDuringState = true;
             mySkillDef.rechargeStock = 1;
             mySkillDef.requiredStock = 1;
-            mySkillDef.shootDelay = 0f;
             mySkillDef.stockToConsume = 1;
             mySkillDef.icon = Assets.icon2;
             mySkillDef.skillDescriptionToken = "MINER_SECONDARY_CHARGE_DESCRIPTION";
@@ -1082,7 +1054,6 @@ namespace DiggerPlugin
             skillFamily.variants[0] = new SkillFamily.Variant
             {
                 skillDef = mySkillDef,
-                unlockableName = "",
                 viewableNode = new ViewablesCatalog.Node(mySkillDef.skillNameToken, false, null)
             };
 
@@ -1103,14 +1074,13 @@ namespace DiggerPlugin
             mySkillDef.canceledFromSprinting = false;
             mySkillDef.fullRestockOnAssign = true;
             mySkillDef.interruptPriority = InterruptPriority.Skill;
-            mySkillDef.isBullets = false;
+            mySkillDef.resetCooldownTimerOnUse = false;
             mySkillDef.isCombatSkill = true;
             mySkillDef.mustKeyPress = true;
-            mySkillDef.noSprint = false;
+            mySkillDef.cancelSprintingOnActivation = false;
             mySkillDef.forceSprintDuringState = true;
             mySkillDef.rechargeStock = 1;
             mySkillDef.requiredStock = 1;
-            mySkillDef.shootDelay = 0f;
             mySkillDef.stockToConsume = 1;
             mySkillDef.icon = Assets.icon2B;
             mySkillDef.skillDescriptionToken = "MINER_SECONDARY_BREAK_DESCRIPTION";
@@ -1123,7 +1093,6 @@ namespace DiggerPlugin
             skillFamily.variants[skillFamily.variants.Length - 1] = new SkillFamily.Variant
             {
                 skillDef = mySkillDef,
-                unlockableName = "MINER_CRACKUNLOCKABLE_REWARD_ID",
                 viewableNode = new ViewablesCatalog.Node(mySkillDef.skillNameToken, false, null)
             };
         }
@@ -1144,13 +1113,12 @@ namespace DiggerPlugin
             mySkillDef.canceledFromSprinting = false;
             mySkillDef.fullRestockOnAssign = true;
             mySkillDef.interruptPriority = InterruptPriority.Skill;
-            mySkillDef.isBullets = false;
+            mySkillDef.resetCooldownTimerOnUse = false;
             mySkillDef.isCombatSkill = true;
             mySkillDef.mustKeyPress = false;
-            mySkillDef.noSprint = false;
+            mySkillDef.cancelSprintingOnActivation = false;
             mySkillDef.rechargeStock = 1;
             mySkillDef.requiredStock = 1;
-            mySkillDef.shootDelay = 0f;
             mySkillDef.stockToConsume = 1;
             mySkillDef.icon = Assets.icon3;
             mySkillDef.skillDescriptionToken = "MINER_UTILITY_BACKBLAST_DESCRIPTION";
@@ -1172,7 +1140,6 @@ namespace DiggerPlugin
             skillFamily.variants[0] = new SkillFamily.Variant
             {
                 skillDef = mySkillDef,
-                unlockableName = "",
                 viewableNode = new ViewablesCatalog.Node(mySkillDef.skillNameToken, false, null)
             };
 
@@ -1190,13 +1157,12 @@ namespace DiggerPlugin
             mySkillDef.canceledFromSprinting = false;
             mySkillDef.fullRestockOnAssign = true;
             mySkillDef.interruptPriority = InterruptPriority.Skill;
-            mySkillDef.isBullets = false;
+            mySkillDef.resetCooldownTimerOnUse = false;
             mySkillDef.isCombatSkill = true;
             mySkillDef.mustKeyPress = true;
-            mySkillDef.noSprint = false;
+            mySkillDef.cancelSprintingOnActivation = false;
             mySkillDef.rechargeStock = 1;
             mySkillDef.requiredStock = 1;
-            mySkillDef.shootDelay = 0f;
             mySkillDef.stockToConsume = 1;
             mySkillDef.icon = Assets.icon3B;
             mySkillDef.skillDescriptionToken = "MINER_UTILITY_CAVEIN_DESCRIPTION";
@@ -1212,7 +1178,6 @@ namespace DiggerPlugin
             skillFamily.variants[skillFamily.variants.Length - 1] = new SkillFamily.Variant
             {
                 skillDef = mySkillDef,
-                unlockableName = "MINER_CAVEINUNLOCKABLE_REWARD_ID",
                 viewableNode = new ViewablesCatalog.Node(mySkillDef.skillNameToken, false, null)
             };
         }
@@ -1233,13 +1198,12 @@ namespace DiggerPlugin
             mySkillDef.canceledFromSprinting = false;
             mySkillDef.fullRestockOnAssign = true;
             mySkillDef.interruptPriority = InterruptPriority.PrioritySkill;
-            mySkillDef.isBullets = false;
+            mySkillDef.resetCooldownTimerOnUse = false;
             mySkillDef.isCombatSkill = true;
             mySkillDef.mustKeyPress = false;
-            mySkillDef.noSprint = true;
+            mySkillDef.cancelSprintingOnActivation = true;
             mySkillDef.rechargeStock = 1;
             mySkillDef.requiredStock = 1;
-            mySkillDef.shootDelay = 0f;
             mySkillDef.stockToConsume = 1;
             mySkillDef.icon = Assets.icon4;
             mySkillDef.skillDescriptionToken = "MINER_SPECIAL_TOTHESTARS_DESCRIPTION";
@@ -1258,7 +1222,6 @@ namespace DiggerPlugin
             skillFamily.variants[0] = new SkillFamily.Variant
             {
                 skillDef = mySkillDef,
-                unlockableName = "",
                 viewableNode = new ViewablesCatalog.Node(mySkillDef.skillNameToken, false, null)
             };
         }
@@ -1279,13 +1242,12 @@ namespace DiggerPlugin
             mySkillDef.canceledFromSprinting = false;
             mySkillDef.fullRestockOnAssign = true;
             mySkillDef.interruptPriority = InterruptPriority.PrioritySkill;
-            mySkillDef.isBullets = false;
+            mySkillDef.resetCooldownTimerOnUse = false;
             mySkillDef.isCombatSkill = true;
             mySkillDef.mustKeyPress = false;
-            mySkillDef.noSprint = true;
+            mySkillDef.cancelSprintingOnActivation = true;
             mySkillDef.rechargeStock = 1;
             mySkillDef.requiredStock = 1;
-            mySkillDef.shootDelay = 0f;
             mySkillDef.stockToConsume = 1;
             mySkillDef.icon = Assets.icon4S;
             mySkillDef.skillDescriptionToken = "MINER_SPECIAL_SCEPTERTOTHESTARS_DESCRIPTION";

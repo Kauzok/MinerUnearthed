@@ -47,7 +47,7 @@ namespace DiggerPlugin
                 LanguageAPI.Add("MINER_UNLOCKABLE_ACHIEVEMENT_DESC", "Defeat the unique guardian of Abyssal Depths.");
                 LanguageAPI.Add("MINER_UNLOCKABLE_UNLOCKABLE_NAME", "Forged in Flames");
 
-                UnlockablesAPI.AddUnlockable<Achievements.DiggerAltUnlockAchievement>(true);
+                //UnlockablesAPI.AddUnlockable<Achievements.DiggerAltUnlockAchievement>(true);
             }
             else
             {
@@ -55,17 +55,17 @@ namespace DiggerPlugin
                 LanguageAPI.Add("MINER_UNLOCKABLE_ACHIEVEMENT_DESC", "Open a Legendary Chest.");
                 LanguageAPI.Add("MINER_UNLOCKABLE_UNLOCKABLE_NAME", "Adrenaline Rush");
 
-                UnlockablesAPI.AddUnlockable<Achievements.DiggerUnlockAchievement>(true);
+                //UnlockablesAPI.AddUnlockable<Achievements.DiggerUnlockAchievement>(true);
             }
 
-            UnlockablesAPI.AddUnlockable<Achievements.MasteryAchievement>(true);
-            UnlockablesAPI.AddUnlockable<Achievements.TundraAchievement>(true);
-            UnlockablesAPI.AddUnlockable<Achievements.PupleAchievement>(true);
-            UnlockablesAPI.AddUnlockable<Achievements.CrushAchievement>(true);
-            UnlockablesAPI.AddUnlockable<Achievements.CrackHammerAchievement>(true);
-            UnlockablesAPI.AddUnlockable<Achievements.CaveInAchievement>(true);
-            UnlockablesAPI.AddUnlockable<Achievements.BlacksmithAchievement>(true);
-            if (DiggerPlugin.starstormInstalled) UnlockablesAPI.AddUnlockable<Achievements.GrandMasteryAchievement>(true);
+            //UnlockablesAPI.AddUnlockable<Achievements.MasteryAchievement>(true);
+            //UnlockablesAPI.AddUnlockable<Achievements.TundraAchievement>(true);
+            //UnlockablesAPI.AddUnlockable<Achievements.PupleAchievement>(true);
+            //UnlockablesAPI.AddUnlockable<Achievements.CrushAchievement>(true);
+            //UnlockablesAPI.AddUnlockable<Achievements.CrackHammerAchievement>(true);
+            //UnlockablesAPI.AddUnlockable<Achievements.CaveInAchievement>(true);
+            //UnlockablesAPI.AddUnlockable<Achievements.BlacksmithAchievement>(true);
+            //if (DiggerPlugin.starstormInstalled) UnlockablesAPI.AddUnlockable<Achievements.GrandMasteryAchievement>(true);
         }
     }
 }
@@ -149,7 +149,7 @@ namespace DiggerPlugin.Achievements
 
         public override int LookUpRequiredBodyIndex()
         {
-            return BodyCatalog.FindBodyIndex("MinerBody");
+            return (int)BodyCatalog.FindBodyIndex("MinerBody");
         }
 
         public void ClearCheck(Run run, RunReport runReport)
@@ -200,7 +200,7 @@ namespace DiggerPlugin.Achievements
 
         public override int LookUpRequiredBodyIndex()
         {
-            return BodyCatalog.FindBodyIndex("MinerBody");
+            return (int)BodyCatalog.FindBodyIndex("MinerBody");
         }
 
         public void ClearCheck(Run run, RunReport runReport)
@@ -251,7 +251,7 @@ namespace DiggerPlugin.Achievements
 
         public override int LookUpRequiredBodyIndex()
         {
-            return BodyCatalog.FindBodyIndex("MinerBody");
+            return (int)BodyCatalog.FindBodyIndex("MinerBody");
         }
 
         public void Check(float time)
@@ -289,7 +289,7 @@ namespace DiggerPlugin.Achievements
 
         public override int LookUpRequiredBodyIndex()
         {
-            return BodyCatalog.FindBodyIndex("MinerBody");
+            return (int)BodyCatalog.FindBodyIndex("MinerBody");
         }
 
         public void Check(Run run)
@@ -327,7 +327,7 @@ namespace DiggerPlugin.Achievements
 
         public override int LookUpRequiredBodyIndex()
         {
-            return BodyCatalog.FindBodyIndex("MinerBody");
+            return (int)BodyCatalog.FindBodyIndex("MinerBody");
         }
 
         public void Check(DamageReport report)
@@ -338,7 +338,7 @@ namespace DiggerPlugin.Achievements
                 {
                     if (report.attackerBodyIndex == BodyCatalog.FindBodyIndex("MinerBody") && report.victimBodyIndex == BodyCatalog.FindBodyIndex("TitanGoldBody"))
                     {
-                        if (report.victimBody.GetBuffCount(DiggerPlugin.cleave) >= 12f && base.meetsBodyRequirement)
+                        if (report.victimBody.GetBuffCount(Buffs.cleaveBuff) >= 12f && base.meetsBodyRequirement)
                         {
                             base.Grant();
                         }
@@ -374,7 +374,7 @@ namespace DiggerPlugin.Achievements
 
         public override int LookUpRequiredBodyIndex()
         {
-            return BodyCatalog.FindBodyIndex("MinerBody");
+            return (int)BodyCatalog.FindBodyIndex("MinerBody");
         }
 
         public void Check(bool check)
@@ -409,7 +409,7 @@ namespace DiggerPlugin.Achievements
 
         public override int LookUpRequiredBodyIndex()
         {
-            return BodyCatalog.FindBodyIndex("MinerBody");
+            return (int)BodyCatalog.FindBodyIndex("MinerBody");
         }
 
         public void Check(int count)
@@ -444,7 +444,7 @@ namespace DiggerPlugin.Achievements
 
         public override int LookUpRequiredBodyIndex()
         {
-            return BodyCatalog.FindBodyIndex("MinerBody");
+            return (int)BodyCatalog.FindBodyIndex("MinerBody");
         }
 
         private void Get(bool cum)

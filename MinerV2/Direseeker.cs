@@ -73,15 +73,8 @@ namespace DiggerPlugin
             master.bodyPrefab = fatAcridPrefab;
             master.isBoss = true;
 
-            BodyCatalog.getAdditionalEntries += delegate (List<GameObject> list)
-            {
-                list.Add(fatAcridPrefab);
-            };
-
-            MasterCatalog.getAdditionalEntries += delegate (List<GameObject> list)
-            {
-                list.Add(acridMasterPrefab);
-            };
+            DiggerPlugin.bodyPrefabs.Add(fatAcridPrefab);
+            DiggerPlugin.masterPrefabs.Add(acridMasterPrefab);
 
             CharacterSpawnCard characterSpawnCard = ScriptableObject.CreateInstance<CharacterSpawnCard>();
             characterSpawnCard.name = "cscFatAcrid";
@@ -104,8 +97,6 @@ namespace DiggerPlugin
                 allowAmbushSpawn = false,
                 preventOverhead = false,
                 minimumStageCompletions = 5,
-                requiredUnlockable = "",
-                forbiddenUnlockable = "",
                 spawnDistance = DirectorCore.MonsterSpawnDistance.Close
             };
 
@@ -159,11 +150,8 @@ namespace DiggerPlugin
             fireTrailPrefab.GetComponent<DamageTrail>().segmentPrefab = fireSegmentPrefab;
             fireballGroundPrefab.GetComponent<ProjectileDamageTrail>().trailPrefab = fireTrailPrefab;
 
-            ProjectileCatalog.getAdditionalEntries += delegate (List<GameObject> list)
-            {
-                list.Add(fireballPrefab);
-                list.Add(fireballGroundPrefab);
-            };
+            DiggerPlugin.projectilePrefabs.Add(fireballPrefab);
+            DiggerPlugin.projectilePrefabs.Add(fireballGroundPrefab);
         }
 
         public static void SkillSetup(GameObject sx)
@@ -184,13 +172,12 @@ namespace DiggerPlugin
             mySkillDef.canceledFromSprinting = false;
             mySkillDef.fullRestockOnAssign = true;
             mySkillDef.interruptPriority = InterruptPriority.Any;
-            mySkillDef.isBullets = false;
+            mySkillDef.resetCooldownTimerOnUse = false;
             mySkillDef.isCombatSkill = true;
             mySkillDef.mustKeyPress = false;
-            mySkillDef.noSprint = false;
+            mySkillDef.cancelSprintingOnActivation = false;
             mySkillDef.rechargeStock = 1;
             mySkillDef.requiredStock = 1;
-            mySkillDef.shootDelay = 0f;
             mySkillDef.stockToConsume = 1;
 
             LoadoutAPI.AddSkillDef(mySkillDef);
@@ -205,7 +192,6 @@ namespace DiggerPlugin
             skillFamily.variants[0] = new SkillFamily.Variant
             {
                 skillDef = mySkillDef,
-                unlockableName = "",
                 viewableNode = new ViewablesCatalog.Node(mySkillDef.skillNameToken, false, null)
             };
 
@@ -218,13 +204,12 @@ namespace DiggerPlugin
             mySkillDef.canceledFromSprinting = false;
             mySkillDef.fullRestockOnAssign = true;
             mySkillDef.interruptPriority = InterruptPriority.Any;
-            mySkillDef.isBullets = false;
+            mySkillDef.resetCooldownTimerOnUse = false;
             mySkillDef.isCombatSkill = true;
             mySkillDef.mustKeyPress = false;
-            mySkillDef.noSprint = false;
+            mySkillDef.cancelSprintingOnActivation = false;
             mySkillDef.rechargeStock = 1;
             mySkillDef.requiredStock = 1;
-            mySkillDef.shootDelay = 0f;
             mySkillDef.stockToConsume = 0;
 
             LoadoutAPI.AddSkillDef(mySkillDef);
@@ -239,7 +224,6 @@ namespace DiggerPlugin
             skillFamily.variants[0] = new SkillFamily.Variant
             {
                 skillDef = mySkillDef,
-                unlockableName = "",
                 viewableNode = new ViewablesCatalog.Node(mySkillDef.skillNameToken, false, null)
             };
         }
@@ -373,15 +357,8 @@ namespace DiggerPlugin
                 master.bodyPrefab = bodyPrefab;
                 master.isBoss = false;
 
-                BodyCatalog.getAdditionalEntries += delegate (List<GameObject> list)
-                {
-                    list.Add(bodyPrefab);
-                };
-
-                MasterCatalog.getAdditionalEntries += delegate (List<GameObject> list)
-                {
-                    list.Add(masterPrefab);
-                };
+                DiggerPlugin.bodyPrefabs.Add(bodyPrefab);
+                DiggerPlugin.masterPrefabs.Add(masterPrefab);
 
                 if (DiggerPlugin.enableDireseeker.Value && !DiggerPlugin.direseekerInstalled)
                 {
@@ -406,8 +383,6 @@ namespace DiggerPlugin
                         allowAmbushSpawn = false,
                         preventOverhead = false,
                         minimumStageCompletions = 2,
-                        requiredUnlockable = "",
-                        forbiddenUnlockable = "",
                         spawnDistance = DirectorCore.MonsterSpawnDistance.Close
                     };
 
@@ -536,17 +511,14 @@ namespace DiggerPlugin
 
                 model2.baseRendererInfos = newInfos2;
 
-                survivorPrefab.GetComponent<DeathRewards>().logUnlockableName = "";
+                survivorPrefab.GetComponent<DeathRewards>().logUnlockableDef = null;
                 survivorPrefab.GetComponent<Interactor>().maxInteractionDistance = 5f;
 
                 survivorPrefab.tag = "Player";
 
                 SkinSetup();
 
-                BodyCatalog.getAdditionalEntries += delegate (List<GameObject> list)
-                {
-                    list.Add(survivorPrefab);
-                };
+                DiggerPlugin.bodyPrefabs.Add(survivorPrefab);
 
                 GameObject displayPrefab = PrefabAPI.InstantiateClone(survivorPrefab.GetComponent<ModelLocator>().modelTransform.gameObject, "DireseekerDisplay", true);
                 displayPrefab.AddComponent<NetworkIdentity>();
@@ -554,8 +526,7 @@ namespace DiggerPlugin
 
                 SurvivorDef survivorDef = new SurvivorDef
                 {
-                    name = "DIRESEEKER_BODY_NAME",
-                    unlockableName = "",
+                    displayNameToken = "DIRESEEKER_BODY_NAME",
                     descriptionToken = "MINER_DESCRIPTION",
                     primaryColor = Color.red,
                     bodyPrefab = survivorPrefab,
