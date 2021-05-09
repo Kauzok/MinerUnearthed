@@ -1,48 +1,52 @@
-﻿using System.Collections.Generic;
-using RoR2;
-using UnityEngine;
+﻿using RoR2.ContentManagement;
 
 namespace DiggerPlugin
 {
-    internal class ContentPacks
+    internal class ContentPacks : IContentPackProvider
     {
-        internal static ContentPack contentPack;
+        internal ContentPack contentPack = new ContentPack();
+        public string identifier => DiggerPlugin.MODUID;
 
-        internal void CreateContentPack()
+        public void Initialize()
         {
-            contentPack = new ContentPack()
-            {
-                artifactDefs = new ArtifactDef[0],
-                bodyPrefabs = DiggerPlugin.bodyPrefabs.ToArray(),
-                buffDefs = Buffs.buffDefs.ToArray(),
-                effectDefs = new EffectDef[0],
-                eliteDefs = new EliteDef[0],
-                entityStateConfigurations = new EntityStateConfiguration[0],
-                entityStateTypes = new System.Type[0],
-                equipmentDefs = new EquipmentDef[0],
-                gameEndingDefs = new GameEndingDef[0],
-                gameModePrefabs = new Run[0],
-                itemDefs = new ItemDef[0],
-                masterPrefabs = DiggerPlugin.masterPrefabs.ToArray(),
-                musicTrackDefs = new MusicTrackDef[0],
-                networkedObjectPrefabs = new GameObject[0],
-                networkSoundEventDefs = Assets.networkSoundEventDefs.ToArray(),
-                projectilePrefabs = DiggerPlugin.projectilePrefabs.ToArray(),
-                sceneDefs = new SceneDef[0],
-                skillDefs = new RoR2.Skills.SkillDef[0],
-                skillFamilies = new RoR2.Skills.SkillFamily[0],
-                surfaceDefs = new SurfaceDef[0],
-                survivorDefs = DiggerPlugin.survivorDefs.ToArray(),
-                unlockableDefs = new UnlockableDef[0]
-            };
-
-            On.RoR2.ContentManager.SetContentPacks += AddContent;
+            ContentManager.collectContentPackProviders += ContentManager_collectContentPackProviders;
         }
 
-        private void AddContent(On.RoR2.ContentManager.orig_SetContentPacks orig, List<ContentPack> newContentPacks)
+        private void ContentManager_collectContentPackProviders(ContentManager.AddContentPackProviderDelegate addContentPackProvider)
         {
-            newContentPacks.Add(contentPack);
-            orig(newContentPacks);
+            addContentPackProvider(this);
+        }
+
+        public System.Collections.IEnumerator LoadStaticContentAsync(LoadStaticContentAsyncArgs args)
+        {
+            this.contentPack.identifier = this.identifier;
+            contentPack.bodyPrefabs.Add(DiggerPlugin.bodyPrefabs.ToArray());
+            contentPack.buffDefs.Add(Buffs.buffDefs.ToArray());
+            //contentPack.effectDefs.Add(Assets.effectDefs.ToArray());
+            //contentPack.entityStateTypes.Add(States.entityStates.ToArray());
+            contentPack.masterPrefabs.Add(DiggerPlugin.masterPrefabs.ToArray());
+            contentPack.networkSoundEventDefs.Add(Assets.networkSoundEventDefs.ToArray());
+            //contentPack.projectilePrefabs.Add(Prefabs.projectilePrefabs.ToArray());
+            //contentPack.skillDefs.Add(Skills.skillDefs.ToArray());
+            //contentPack.skillFamilies.Add(DiggerPlugin.skillFamilies.ToArray());
+            contentPack.survivorDefs.Add(DiggerPlugin.survivorDefs.ToArray());
+            //contentPack.unlockableDefs.Add(Unlockables.unlockableDefs.ToArray());
+
+            args.ReportProgress(1f);
+            yield break;
+        }
+
+        public System.Collections.IEnumerator GenerateContentPackAsync(GetContentPackAsyncArgs args)
+        {
+            ContentPack.Copy(this.contentPack, args.output);
+            args.ReportProgress(1f);
+            yield break;
+        }
+
+        public System.Collections.IEnumerator FinalizeAsync(FinalizeAsyncArgs args)
+        {
+            args.ReportProgress(1f);
+            yield break;
         }
     }
 }

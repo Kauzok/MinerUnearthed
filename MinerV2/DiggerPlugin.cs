@@ -28,7 +28,7 @@ namespace DiggerPlugin
     [BepInDependency("com.Sivelos.SivsItems", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("com.TeamMoonstorm.Starstorm2", BepInDependency.DependencyFlags.SoftDependency)]
     [NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod, VersionStrictness.EveryoneNeedSameModVersion)]
-    [BepInPlugin(MODUID, "DiggerUnearthed", "1.5.2")]
+    [BepInPlugin(MODUID, "DiggerUnearthed", "1.5.3")]
     [R2APISubmoduleDependency(new string[]
     {
         "PrefabAPI",
@@ -38,8 +38,7 @@ namespace DiggerPlugin
         "LanguageAPI",
         "SoundAPI",
         "EffectAPI",
-        "UnlockablesAPI",
-        "ResourcesAPI"
+        "UnlockablesAPI"
     })]
 
     public class DiggerPlugin : BaseUnityPlugin
@@ -181,15 +180,15 @@ namespace DiggerPlugin
             //ILHook();
             Hook();
 
-            new ContentPacks().CreateContentPack();
+            new ContentPacks().Initialize();
         }
 
         private void DiggerPlugin_LoadStart()
         {
             if (styleUI.Value && BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("com.rob.Aatrox"))
             {
-                hasAatrox = true;
-                AddStyleMeter();
+                //hasAatrox = true;
+                //AddStyleMeter();
             }
 
             //Direseeker.LateSetup();

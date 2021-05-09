@@ -4,7 +4,6 @@ using UnityEngine;
 using System.IO;
 using UnityEngine.Networking;
 using RoR2;
-using RoR2.Audio;
 using System.Collections.Generic;
 
 namespace DiggerPlugin
@@ -55,8 +54,6 @@ namespace DiggerPlugin
                 using (var assetStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("DiggerUnearthed.miner"))
                 {
                     mainAssetBundle = AssetBundle.LoadFromStream(assetStream);
-                    var provider = new AssetBundleResourcesProvider("@Miner", mainAssetBundle);
-                    ResourcesAPI.AddProvider(provider);
                 }
             }
 

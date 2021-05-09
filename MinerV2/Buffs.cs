@@ -8,7 +8,6 @@ namespace DiggerPlugin
 {
     public static class Buffs
     {
-        // armor buff gained during roll
         internal static BuffDef goldRushBuff;
         internal static BuffDef cleaveBuff;
 
@@ -16,24 +15,8 @@ namespace DiggerPlugin
 
         internal static void RegisterBuffs()
         {
-            // fix the buff catalog to actually register our buffs
-            IL.RoR2.BuffCatalog.Init += FixBuffCatalog;
-
             goldRushBuff = AddNewBuff("GoldRush", Resources.Load<Sprite>("Textures/BuffIcons/texBuffOnFireIcon"), DiggerPlugin.characterColor, true, false);
             cleaveBuff = AddNewBuff("Cleave", Resources.Load<Sprite>("Textures/BuffIcons/texBuffPulverizeIcon"), DiggerPlugin.characterColor, true, true);
-        }
-
-        internal static void FixBuffCatalog(ILContext il)
-        {
-            ILCursor c = new ILCursor(il);
-
-            if (!c.Next.MatchLdsfld(typeof(RoR2Content.Buffs), nameof(RoR2Content.Buffs.buffDefs)))
-            {
-                return;
-            }
-
-            c.Remove();
-            c.Emit(OpCodes.Ldsfld, typeof(ContentManager).GetField(nameof(ContentManager.buffDefs)));
         }
 
         // simple helper method
