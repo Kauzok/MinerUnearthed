@@ -26,6 +26,8 @@ namespace DiggerPlugin
     [BepInDependency("com.DestroyedClone.AncientScepter", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("com.KomradeSpectre.Aetherium", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("com.Sivelos.SivsItems", BepInDependency.DependencyFlags.SoftDependency)]
+    [BepInDependency("com.K1454.SupplyDrop", BepInDependency.DependencyFlags.SoftDependency)]
+    [BepInDependency("com.Skell.GoldenCoastPlus", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("com.TeamMoonstorm.Starstorm2", BepInDependency.DependencyFlags.SoftDependency)]
     [NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod, VersionStrictness.EveryoneNeedSameModVersion)]
     [BepInPlugin(MODUID, "DiggerUnearthed", "1.5.3")]
@@ -71,6 +73,12 @@ namespace DiggerPlugin
         public static DiggerPlugin instance;
 
         public static GameObject characterPrefab;
+        //I do not know why I needed this hack
+        //paladin was able to grab the charactermodel from characterprefab.getcomponentinchildren but for some reason that got lost for miner by the time i'm setting up item displays
+        //I'd normally be in a whatever this works kinda mood but I'm very very curious what the actual code difference is that changes this. the new fancy modern prefab builder is basically the exact same code as is here
+        //thanks for coming to my ted talk
+        //have a lovely evening
+        public static CharacterModel characterPrefabModel;
         public static GameObject characterDisplay;
 
         public static List<GameObject> bodyPrefabs = new List<GameObject>();
@@ -79,9 +87,6 @@ namespace DiggerPlugin
         public static List<SurvivorDef> survivorDefs = new List<SurvivorDef>();
 
         public GameObject doppelganger;
-
-        public static event Action awake;
-        public static event Action start;
 
         public static readonly Color characterColor = new Color(0.956862745f, 0.874509803f, 0.603921568f);
 
@@ -96,8 +101,11 @@ namespace DiggerPlugin
 
         public static bool hasAatrox = false;
         public static bool direseekerInstalled = false;
+        public static bool ancientScepterInstalled = false;
         public static bool aetheriumInstalled = false;
         public static bool sivsItemsInstalled = false;
+        public static bool supplyDropInstalled = false;
+        public static bool goldenCoastInstalled = false;
         public static bool starstormInstalled = false;
         public static uint blacksmithSkinIndex = 4;
 
@@ -122,13 +130,7 @@ namespace DiggerPlugin
         public static ConfigEntry<KeyCode> tauntKeybind;
         public static ConfigEntry<KeyCode> jokeKeybind;
 
-        public DiggerPlugin()
-        {
-            awake += DiggerPlugin_Load;
-            start += DiggerPlugin_LoadStart;
-        }
-
-        private void DiggerPlugin_Load()
+        private void Awake()
         {
             instance = this;
 
@@ -141,37 +143,49 @@ namespace DiggerPlugin
                 blacksmithSkinIndex++;
             }
 
-            CreateDisplayPrefab();
-            CreatePrefab();
-            RegisterCharacter();
-            Skins.RegisterSkins();
-
             //direseeker compat
             if (BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("com.rob.Direseeker"))
             {
                 direseekerInstalled = true;
             }
+
             //aetherium item displays- dll won't compile without a reference to aetherium
-            if (BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("com.KomradeSpectre.Aetherium"))
-            {
+            if (BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("com.KomradeSpectre.Aetherium")) {
                 aetheriumInstalled = true;
+            }
+
+            //aetherium item displays- dll won't compile without a reference to aetherium
+            if (BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("com.Skell.GoldenCoastPlus"))
+            {
+                goldenCoastInstalled = true;
             }
             //sivs item displays- dll won't compile without a reference
             if (BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("com.Sivelos.SivsItems"))
             {
                 sivsItemsInstalled = true;
             }
+            //sivs item displays- dll won't compile without a reference
+            if (BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("com.K1454.SupplyDrop")) {
+                supplyDropInstalled = true;
+            }
             //scepter stuff- dll won't compile without a reference to TILER2 and ClassicItems
-            if (BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("com.DestroyedClone.AncientScepter"))
-            {
+            if (BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("com.DestroyedClone.AncientScepter")) {
+                ancientScepterInstalled = true;
                 ScepterSkillSetup();
                 ScepterSetup();
             }
 
-            ItemDisplays.RegisterDisplays();
+
             Unlockables.RegisterUnlockables();
-            RegisterEffects();
+            CreateDisplayPrefab();
+            CreatePrefab();
+            ItemDisplays.InitializeItemDisplays();
+            RegisterCharacter();
+
             Buffs.RegisterBuffs();
+            Skins.RegisterSkins();
+            RegisterEffects();
+
             CreateDoppelganger();
 
             Direseeker.CreateDireseeker();
@@ -181,9 +195,16 @@ namespace DiggerPlugin
             Hook();
 
             new ContentPacks().Initialize();
+
+            RoR2.ContentManagement.ContentManager.onContentPacksAssigned += LateSetup;
         }
 
-        private void DiggerPlugin_LoadStart()
+        private void LateSetup(HG.ReadOnlyArray<RoR2.ContentManagement.ReadOnlyContentPack> obj) {
+            ItemDisplays.SetItemDisplays();
+        }
+
+
+        private void Start()
         {
             if (styleUI.Value && BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("com.rob.Aatrox"))
             {
@@ -203,26 +224,7 @@ namespace DiggerPlugin
         [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
         private void AddStyleMeter()
         {
-            characterPrefab.AddComponent<Aatrox.GenericStyleController>();
-        }
-
-        public void Awake()
-        {
-            Action awake = DiggerPlugin.awake;
-            if (awake == null)
-            {
-                return;
-            }
-            awake();
-        }
-        public void Start()
-        {
-            Action start = DiggerPlugin.start;
-            if (start == null)
-            {
-                return;
-            }
-            start();
+            //characterPrefab.AddComponent<Aatrox.GenericStyleController>();
         }
 
         //shit is right
@@ -420,16 +422,16 @@ namespace DiggerPlugin
             };*/
         }
 
-        private static GameObject CreateModel(GameObject main, int index)
+        //classic
+        //wait this is retarded what
+        private static GameObject CreateModel(int index)
         {
-            Destroy(main.transform.Find("ModelBase").gameObject);
-            Destroy(main.transform.Find("CameraPivot").gameObject);
-            Destroy(main.transform.Find("AimOrigin").gameObject);
 
             GameObject model = null;
 
             if (index == 0) model = Assets.mainAssetBundle.LoadAsset<GameObject>("mdlMiner");
             else if (index == 1) model = Assets.mainAssetBundle.LoadAsset<GameObject>("MinerDisplay");
+
 
             return model;
         }
@@ -439,7 +441,7 @@ namespace DiggerPlugin
             //spaghetti incoming
             GameObject tempDisplay = PrefabAPI.InstantiateClone(Resources.Load<GameObject>("Prefabs/CharacterBodies/CommandoBody"), "MinerDisplay");
 
-            GameObject model = CreateModel(tempDisplay, 1);
+            GameObject model = CreateModel(1);
 
             GameObject gameObject = new GameObject("ModelBase");
             gameObject.transform.parent = tempDisplay.transform;
@@ -515,10 +517,18 @@ namespace DiggerPlugin
 
             characterModel.SetFieldValue("mainSkinnedMeshRenderer", characterModel.baseRendererInfos[0].renderer.gameObject.GetComponent<SkinnedMeshRenderer>());
 
-            characterDisplay = PrefabAPI.InstantiateClone(tempDisplay.GetComponent<ModelLocator>().modelBaseTransform.gameObject, "MinerDisplay", true);
+            characterDisplay = tempDisplay.GetComponent<ModelLocator>().modelBaseTransform.gameObject;
 
             characterDisplay.AddComponent<MenuSound>();
         }
+
+
+        void Update() {
+            if (Input.GetKeyDown(KeyCode.N) && Input.GetKeyDown(KeyCode.LeftAlt)) {
+                var nig = Instantiate(characterPrefab, null);
+            }
+        }
+
 
         private static void CreatePrefab()
         {
@@ -526,34 +536,37 @@ namespace DiggerPlugin
 
             characterPrefab.GetComponent<NetworkIdentity>().localPlayerAuthority = true;
 
-            GameObject model = CreateModel(characterPrefab, 0);
+            Destroy(characterPrefab.transform.Find("ModelBase").gameObject);
+            Destroy(characterPrefab.transform.Find("CameraPivot").gameObject);
+            Destroy(characterPrefab.transform.Find("AimOrigin").gameObject);
 
-            GameObject gameObject = new GameObject("ModelBase");
-            gameObject.transform.parent = characterPrefab.transform;
-            gameObject.transform.localPosition = new Vector3(0f, -0.9f, 0f);
-            gameObject.transform.localRotation = Quaternion.identity;
-            gameObject.transform.localScale = new Vector3(1f, 1f, 1f);
+            GameObject model = CreateModel(0);
 
-            GameObject gameObject2 = new GameObject("CameraPivot");
-            gameObject2.transform.parent = gameObject.transform;
-            gameObject2.transform.localPosition = new Vector3(0f, 1.6f, 0f);
-            gameObject2.transform.localRotation = Quaternion.identity;
-            gameObject2.transform.localScale = Vector3.one;
+            GameObject modelBase = new GameObject("ModelBase");
+            modelBase.transform.parent = characterPrefab.transform;
+            modelBase.transform.localPosition = new Vector3(0f, -0.9f, 0f);
+            modelBase.transform.localRotation = Quaternion.identity;
+            modelBase.transform.localScale = new Vector3(1f, 1f, 1f);
 
-            GameObject gameObject3 = new GameObject("AimOrigin");
-            gameObject3.transform.parent = gameObject.transform;
-            gameObject3.transform.localPosition = new Vector3(0f, 1.5f, 0f);
-            gameObject3.transform.localRotation = Quaternion.identity;
-            gameObject3.transform.localScale = Vector3.one;
+            GameObject cameraPivot = new GameObject("CameraPivot");
+            cameraPivot.transform.parent = modelBase.transform;
+            cameraPivot.transform.localPosition = new Vector3(0f, 1.6f, 0f);
+            cameraPivot.transform.localRotation = Quaternion.identity;
+            cameraPivot.transform.localScale = Vector3.one;
 
-            Transform transform = model.transform;
-            transform.parent = gameObject.transform;
-            transform.localPosition = Vector3.zero;
-            transform.localRotation = Quaternion.identity;
+            GameObject aimOrigin = new GameObject("AimOrigin");
+            aimOrigin.transform.parent = modelBase.transform;
+            aimOrigin.transform.localPosition = new Vector3(0f, 1.5f, 0f);
+            aimOrigin.transform.localRotation = Quaternion.identity;
+            aimOrigin.transform.localScale = Vector3.one;
+
+            model.transform.parent = modelBase.transform;
+            model.transform.localPosition = Vector3.zero;
+            model.transform.localRotation = Quaternion.identity;
 
             CharacterDirection characterDirection = characterPrefab.GetComponent<CharacterDirection>();
             characterDirection.moveVector = Vector3.zero;
-            characterDirection.targetTransform = gameObject.transform;
+            characterDirection.targetTransform = modelBase.transform;
             characterDirection.overrideAnimatorForwardTransform = null;
             characterDirection.rootMotionAccumulator = null;
             characterDirection.modelAnimator = model.GetComponentInChildren<Animator>();
@@ -591,7 +604,7 @@ namespace DiggerPlugin
             bodyComponent.wasLucky = false;
             bodyComponent.hideCrosshair = false;
             bodyComponent.crosshairPrefab = Resources.Load<GameObject>("Prefabs/Crosshair/SimpleDotCrosshair");
-            bodyComponent.aimOriginTransform = gameObject3.transform;
+            bodyComponent.aimOriginTransform = aimOrigin.transform;
             bodyComponent.hullClassification = HullClassification.Human;
             bodyComponent.portraitIcon = Assets.charPortrait;
             bodyComponent.isChampion = false;
@@ -605,7 +618,7 @@ namespace DiggerPlugin
             LoadoutAPI.AddSkill(typeof(Taunt));
             LoadoutAPI.AddSkill(typeof(Joke));
 
-            var stateMachine = bodyComponent.GetComponent<EntityStateMachine>();
+            EntityStateMachine stateMachine = bodyComponent.GetComponent<EntityStateMachine>();
             stateMachine.mainStateType = new SerializableEntityStateType(typeof(DiggerMain));
 
             CharacterMotor characterMotor = characterPrefab.GetComponent<CharacterMotor>();
@@ -626,13 +639,14 @@ namespace DiggerPlugin
             cameraTargetParams.dontRaycastToPivot = false;
 
             ModelLocator modelLocator = characterPrefab.GetComponent<ModelLocator>();
-            modelLocator.modelTransform = transform;
-            modelLocator.modelBaseTransform = gameObject.transform;
+            modelLocator.modelTransform = model.transform;
+            modelLocator.modelBaseTransform = modelBase.transform;
 
             ChildLocator childLocator = model.GetComponent<ChildLocator>();
 
             CharacterModel characterModel = model.AddComponent<CharacterModel>();
             characterModel.body = bodyComponent;
+            characterPrefabModel = characterModel;
             characterModel.baseRendererInfos = new CharacterModel.RendererInfo[]
             {
                 new CharacterModel.RendererInfo
@@ -864,7 +878,6 @@ namespace DiggerPlugin
 
             string unlockString = "";
             if (!forceUnlock.Value) unlockString = "MINER_UNLOCKABLE_REWARD_ID";
-
             SurvivorDef survivorDef = ScriptableObject.CreateInstance<SurvivorDef>();
             survivorDef.displayNameToken = "MINER_NAME";
             survivorDef.unlockableDef = null;
@@ -1095,7 +1108,6 @@ namespace DiggerPlugin
                 viewableNode = new ViewablesCatalog.Node(mySkillDef.skillNameToken, false, null)
             };
         }
-
         private void UtilitySetup()
         {
             LoadoutAPI.AddSkill(typeof(BackBlast));

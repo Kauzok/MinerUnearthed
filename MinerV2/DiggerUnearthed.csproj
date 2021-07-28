@@ -18,112 +18,124 @@
 
   <ItemGroup>
     <Reference Include="0Harmony">
-      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\0Harmony.dll</HintPath>
-    </Reference>
-    <Reference Include="Aatrox">
-      <HintPath>..\..\..\..\Downloads\risky\Aatrox\Aatrox.dll</HintPath>
+      <HintPath>E:\Abbas's stuff VII I think\1337 haxx\ror2lol\Chikara ga minegitte kuru\MinerUnearthed\MinerV2\libs\0Harmony.dll</HintPath>
     </Reference>
     <Reference Include="Aetherium">
-      <HintPath>..\..\..\..\Downloads\risky\Aetherium\Aetherium.dll</HintPath>
+      <HintPath>E:\Abbas's stuff VII I think\1337 haxx\ror2lol\Chikara ga minegitte kuru\MinerUnearthed\MinerV2\libs\Aetherium.dll</HintPath>
     </Reference>
     <Reference Include="AncientScepter">
-      <HintPath>..\..\AncientScepter\AncientScepter\obj\Debug\netstandard2.0\AncientScepter.dll</HintPath>
+      <HintPath>E:\Abbas's stuff VII I think\1337 haxx\ror2lol\Chikara ga minegitte kuru\MinerUnearthed\MinerV2\libs\AncientScepter.dll</HintPath>
     </Reference>
     <Reference Include="Assembly-CSharp">
-      <HintPath>..\..\AegisBuff\libs\Assembly-CSharp.dll</HintPath>
+      <HintPath>E:\Abbas's stuff VII I think\1337 haxx\ror2lol\Chikara ga minegitte kuru\MinerUnearthed\MinerV2\libs\Assembly-CSharp.dll</HintPath>
     </Reference>
     <Reference Include="BepInEx">
-      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\BepInEx.dll</HintPath>
+      <HintPath>E:\Abbas's stuff VII I think\1337 haxx\ror2lol\Chikara ga minegitte kuru\MinerUnearthed\MinerV2\libs\BepInEx.dll</HintPath>
     </Reference>
     <Reference Include="BepInEx.Harmony">
-      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\BepInEx.Harmony.dll</HintPath>
+      <HintPath>E:\Abbas's stuff VII I think\1337 haxx\ror2lol\Chikara ga minegitte kuru\MinerUnearthed\MinerV2\libs\BepInEx.Harmony.dll</HintPath>
     </Reference>
     <Reference Include="BepInEx.MonoMod.Loader">
-      <HintPath>..\..\AegisBuff\libs\BepInEx.MonoMod.Loader.dll</HintPath>
+      <HintPath>E:\Abbas's stuff VII I think\1337 haxx\ror2lol\Chikara ga minegitte kuru\MinerUnearthed\MinerV2\libs\BepInEx.MonoMod.Loader.dll</HintPath>
     </Reference>
     <Reference Include="BepInEx.Preloader">
-      <HintPath>..\..\EnforcerMod\EnforcerMod_VS\bin\Debug\netstandard2.0\BepInEx.Preloader.dll</HintPath>
+      <HintPath>E:\Abbas's stuff VII I think\1337 haxx\ror2lol\Chikara ga minegitte kuru\MinerUnearthed\MinerV2\libs\BepInEx.Preloader.dll</HintPath>
     </Reference>
     <Reference Include="DireseekerMod">
-      <HintPath>..\..\Direseeker\DireseekerMod\DireseekerMod\bin\Debug\netstandard2.0\DireseekerMod.dll</HintPath>
+      <HintPath>E:\Abbas's stuff VII I think\1337 haxx\ror2lol\Chikara ga minegitte kuru\MinerUnearthed\MinerV2\libs\DireseekerMod.dll</HintPath>
+    </Reference>
+    <Reference Include="EliteSpawningOverhaul">
+      <HintPath>E:\Abbas's stuff VII I think\1337 haxx\ror2lol\Chikara ga minegitte kuru\MinerUnearthed\MinerV2\libs\EliteSpawningOverhaul.dll</HintPath>
     </Reference>
     <Reference Include="Facepunch.Steamworks">
-      <HintPath>..\..\AegisBuff\libs\Facepunch.Steamworks.dll</HintPath>
+      <HintPath>E:\Abbas's stuff VII I think\1337 haxx\ror2lol\Chikara ga minegitte kuru\MinerUnearthed\MinerV2\libs\Facepunch.Steamworks.dll</HintPath>
+    </Reference>
+    <Reference Include="GoldenCoastPlus">
+      <HintPath>E:\Abbas's stuff VII I think\1337 haxx\ror2lol\Chikara ga minegitte kuru\MinerUnearthed\MinerV2\libs\GoldenCoastPlus.dll</HintPath>
     </Reference>
     <Reference Include="HGCSharpUtils">
-      <HintPath>..\..\AegisBuff\libs\HGCSharpUtils.dll</HintPath>
+      <HintPath>E:\Abbas's stuff VII I think\1337 haxx\ror2lol\Chikara ga minegitte kuru\MinerUnearthed\MinerV2\libs\HGCSharpUtils.dll</HintPath>
     </Reference>
     <Reference Include="HGUnityUtils">
-      <HintPath>..\..\AegisBuff\libs\HGUnityUtils.dll</HintPath>
+      <HintPath>E:\Abbas's stuff VII I think\1337 haxx\ror2lol\Chikara ga minegitte kuru\MinerUnearthed\MinerV2\libs\HGUnityUtils.dll</HintPath>
     </Reference>
     <Reference Include="MMHOOK_Assembly-CSharp">
-      <HintPath>..\..\AegisBuff\libs\MMHOOK_Assembly-CSharp.dll</HintPath>
+      <HintPath>E:\Abbas's stuff VII I think\1337 haxx\ror2lol\Chikara ga minegitte kuru\MinerUnearthed\MinerV2\libs\MMHOOK_Assembly-CSharp.dll</HintPath>
     </Reference>
     <Reference Include="Mono.Cecil">
-      <HintPath>..\..\AegisBuff\libs\Mono.Cecil.dll</HintPath>
+      <HintPath>E:\Abbas's stuff VII I think\1337 haxx\ror2lol\Chikara ga minegitte kuru\MinerUnearthed\MinerV2\libs\Mono.Cecil.dll</HintPath>
     </Reference>
     <Reference Include="Mono.Cecil.Mdb">
-      <HintPath>..\..\AegisBuff\libs\Mono.Cecil.Mdb.dll</HintPath>
+      <HintPath>E:\Abbas's stuff VII I think\1337 haxx\ror2lol\Chikara ga minegitte kuru\MinerUnearthed\MinerV2\libs\Mono.Cecil.Mdb.dll</HintPath>
     </Reference>
     <Reference Include="Mono.Cecil.Pdb">
-      <HintPath>..\..\AegisBuff\libs\Mono.Cecil.Pdb.dll</HintPath>
+      <HintPath>E:\Abbas's stuff VII I think\1337 haxx\ror2lol\Chikara ga minegitte kuru\MinerUnearthed\MinerV2\libs\Mono.Cecil.Pdb.dll</HintPath>
     </Reference>
     <Reference Include="Mono.Cecil.Rocks">
-      <HintPath>..\..\AegisBuff\libs\Mono.Cecil.Rocks.dll</HintPath>
-    </Reference>
-    <Reference Include="MonoMod">
-      <HintPath>..\..\AegisBuff\libs\MonoMod.exe</HintPath>
+      <HintPath>E:\Abbas's stuff VII I think\1337 haxx\ror2lol\Chikara ga minegitte kuru\MinerUnearthed\MinerV2\libs\Mono.Cecil.Rocks.dll</HintPath>
     </Reference>
     <Reference Include="MonoMod.RuntimeDetour">
-      <HintPath>..\..\AegisBuff\libs\MonoMod.RuntimeDetour.dll</HintPath>
+      <HintPath>E:\Abbas's stuff VII I think\1337 haxx\ror2lol\Chikara ga minegitte kuru\MinerUnearthed\MinerV2\libs\MonoMod.RuntimeDetour.dll</HintPath>
     </Reference>
     <Reference Include="MonoMod.Utils">
-      <HintPath>..\..\AegisBuff\libs\MonoMod.Utils.dll</HintPath>
+      <HintPath>E:\Abbas's stuff VII I think\1337 haxx\ror2lol\Chikara ga minegitte kuru\MinerUnearthed\MinerV2\libs\MonoMod.Utils.dll</HintPath>
     </Reference>
     <Reference Include="R2API">
-      <HintPath>..\..\AegisBuff\libs\R2API.dll</HintPath>
+      <HintPath>E:\Abbas's stuff VII I think\1337 haxx\ror2lol\Chikara ga minegitte kuru\MinerUnearthed\MinerV2\libs\R2API.dll</HintPath>
+    </Reference>
+    <Reference Include="ScrollableLobbyUI">
+      <HintPath>E:\Abbas's stuff VII I think\1337 haxx\ror2lol\Chikara ga minegitte kuru\MinerUnearthed\MinerV2\libs\ScrollableLobbyUI.dll</HintPath>
+    </Reference>
+    <Reference Include="SivsItemsRoR2">
+      <HintPath>E:\Abbas's stuff VII I think\1337 haxx\ror2lol\Chikara ga minegitte kuru\MinerUnearthed\MinerV2\libs\SivsItemsRoR2.dll</HintPath>
+    </Reference>
+    <Reference Include="SupplyDrop">
+      <HintPath>E:\Abbas's stuff VII I think\1337 haxx\ror2lol\Chikara ga minegitte kuru\MinerUnearthed\MinerV2\libs\SupplyDrop.dll</HintPath>
+    </Reference>
+    <Reference Include="TILER2">
+      <HintPath>E:\Abbas's stuff VII I think\1337 haxx\ror2lol\Chikara ga minegitte kuru\MinerUnearthed\MinerV2\libs\TILER2.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Postprocessing.Runtime">
-      <HintPath>..\..\AegisBuff\libs\Unity.Postprocessing.Runtime.dll</HintPath>
+      <HintPath>E:\Abbas's stuff VII I think\1337 haxx\ror2lol\Chikara ga minegitte kuru\MinerUnearthed\MinerV2\libs\Unity.Postprocessing.Runtime.dll</HintPath>
     </Reference>
     <Reference Include="Unity.TextMeshPro">
-      <HintPath>..\..\AegisBuff\libs\Unity.TextMeshPro.dll</HintPath>
+      <HintPath>E:\Abbas's stuff VII I think\1337 haxx\ror2lol\Chikara ga minegitte kuru\MinerUnearthed\MinerV2\libs\Unity.TextMeshPro.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine">
-      <HintPath>..\..\AegisBuff\libs\UnityEngine.dll</HintPath>
+      <HintPath>E:\Abbas's stuff VII I think\1337 haxx\ror2lol\Chikara ga minegitte kuru\MinerUnearthed\MinerV2\libs\UnityEngine.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.AnimationModule">
-      <HintPath>..\..\AegisBuff\libs\UnityEngine.AnimationModule.dll</HintPath>
+      <HintPath>E:\Abbas's stuff VII I think\1337 haxx\ror2lol\Chikara ga minegitte kuru\MinerUnearthed\MinerV2\libs\UnityEngine.AnimationModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.AssetBundleModule">
-      <HintPath>..\..\AegisBuff\libs\UnityEngine.AssetBundleModule.dll</HintPath>
+      <HintPath>E:\Abbas's stuff VII I think\1337 haxx\ror2lol\Chikara ga minegitte kuru\MinerUnearthed\MinerV2\libs\UnityEngine.AssetBundleModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.CoreModule">
-      <HintPath>..\..\AegisBuff\libs\UnityEngine.CoreModule.dll</HintPath>
+      <HintPath>E:\Abbas's stuff VII I think\1337 haxx\ror2lol\Chikara ga minegitte kuru\MinerUnearthed\MinerV2\libs\UnityEngine.CoreModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.Networking">
-      <HintPath>..\..\AegisBuff\libs\UnityEngine.Networking.dll</HintPath>
+      <HintPath>E:\Abbas's stuff VII I think\1337 haxx\ror2lol\Chikara ga minegitte kuru\MinerUnearthed\MinerV2\libs\UnityEngine.Networking.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.ParticleSystemModule">
-      <HintPath>..\..\AegisBuff\libs\UnityEngine.ParticleSystemModule.dll</HintPath>
+      <HintPath>E:\Abbas's stuff VII I think\1337 haxx\ror2lol\Chikara ga minegitte kuru\MinerUnearthed\MinerV2\libs\UnityEngine.ParticleSystemModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.PhysicsModule">
-      <HintPath>..\..\AegisBuff\libs\UnityEngine.PhysicsModule.dll</HintPath>
+      <HintPath>E:\Abbas's stuff VII I think\1337 haxx\ror2lol\Chikara ga minegitte kuru\MinerUnearthed\MinerV2\libs\UnityEngine.PhysicsModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.UI">
-      <HintPath>..\..\AegisBuff\libs\UnityEngine.UI.dll</HintPath>
+      <HintPath>E:\Abbas's stuff VII I think\1337 haxx\ror2lol\Chikara ga minegitte kuru\MinerUnearthed\MinerV2\libs\UnityEngine.UI.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.UIModule">
-      <HintPath>..\..\AegisBuff\libs\UnityEngine.UIModule.dll</HintPath>
+      <HintPath>E:\Abbas's stuff VII I think\1337 haxx\ror2lol\Chikara ga minegitte kuru\MinerUnearthed\MinerV2\libs\UnityEngine.UIModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.UNETModule">
-      <HintPath>..\..\AegisBuff\libs\UnityEngine.UNETModule.dll</HintPath>
+      <HintPath>E:\Abbas's stuff VII I think\1337 haxx\ror2lol\Chikara ga minegitte kuru\MinerUnearthed\MinerV2\libs\UnityEngine.UNETModule.dll</HintPath>
     </Reference>
     <Reference Include="Wwise">
-      <HintPath>..\..\AegisBuff\libs\Wwise.dll</HintPath>
+      <HintPath>E:\Abbas's stuff VII I think\1337 haxx\ror2lol\Chikara ga minegitte kuru\MinerUnearthed\MinerV2\libs\Wwise.dll</HintPath>
     </Reference>
     <Reference Include="Zio">
-      <HintPath>..\..\AegisBuff\libs\Zio.dll</HintPath>
+      <HintPath>E:\Abbas's stuff VII I think\1337 haxx\ror2lol\Chikara ga minegitte kuru\MinerUnearthed\MinerV2\libs\Zio.dll</HintPath>
     </Reference>
   </ItemGroup>
 

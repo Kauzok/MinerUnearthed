@@ -7,38 +7,92 @@ using System.Runtime.CompilerServices;
 
 namespace DiggerPlugin
 {
-    public static class ItemDisplays
-    {
-        public static List<ItemDisplayRuleSet.NamedRuleGroup> list;
-        public static List<ItemDisplayRuleSet.NamedRuleGroup> list2;
-
-        public static GameObject capacitorPrefab;
+    public static class ItemDisplays {
+        internal static ItemDisplayRuleSet itemDisplayRuleSet;
+        internal static List<ItemDisplayRuleSet.KeyAssetRuleGroup> itemDisplayRules;
 
         private static Dictionary<string, GameObject> itemDisplayPrefabs = new Dictionary<string, GameObject>();
 
-        public static void RegisterDisplays()
-        {
-            return;
+        internal static void InitializeItemDisplays() {
+            PopulateDisplayPrefabs();
 
-            GameObject bodyPrefab = DiggerPlugin.characterPrefab;
+            CharacterModel characterModel = DiggerPlugin.characterPrefabModel;// DiggerPlugin.characterPrefab.GetComponentInChildren<CharacterModel>();
 
-            GameObject model = bodyPrefab.GetComponentInChildren<ModelLocator>().modelTransform.gameObject;
-            CharacterModel characterModel = model.GetComponent<CharacterModel>();
+            itemDisplayRuleSet = ScriptableObject.CreateInstance<ItemDisplayRuleSet>();
+            itemDisplayRuleSet.name = "idrsMiner";
 
-            PopulateDisplays();
+            characterModel.itemDisplayRuleSet = itemDisplayRuleSet;
+        }
 
-            ItemDisplayRuleSet itemDisplayRuleSet = ScriptableObject.CreateInstance<ItemDisplayRuleSet>();
+        internal static void PopulateDisplayPrefabs() {
+            PopulateFromBody("Commando");
+            PopulateFromBody("Croco");
+        }
 
-            list = new List<ItemDisplayRuleSet.NamedRuleGroup>();
-            list2 = new List<ItemDisplayRuleSet.NamedRuleGroup>();
+        private static void PopulateFromBody(string bodyName) {
+            ItemDisplayRuleSet itemDisplayRuleSet = Resources.Load<GameObject>("Prefabs/CharacterBodies/" + bodyName + "Body").GetComponent<ModelLocator>().modelTransform.GetComponent<CharacterModel>().itemDisplayRuleSet;
+
+            ItemDisplayRuleSet.KeyAssetRuleGroup[] item = itemDisplayRuleSet.keyAssetRuleGroups;
+
+            for (int i = 0; i < item.Length; i++) {
+                ItemDisplayRule[] rules = item[i].displayRuleGroup.rules;
+
+                for (int j = 0; j < rules.Length; j++) {
+                    GameObject followerPrefab = rules[j].followerPrefab;
+                    if (followerPrefab) {
+                        string name = followerPrefab.name;
+                        string key = (name != null) ? name.ToLower() : null;
+                        if (!itemDisplayPrefabs.ContainsKey(key)) {
+                            itemDisplayPrefabs[key] = followerPrefab;
+                        }
+                    }
+                }
+            }
+        }
+
+        private static GameObject LoadDisplay(string name) {
+            if (itemDisplayPrefabs.ContainsKey(name.ToLower())) {
+                if (itemDisplayPrefabs[name.ToLower()]) return itemDisplayPrefabs[name.ToLower()];
+            }
+            return null;
+        }
+
+        internal static void SetItemDisplays() {
+
+            //how come I couldn't get characterPrefab.GetComponent<CharacterModel>() huh?
+            //Debug.LogWarning("norg" + DiggerPlugin.characterPrefabModel.itemDisplayRuleSet.name);// DiggerPlugin.characterPrefab.GetComponent<CharacterModel>().itemDisplayRuleSet.name);
+            itemDisplayRules = new List<ItemDisplayRuleSet.KeyAssetRuleGroup>();
 
             //add item displays here
-            #region Item Displays
-            list2.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "Jetpack",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+            SetVanillaDisplays();
+
+            if (DiggerPlugin.ancientScepterInstalled)
+                fixFuckinScepterDisplay();
+
+            if (DiggerPlugin.aetheriumInstalled)
+                AddAetheriumDisplays();
+
+            if (DiggerPlugin.supplyDropInstalled)
+                AddSupplyDropDisplays();
+
+            if (DiggerPlugin.sivsItemsInstalled)
+                AddSivsItemsDisplays();
+
+            if (DiggerPlugin.goldenCoastInstalled)
+                fixFuckinGoaldCoastDisplays();
+
+            //apply displays here
+
+            Debug.LogWarning(itemDisplayRuleSet.keyAssetRuleGroups.Length);
+            itemDisplayRuleSet.keyAssetRuleGroups = itemDisplayRules.ToArray();
+            itemDisplayRuleSet.GenerateRuntimeValues();
+        }
+
+        private static void SetVanillaDisplays() {
+
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Equipment.Jetpack,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -55,11 +109,9 @@ namespace DiggerPlugin
                 }
             });
 
-            list2.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "GoldGat",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Equipment.GoldGat,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -76,11 +128,9 @@ namespace DiggerPlugin
                 }
             });
 
-            list2.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "BFG",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Equipment.BFG,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -97,11 +147,9 @@ namespace DiggerPlugin
                 }
             });
 
-            list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "CritGlasses",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Items.CritGlasses,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -118,11 +166,9 @@ namespace DiggerPlugin
                 }
             });
 
-            list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "Syringe",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Items.Syringe,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -138,12 +184,10 @@ namespace DiggerPlugin
                     }
                 }
             });
-            
-            list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "Behemoth",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Items.Behemoth,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -160,11 +204,9 @@ namespace DiggerPlugin
                 }
             });
 
-            list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "Missile",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Items.Missile,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -181,11 +223,9 @@ namespace DiggerPlugin
                 }
             });
 
-            list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "Dagger",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Items.Dagger,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -201,12 +241,10 @@ namespace DiggerPlugin
                     }
                 }
             });
-            
-            list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "Hoof",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Items.Hoof,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -218,16 +256,21 @@ namespace DiggerPlugin
                             localAngles = new Vector3(70, 0, 0),
                             localScale = new Vector3(0.0011f, 0.0014f, 0.0008f),
                             limbMask = LimbFlags.None
+                        },
+
+                        new ItemDisplayRule
+                        {
+                            ruleType = ItemDisplayRuleType.LimbMask,
+                            childName = "KneeL",
+                            limbMask = LimbFlags.LeftLeg
                         }
                     }
                 }
             });
-            
-            list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "ChainLightning",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Items.ChainLightning,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -243,12 +286,10 @@ namespace DiggerPlugin
                     }
                 }
             });
-            
-            list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "GhostOnKill",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Items.GhostOnKill,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -264,12 +305,10 @@ namespace DiggerPlugin
                     }
                 }
             });
-            
-            list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "Mushroom",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Items.Mushroom,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -285,33 +324,29 @@ namespace DiggerPlugin
                     }
                 }
             });
-            
-            list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "AttackSpeedOnCrit",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Items.AttackSpeedOnCrit,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
                         {
                             ruleType = ItemDisplayRuleType.ParentedPrefab,
                             followerPrefab = ItemDisplays.LoadDisplay("DisplayWolfPelt"),
-                            childName = "Head",
-                            localPos = new Vector3(0, 0.0024f, -0.001f),
-                            localAngles = new Vector3(0, 180, 0),
-                            localScale = new Vector3(0.006f, 0.006f, 0.006f),
+                            childName = "KneeR",
+                            localPos = new Vector3(0.00023F, 0.00035F, -0.0005F),
+                            localAngles = new Vector3(304.9414F, 175.5463F, 185.4277F),
+                            localScale = new Vector3(0.00395F, 0.0038F, 0.0038F),
                             limbMask = LimbFlags.None
                         }
                     }
                 }
             });
-            
-            list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "BleedOnHit",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Items.BleedOnHit,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -328,11 +363,9 @@ namespace DiggerPlugin
                 }
             });
 
-            list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "WardOnLevel",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Items.WardOnLevel,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -349,11 +382,9 @@ namespace DiggerPlugin
                 }
             });
 
-            list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "HealOnCrit",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Items.HealOnCrit,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -370,11 +401,9 @@ namespace DiggerPlugin
                 }
             });
 
-            list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "HealWhileSafe",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Items.HealWhileSafe,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -390,12 +419,10 @@ namespace DiggerPlugin
                     }
                 }
             });
-            
-            list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "Clover",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Items.Clover,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -411,12 +438,10 @@ namespace DiggerPlugin
                     }
                 }
             });
-            
-            list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "BarrierOnOverHeal",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Items.BarrierOnOverHeal,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -432,12 +457,10 @@ namespace DiggerPlugin
                     }
                 }
             });
-            
-            list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "GoldOnHit",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Items.GoldOnHit,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -453,12 +476,10 @@ namespace DiggerPlugin
                     }
                 }
             });
-            
-            list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "WarCryOnMultiKill",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Items.WarCryOnMultiKill,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -475,11 +496,9 @@ namespace DiggerPlugin
                 }
             });
 
-            list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "SprintArmor",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Items.SprintArmor,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -496,11 +515,9 @@ namespace DiggerPlugin
                 }
             });
 
-            list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "IceRing",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Items.IceRing,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -517,11 +534,9 @@ namespace DiggerPlugin
                 }
             });
 
-            list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "FireRing",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Items.FireRing,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -538,11 +553,9 @@ namespace DiggerPlugin
                 }
             });
 
-            list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "UtilitySkillMagazine",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Items.UtilitySkillMagazine,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -568,12 +581,10 @@ namespace DiggerPlugin
                     }
                 }
             });
-            
-            list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "JumpBoost",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Items.JumpBoost,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -589,12 +600,10 @@ namespace DiggerPlugin
                     }
                 }
             });
-            
-            list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "ArmorReductionOnHit",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Items.ArmorReductionOnHit,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -610,12 +619,10 @@ namespace DiggerPlugin
                     }
                 }
             });
-            
-            list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "NearbyDamageBonus",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Items.NearbyDamageBonus,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -642,11 +649,9 @@ namespace DiggerPlugin
                 }
             });
 
-            list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "ArmorPlate",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Items.ArmorPlate,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -662,12 +667,10 @@ namespace DiggerPlugin
                     }
                 }
             });
-            
-            list2.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "CommandMissile",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Equipment.CommandMissile,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -683,12 +686,10 @@ namespace DiggerPlugin
                     }
                 }
             });
-            
-            list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "Feather",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Items.Feather,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -705,11 +706,9 @@ namespace DiggerPlugin
                 }
             });
 
-            list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "Crowbar",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Items.Crowbar,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -725,12 +724,10 @@ namespace DiggerPlugin
                     }
                 }
             });
-            
-            list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "FallBoots",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Items.FallBoots,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -756,12 +753,10 @@ namespace DiggerPlugin
                     }
                 }
             });
-            
-            list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "ExecuteLowHealthElite",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Items.ExecuteLowHealthElite,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -777,12 +772,10 @@ namespace DiggerPlugin
                     }
                 }
             });
-            
-            list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "EquipmentMagazine",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Items.EquipmentMagazine,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -799,11 +792,9 @@ namespace DiggerPlugin
                 }
             });
 
-            list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "NovaOnHeal",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Items.NovaOnHeal,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -829,12 +820,10 @@ namespace DiggerPlugin
                     }
                 }
             });
-            
-            list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "Infusion",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Items.Infusion,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -851,11 +840,9 @@ namespace DiggerPlugin
                 }
             });
 
-            list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "Medkit",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Items.Medkit,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -871,12 +858,10 @@ namespace DiggerPlugin
                     }
                 }
             });
-            
-            list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "Bandolier",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Items.Bandolier,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -892,12 +877,10 @@ namespace DiggerPlugin
                     }
                 }
             });
-            
-            list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "BounceNearby",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Items.BounceNearby,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -914,11 +897,9 @@ namespace DiggerPlugin
                 }
             });
 
-            list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "IgniteOnKill",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Items.IgniteOnKill,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -935,11 +916,9 @@ namespace DiggerPlugin
                 }
             });
 
-            list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "StunChanceOnHit",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Items.StunChanceOnHit,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -956,11 +935,9 @@ namespace DiggerPlugin
                 }
             });
 
-            list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "Firework",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Items.Firework,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -977,11 +954,9 @@ namespace DiggerPlugin
                 }
             });
 
-            list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "LunarDagger",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Items.LunarDagger,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -998,11 +973,9 @@ namespace DiggerPlugin
                 }
             });
 
-            list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "Knurl",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Items.Knurl,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -1019,11 +992,9 @@ namespace DiggerPlugin
                 }
             });
 
-            list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "BeetleGland",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Items.BeetleGland,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -1040,11 +1011,9 @@ namespace DiggerPlugin
                 }
             });
 
-            list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "SprintBonus",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Items.SprintBonus,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -1060,12 +1029,10 @@ namespace DiggerPlugin
                     }
                 }
             });
-            
-            list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "SecondarySkillMagazine",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Items.SecondarySkillMagazine,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -1091,12 +1058,10 @@ namespace DiggerPlugin
                     }
                 }
             });
-            
-            list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "StickyBomb",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Items.StickyBomb,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -1113,11 +1078,9 @@ namespace DiggerPlugin
                 }
             });
 
-            list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "TreasureCache",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Items.TreasureCache,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -1134,11 +1097,9 @@ namespace DiggerPlugin
                 }
             });
 
-            list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "BossDamageBonus",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Items.BossDamageBonus,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -1155,11 +1116,9 @@ namespace DiggerPlugin
                 }
             });
 
-            list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "SlowOnHit",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Items.SlowOnHit,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -1176,11 +1135,9 @@ namespace DiggerPlugin
                 }
             });
 
-            list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "ExtraLife",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Items.ExtraLife,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -1196,12 +1153,10 @@ namespace DiggerPlugin
                     }
                 }
             });
-            
-            list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "KillEliteFrenzy",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Items.KillEliteFrenzy,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -1209,20 +1164,18 @@ namespace DiggerPlugin
                             ruleType = ItemDisplayRuleType.ParentedPrefab,
                             followerPrefab = ItemDisplays.LoadDisplay("DisplayBrainstalk"),
                             childName = "Head",
-                            localPos = new Vector3(0, 0.002f, 0),
-                            localAngles = new Vector3(0, 0, 0),
-                            localScale = new Vector3(0.002f, 0.002f, 0.002f),
+                            localPos = new Vector3(-0.00002F, 0.00038F, 0.00013F),
+                            localAngles = new Vector3(12.43669F, 359.5866F, 0F),
+                            localScale = new Vector3(0.00215F, 0.00655F, 0.00203F),
                             limbMask = LimbFlags.None
                         }
                     }
                 }
             });
-            
-            list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "RepeatHeal",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Items.RepeatHeal,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -1239,11 +1192,9 @@ namespace DiggerPlugin
                 }
             });
 
-            list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "AutoCastEquipment",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Items.AutoCastEquipment,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -1259,12 +1210,10 @@ namespace DiggerPlugin
                     }
                 }
             });
-            
-            list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "IncreaseHealing",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Items.IncreaseHealing,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -1291,11 +1240,9 @@ namespace DiggerPlugin
                 }
             });
 
-            list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "TitanGoldDuringTP",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Items.TitanGoldDuringTP,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -1311,12 +1258,10 @@ namespace DiggerPlugin
                     }
                 }
             });
-            
-            list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "SprintWisp",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Items.SprintWisp,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -1333,11 +1278,9 @@ namespace DiggerPlugin
                 }
             });
 
-            list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "BarrierOnKill",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Items.BarrierOnKill,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -1354,11 +1297,9 @@ namespace DiggerPlugin
                 }
             });
 
-            list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "TPHealingNova",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Items.TPHealingNova,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -1375,11 +1316,9 @@ namespace DiggerPlugin
                 }
             });
 
-            list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "LunarUtilityReplacement",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Items.LunarUtilityReplacement,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -1396,11 +1335,9 @@ namespace DiggerPlugin
                 }
             });
 
-            list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "Thorns",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Items.Thorns,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -1417,11 +1354,9 @@ namespace DiggerPlugin
                 }
             });
 
-            list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "LunarPrimaryReplacement",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Items.LunarPrimaryReplacement,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -1438,11 +1373,9 @@ namespace DiggerPlugin
                 }
             });
 
-            list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "NovaOnLowHealth",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Items.NovaOnLowHealth,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -1459,11 +1392,9 @@ namespace DiggerPlugin
                 }
             });
 
-            list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "LunarTrinket",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Items.LunarTrinket,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -1480,11 +1411,9 @@ namespace DiggerPlugin
                 }
             });
 
-            list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "Plant",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Items.Plant,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -1501,11 +1430,9 @@ namespace DiggerPlugin
                 }
             });
 
-            list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "Bear",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Items.Bear,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -1522,11 +1449,9 @@ namespace DiggerPlugin
                 }
             });
 
-            list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "DeathMark",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Items.DeathMark,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -1543,11 +1468,9 @@ namespace DiggerPlugin
                 }
             });
 
-            list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "ExplodeOnDeath",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Items.ExplodeOnDeath,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -1564,11 +1487,9 @@ namespace DiggerPlugin
                 }
             });
 
-            list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "Seed",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Items.Seed,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -1585,11 +1506,9 @@ namespace DiggerPlugin
                 }
             });
 
-            list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "SprintOutOfCombat",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Items.SprintOutOfCombat,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -1606,11 +1525,9 @@ namespace DiggerPlugin
                 }
             });
 
-            list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "CooldownOnCrit",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Items.CooldownOnCrit,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -1626,12 +1543,10 @@ namespace DiggerPlugin
                     }
                 }
             });
-            
-            list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "Phasing",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Items.Phasing,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -1648,11 +1563,9 @@ namespace DiggerPlugin
                 }
             });
 
-            list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "PersonalShield",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Items.PersonalShield,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -1669,11 +1582,9 @@ namespace DiggerPlugin
                 }
             });
 
-            list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "ShockNearby",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Items.ShockNearby,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -1689,12 +1600,10 @@ namespace DiggerPlugin
                     }
                 }
             });
-            
-            list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "ShieldOnly",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Items.ShieldOnly,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -1720,12 +1629,10 @@ namespace DiggerPlugin
                     }
                 }
             });
-            
-            list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "AlienHead",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Items.AlienHead,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -1741,12 +1648,10 @@ namespace DiggerPlugin
                     }
                 }
             });
-            
-            list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "HeadHunter",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Items.HeadHunter,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -1762,12 +1667,10 @@ namespace DiggerPlugin
                     }
                 }
             });
-            
-            list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "EnergizedOnEquipmentUse",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Items.EnergizedOnEquipmentUse,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -1783,12 +1686,9 @@ namespace DiggerPlugin
                     }
                 }
             });
-            
-            list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "RegenOnKill",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Items.FlatHealth,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -1805,11 +1705,9 @@ namespace DiggerPlugin
                 }
             });
 
-            list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "Tooth",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Items.Tooth,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -1826,11 +1724,9 @@ namespace DiggerPlugin
                 }
             });
 
-            list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "Pearl",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Items.Pearl,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -1847,11 +1743,9 @@ namespace DiggerPlugin
                 }
             });
 
-            list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "ShinyPearl",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Items.ShinyPearl,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -1867,12 +1761,10 @@ namespace DiggerPlugin
                     }
                 }
             });
-            
-            list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "BonusGoldPackOnKill",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Items.BonusGoldPackOnKill,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -1889,11 +1781,9 @@ namespace DiggerPlugin
                 }
             });
 
-            list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "Squid",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Items.Squid,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -1901,20 +1791,18 @@ namespace DiggerPlugin
                             ruleType = ItemDisplayRuleType.ParentedPrefab,
                             followerPrefab = ItemDisplays.LoadDisplay("DisplaySquidTurret"),
                             childName = "Head",
-                            localPos = new Vector3(0, 0.0015f, -0.0005f),
-                            localAngles = new Vector3(0, 270, 0),
-                            localScale = new Vector3(0.002f, 0.003f, 0.003f),
+                            localPos = new Vector3(0.00008F, 0.00143F, -0.00093F),
+                            localAngles = new Vector3(278.1043F, 48.54117F, 309.125F),
+                            localScale = new Vector3(0.00129F, 0.00149F, 0.00134F),
                             limbMask = LimbFlags.None
                         }
                     }
                 }
             });
-            
-            list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "Icicle",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Items.Icicle,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -1931,11 +1819,9 @@ namespace DiggerPlugin
                 }
             });
 
-            list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "Talisman",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Items.Talisman,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -1952,11 +1838,9 @@ namespace DiggerPlugin
                 }
             });
 
-            list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "LaserTurbine",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Items.LaserTurbine,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -1973,11 +1857,9 @@ namespace DiggerPlugin
                 }
             });
 
-            list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "FocusConvergence",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Items.FocusConvergence,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -1993,12 +1875,10 @@ namespace DiggerPlugin
                     }
                 }
             });
-            
-            list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "Incubator",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Items.Incubator,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -2014,12 +1894,10 @@ namespace DiggerPlugin
                     }
                 }
             });
-            
-            list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "FireballsOnHit",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Items.FireballsOnHit,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -2035,12 +1913,10 @@ namespace DiggerPlugin
                     }
                 }
             });
-            
-            list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "SiphonOnLowHealth",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Items.SiphonOnLowHealth,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -2057,11 +1933,9 @@ namespace DiggerPlugin
                 }
             });
 
-            list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "BleedOnHitAndExplode",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Items.BleedOnHitAndExplode,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -2078,11 +1952,9 @@ namespace DiggerPlugin
                 }
             });
 
-            list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "MonstersOnShrineUse",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Items.MonstersOnShrineUse,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -2099,11 +1971,9 @@ namespace DiggerPlugin
                 }
             });
 
-            list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "RandomDamageZone",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Items.RandomDamageZone,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -2119,12 +1989,10 @@ namespace DiggerPlugin
                     }
                 }
             });
-            
-            list2.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "Fruit",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Equipment.Fruit,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -2141,11 +2009,9 @@ namespace DiggerPlugin
                 }
             });
 
-            list2.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "AffixRed",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Equipment.AffixRed,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -2172,11 +2038,9 @@ namespace DiggerPlugin
                 }
             });
 
-            list2.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "AffixBlue",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Equipment.AffixBlue,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -2203,11 +2067,9 @@ namespace DiggerPlugin
                 }
             });
 
-            list2.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "AffixWhite",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Equipment.AffixWhite,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -2224,11 +2086,9 @@ namespace DiggerPlugin
                 }
             });
 
-            list2.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "AffixPoison",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Equipment.AffixPoison,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -2245,11 +2105,9 @@ namespace DiggerPlugin
                 }
             });
 
-            list2.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "AffixHaunted",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Equipment.AffixHaunted,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -2266,11 +2124,9 @@ namespace DiggerPlugin
                 }
             });
 
-            list2.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "CritOnUse",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Equipment.CritOnUse,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -2287,11 +2143,9 @@ namespace DiggerPlugin
                 }
             });
 
-            list2.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "DroneBackup",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Equipment.DroneBackup,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -2308,17 +2162,15 @@ namespace DiggerPlugin
                 }
             });
 
-            list2.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "Lightning",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Equipment.Lightning,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
                         {
                             ruleType = ItemDisplayRuleType.ParentedPrefab,
-                            followerPrefab = ItemDisplays.capacitorPrefab,
+                            followerPrefab = ItemDisplays.LoadDisplay("DisplayLightningArmRight"), //ItemDisplays.capacitorPrefab,
                             childName = "Chest",
                             localPos = new Vector3(0, 0, 0),
                             localAngles = new Vector3(0, 0, 0),
@@ -2328,12 +2180,10 @@ namespace DiggerPlugin
                     }
                 }
             });
-            
-            list2.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "BurnNearby",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Items.BurnNearby,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -2350,11 +2200,9 @@ namespace DiggerPlugin
                 }
             });
 
-            list2.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "CrippleWard",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Equipment.CrippleWard,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -2370,12 +2218,10 @@ namespace DiggerPlugin
                     }
                 }
             });
-            
-            list2.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "QuestVolatileBattery",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Equipment.QuestVolatileBattery,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -2391,12 +2237,10 @@ namespace DiggerPlugin
                     }
                 }
             });
-            
-            list2.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "GainArmor",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Equipment.GainArmor,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -2412,12 +2256,10 @@ namespace DiggerPlugin
                     }
                 }
             });
-            
-            list2.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "Recycle",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Equipment.Recycle,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -2433,12 +2275,10 @@ namespace DiggerPlugin
                     }
                 }
             });
-            
-            list2.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "FireBallDash",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Equipment.FireBallDash,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -2454,12 +2294,10 @@ namespace DiggerPlugin
                     }
                 }
             });
-            
-            list2.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "Cleanse",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Equipment.Cleanse,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -2475,12 +2313,10 @@ namespace DiggerPlugin
                     }
                 }
             });
-            
-            list2.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "Tonic",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Equipment.Tonic,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -2497,11 +2333,9 @@ namespace DiggerPlugin
                 }
             });
 
-            list2.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "Gateway",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Equipment.Gateway,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -2517,12 +2351,10 @@ namespace DiggerPlugin
                     }
                 }
             });
-            
-            list2.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "Meteor",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Equipment.Meteor,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -2539,11 +2371,9 @@ namespace DiggerPlugin
                 }
             });
 
-            list2.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "Saw",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Equipment.Saw,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -2560,11 +2390,9 @@ namespace DiggerPlugin
                 }
             });
 
-            list2.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "Blackhole",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Equipment.Blackhole,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -2580,12 +2408,10 @@ namespace DiggerPlugin
                     }
                 }
             });
-            
-            list2.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "Scanner",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Equipment.Scanner,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -2602,11 +2428,9 @@ namespace DiggerPlugin
                 }
             });
 
-            list2.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "DeathProjectile",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Equipment.DeathProjectile,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -2622,12 +2446,10 @@ namespace DiggerPlugin
                     }
                 }
             });
-            
-            list2.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "LifestealOnHit",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Equipment.LifestealOnHit,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -2644,11 +2466,9 @@ namespace DiggerPlugin
                 }
             });
 
-            list2.Add(new ItemDisplayRuleSet.NamedRuleGroup
-            {
-                name = "TeamWarCry",
-                displayRuleGroup = new DisplayRuleGroup
-                {
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = RoR2Content.Equipment.TeamWarCry,
+                displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {
                         new ItemDisplayRule
@@ -2664,17 +2484,38 @@ namespace DiggerPlugin
                     }
                 }
             });
-            #endregion
 
-            //aetherium displays
-            #region Aetherium
-            if (DiggerPlugin.aetheriumInstalled)
-            {
-                list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-                {
-                    name = "ITEM_ACCURSED_POTION",
-                    displayRuleGroup = new DisplayRuleGroup
-                    {
+        }
+
+        //scept
+        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+        private static void fixFuckinScepterDisplay() {
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = AncientScepter.AncientScepterItem.instance.ItemDef,
+                displayRuleGroup = new DisplayRuleGroup {
+                    rules = new ItemDisplayRule[]
+        {
+                        new ItemDisplayRule
+                        {
+                            ruleType = ItemDisplayRuleType.ParentedPrefab,
+                            followerPrefab = AncientScepter.AncientScepterItem.displayPrefab,
+                            childName = "Pelvis",
+                            localPos = new Vector3(0.00042F, 0.00097F, -0.0014F),
+                            localAngles = new Vector3(333.2843F, 198.8161F, 165.1177F),
+                            localScale = new Vector3(0.00224F, 0.00224F, 0.00224F),
+                            limbMask = LimbFlags.None
+                        }
+        }
+                }
+            });
+        }
+
+        #region aeth
+        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+        private static void AddAetheriumDisplays() {
+                itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                    keyAsset = ItemDisplays.LoadAetheriumKeyAsset("AccursedPotion"),
+                    displayRuleGroup = new DisplayRuleGroup {
                         rules = new ItemDisplayRule[]
                         {
                             new ItemDisplayRule
@@ -2691,11 +2532,9 @@ namespace DiggerPlugin
                     }
                 });
 
-                list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-                {
-                    name = "ITEM_ALIEN_MAGNET",
-                    displayRuleGroup = new DisplayRuleGroup
-                    {
+                itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                    keyAsset = ItemDisplays.LoadAetheriumKeyAsset("AlienMagnet"),
+                    displayRuleGroup = new DisplayRuleGroup {
                         rules = new ItemDisplayRule[]
                         {
                             new ItemDisplayRule
@@ -2712,11 +2551,9 @@ namespace DiggerPlugin
                     }
                 });
 
-                list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-                {
-                    name = "ITEM_VOID_HEART",
-                    displayRuleGroup = new DisplayRuleGroup
-                    {
+                itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                    keyAsset = ItemDisplays.LoadAetheriumKeyAsset("VoidHeart"),
+                    displayRuleGroup = new DisplayRuleGroup {
                         rules = new ItemDisplayRule[]
                         {
                             new ItemDisplayRule
@@ -2733,11 +2570,9 @@ namespace DiggerPlugin
                     }
                 });
 
-                list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-                {
-                    name = "ITEM_SHARK_TEETH",
-                    displayRuleGroup = new DisplayRuleGroup
-                    {
+                itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                    keyAsset = ItemDisplays.LoadAetheriumKeyAsset("SharkTeeth"),
+                    displayRuleGroup = new DisplayRuleGroup {
                         rules = new ItemDisplayRule[]
                         {
                             new ItemDisplayRule
@@ -2754,11 +2589,9 @@ namespace DiggerPlugin
                     }
                 });
 
-                list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-                {
-                    name = "ITEM_BLOOD_SOAKED_SHIELD",
-                    displayRuleGroup = new DisplayRuleGroup
-                    {
+                itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                    keyAsset = ItemDisplays.LoadAetheriumKeyAsset("BloodSoakedShield"),
+                    displayRuleGroup = new DisplayRuleGroup {
                         rules = new ItemDisplayRule[]
                         {
                             new ItemDisplayRule
@@ -2775,11 +2608,9 @@ namespace DiggerPlugin
                     }
                 });
 
-                list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-                {
-                    name = "ITEM_INSPIRING_DRONE",
-                    displayRuleGroup = new DisplayRuleGroup
-                    {
+                itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                    keyAsset = ItemDisplays.LoadAetheriumKeyAsset("InspiringDrone"),
+                    displayRuleGroup = new DisplayRuleGroup {
                         rules = new ItemDisplayRule[]
                         {
                             new ItemDisplayRule
@@ -2787,20 +2618,18 @@ namespace DiggerPlugin
                                 ruleType = ItemDisplayRuleType.ParentedPrefab,
                                 followerPrefab = ItemDisplays.LoadAetheriumDisplay("InspiringDrone"),
                                 childName = "Base",
-                                localPos = new Vector3(0.015f, 0, 0.02f),
-                                localAngles = new Vector3(90, 0, 0),
-                                localScale = new Vector3(0.002f, 0.002f, 0.002f),
+                                localPos = new Vector3(0.015F, -0.01544F, 0.02F),
+                                localAngles = new Vector3(285.671F, 270F, 270F),
+                                localScale = new Vector3(0.002F, 0.002F, 0.002F),
                                 limbMask = LimbFlags.None
                             }
                         }
                     }
                 });
 
-                list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-                {
-                    name = "ITEM_FEATHERED_PLUME",
-                    displayRuleGroup = new DisplayRuleGroup
-                    {
+                itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                    keyAsset = ItemDisplays.LoadAetheriumKeyAsset("FeatheredPlume"),
+                    displayRuleGroup = new DisplayRuleGroup {
                         rules = new ItemDisplayRule[]
                         {
                             new ItemDisplayRule
@@ -2817,11 +2646,9 @@ namespace DiggerPlugin
                     }
                 });
 
-                list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-                {
-                    name = "ITEM_SHIELDING_CORE",
-                    displayRuleGroup = new DisplayRuleGroup
-                    {
+                itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                    keyAsset = ItemDisplays.LoadAetheriumKeyAsset("ShieldingCore"),
+                    displayRuleGroup = new DisplayRuleGroup {
                         rules = new ItemDisplayRule[]
                         {
                             new ItemDisplayRule
@@ -2838,11 +2665,9 @@ namespace DiggerPlugin
                     }
                 });
 
-                list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-                {
-                    name = "ITEM_UNSTABLE_DESIGN",
-                    displayRuleGroup = new DisplayRuleGroup
-                    {
+                itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                    keyAsset = ItemDisplays.LoadAetheriumKeyAsset("UnstableDesign"),
+                    displayRuleGroup = new DisplayRuleGroup {
                         rules = new ItemDisplayRule[]
                         {
                             new ItemDisplayRule
@@ -2859,11 +2684,9 @@ namespace DiggerPlugin
                     }
                 });
 
-                list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-                {
-                    name = "ITEM_WEIGHTED_ANKLET",
-                    displayRuleGroup = new DisplayRuleGroup
-                    {
+                itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                    keyAsset = ItemDisplays.LoadAetheriumKeyAsset("WeightedAnklet"),
+                    displayRuleGroup = new DisplayRuleGroup {
                         rules = new ItemDisplayRule[]
                         {
                             new ItemDisplayRule
@@ -2880,11 +2703,9 @@ namespace DiggerPlugin
                     }
                 });
 
-                list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-                {
-                    name = "ITEM_BLASTER_SWORD",
-                    displayRuleGroup = new DisplayRuleGroup
-                    {
+                itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                    keyAsset = ItemDisplays.LoadAetheriumKeyAsset("BlasterSword"),
+                    displayRuleGroup = new DisplayRuleGroup {
                         rules = new ItemDisplayRule[]
                         {
                         new ItemDisplayRule
@@ -2911,11 +2732,9 @@ namespace DiggerPlugin
                     }
                 });
 
-                list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-                {
-                    name = "ITEM_WITCHES_RING",
-                    displayRuleGroup = new DisplayRuleGroup
-                    {
+                itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                    keyAsset = ItemDisplays.LoadAetheriumKeyAsset("WitchesRing"),
+                    displayRuleGroup = new DisplayRuleGroup {
                         rules = new ItemDisplayRule[]
                         {
                             new ItemDisplayRule
@@ -2923,20 +2742,28 @@ namespace DiggerPlugin
                                 ruleType = ItemDisplayRuleType.ParentedPrefab,
                                 followerPrefab = ItemDisplays.LoadAetheriumDisplay("WitchesRing"),
                                 childName = "ElbowL",
-                                localPos = new Vector3(0, 0.002f, 0),
-                                localAngles = new Vector3(0, 270, 0),
-                                localScale = new Vector3(0.004f, 0.004f, 0.004f),
+                                localPos = new Vector3(0.00011F, 0.002F, 0F),
+                                localAngles = new Vector3(0F, 270F, 0F),
+                                localScale = new Vector3(0.00324F, 0.00324F, 0.00356F),
+                                limbMask = LimbFlags.None
+                            },
+                            new ItemDisplayRule
+                            {
+                                ruleType = ItemDisplayRuleType.ParentedPrefab,
+                                followerPrefab = ItemDisplays.LoadAetheriumDisplay("WitchesRingCircle"),
+                                childName = "ElbowL",
+                                localPos = new Vector3(0F, 0.002F, 0F),
+                                localAngles = new Vector3(90F, 0F, 0F),
+                                localScale = new Vector3(0.00244F, 0.00244F, 0.00026F),
                                 limbMask = LimbFlags.None
                             }
                         }
                     }
                 });
-                
-                list2.Add(new ItemDisplayRuleSet.NamedRuleGroup
-                {
-                    name = "EQUIPMENT_JAR_OF_RESHAPING",
-                    displayRuleGroup = new DisplayRuleGroup
-                    {
+
+                itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                    keyAsset = ItemDisplays.LoadAetheriumKeyAsset("JarOfReshaping"),
+                    displayRuleGroup = new DisplayRuleGroup {
                         rules = new ItemDisplayRule[]
                         {
                             new ItemDisplayRule
@@ -2944,25 +2771,260 @@ namespace DiggerPlugin
                                 ruleType = ItemDisplayRuleType.ParentedPrefab,
                                 followerPrefab = ItemDisplays.LoadAetheriumDisplay("JarOfReshaping"),
                                 childName = "Pelvis",
-                                localPos = new Vector3(0.0003f, 0, 0),
-                                localAngles = new Vector3(0, 270, 0),
-                                localScale = new Vector3(0.0005f, 0.0005f, 0.0005f),
+                                localPos = new Vector3(-0.00025F, 0F, 0.00191F),
+                                localAngles = new Vector3(0F, 4.09304F, 0F),
+                                localScale = new Vector3(0.0005F, 0.0005F, 0.00076F),
                                 limbMask = LimbFlags.None
                             }
                         }
                     }
                 });
-            }
-            #endregion
+        }
 
-            //sivsitems displays
-            /*
-            #region SivsItems
+        public static GameObject LoadAetheriumDisplay(string name) {
+            switch (name) {
+                case "AccursedPotion":
+                    return Aetherium.Items.AccursedPotion.ItemBodyModelPrefab;
+                case "AlienMagnet":
+                    return Aetherium.Items.AlienMagnet.ItemFollowerPrefab;
+                case "BlasterSword":
+                    return Aetherium.Items.BlasterSword.ItemBodyModelPrefab;
+                case "BloodSoakedShield":
+                    return Aetherium.Items.BloodSoakedShield.ItemBodyModelPrefab;
+                case "FeatheredPlume":
+                    return Aetherium.Items.FeatheredPlume.ItemBodyModelPrefab;
+                case "InspiringDrone":
+                    return Aetherium.Items.InspiringDrone.ItemFollowerPrefab;
+                case "SharkTeeth":
+                    return Aetherium.Items.SharkTeeth.ItemBodyModelPrefab;
+                case "ShieldingCore":
+                    return Aetherium.Items.ShieldingCore.ItemBodyModelPrefab;
+                case "UnstableDesign":
+                    return Aetherium.Items.UnstableDesign.ItemBodyModelPrefab;
+                case "VoidHeart":
+                    return Aetherium.Items.Voidheart.ItemBodyModelPrefab;
+                case "WeightedAnklet":
+                    return Aetherium.Items.WeightedAnklet.ItemBodyModelPrefab;
+                case "WitchesRing":
+                    return Aetherium.Items.WitchesRing.ItemBodyModelPrefab;
+                case "WitchesRingCircle":
+                    return Aetherium.Items.WitchesRing.CircleBodyModelPrefab;
+                case "EngiBelt":
+                    return Aetherium.Items.EngineersToolbelt.ItemBodyModelPrefab;
+                case "JarOfReshaping":
+                    return Aetherium.Equipment.JarOfReshaping.ItemBodyModelPrefab;
+            }
+            return null;
+        }
+        public static Object LoadAetheriumKeyAsset(string name) {
+            switch (name) {
+                case "AccursedPotion":
+                    return Aetherium.Items.AccursedPotion.instance.ItemDef;
+                case "AlienMagnet":
+                    return Aetherium.Items.AlienMagnet.instance.ItemDef;
+                case "BlasterSword":
+                    return Aetherium.Items.BlasterSword.instance.ItemDef;
+                case "BloodSoakedShield":
+                    return Aetherium.Items.BloodSoakedShield.instance.ItemDef;
+                case "FeatheredPlume":
+                    return Aetherium.Items.FeatheredPlume.instance.ItemDef;
+                case "InspiringDrone":
+                    return Aetherium.Items.InspiringDrone.instance.ItemDef;
+                case "SharkTeeth":
+                    return Aetherium.Items.SharkTeeth.instance.ItemDef;
+                case "ShieldingCore":
+                    return Aetherium.Items.ShieldingCore.instance.ItemDef;
+                case "UnstableDesign":
+                    return Aetherium.Items.UnstableDesign.instance.ItemDef;
+                case "VoidHeart":
+                    return Aetherium.Items.Voidheart.instance.ItemDef;
+                case "WeightedAnklet":
+                    return Aetherium.Items.WeightedAnklet.instance.ItemDef;
+                case "WitchesRing":
+                    return Aetherium.Items.WitchesRing.instance.ItemDef;
+                case "EngiBelt":
+                    return Aetherium.Items.EngineersToolbelt.instance.ItemDef;
+                case "JarOfReshaping":
+                    return Aetherium.Equipment.JarOfReshaping.instance.EquipmentDef;
+            }
+            return null;
+        }
+        #endregion
+
+        #region HEE HEE HEE
+        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+        private static void AddSupplyDropDisplays() {
+            itemDisplayRules.Add(CreateSupplyDropRuleGroup("PlagueMask",
+                                                           "Head",
+                                                           new Vector3(0F, 0.00109F, -0.00241F),
+                                                           new Vector3(353.6208F, 0F, 0F),
+                                                           new Vector3(0.00246F, 0.0026F, 0.0024F)));
+            itemDisplayRules.Add(CreateSupplyDropRuleGroup("PlagueHat",
+                                                           "Head",
+                                                           new Vector3(0F, 0.00328F, -0.00004F),
+                                                           new Vector3(0F, 0F, 0F),
+                                                           new Vector3(0.00164F, 0.00442F, 0.00189F)));
+
+            //itemDisplayRules.Add(CreateSupplyDropRuleGroup("Bones",
+            //                                               "CalfR",
+            //                                               new Vector3(0.17997F, -0.05238F, 0.07133F),
+            //                                               new Vector3(13.68323F, 76.44486F, 191.9287F),
+            //                                               new Vector3(1.25683F, 1.25683F, 1.25683F)));
+            //itemDisplayRules.Add(CreateSupplyDropRuleGroup("Berries",
+            //                                               "loinFront2",
+            //                                               new Vector3(0.11782F, 0.27382F, -0.13743F),
+            //                                               new Vector3(341.1884F, 284.1298F, 180.0032F),
+            //                                               new Vector3(0.08647F, 0.08647F, 0.08647F)));
+            //itemDisplayRules.Add(CreateSupplyDropRuleGroup("UnassumingTie",
+            //                                               "Chest",
+            //                                               new Vector3(-0.08132F, 0.30226F, 0.34786F),
+            //                                               new Vector3(351.786F, 356.4574F, 0.73319F),
+            //                                               new Vector3(0.32213F, 0.35018F, 0.42534F)));
+            //itemDisplayRules.Add(CreateSupplyDropRuleGroup("SalvagedWires",
+            //                                               "UpperArmL",
+            //                                               new Vector3(-0.00419F, 0.10839F, -0.20693F),
+            //                                               new Vector3(21.68419F, 165.3445F, 132.0565F),
+            //                                               new Vector3(0.63809F, 0.63809F, 0.63809F)));
+
+            //itemDisplayRules.Add(CreateSupplyDropRuleGroup("ShellPlating",
+            //                                               "ThighR",
+            //                                               new Vector3(0.02115F, 0.52149F, -0.31269F),
+            //                                               new Vector3(319.6181F, 168.4007F, 184.779F),
+            //                                               new Vector3(0.24302F, 0.26871F, 0.26871F)));
+            //itemDisplayRules.Add(CreateSupplyDropRuleGroup("ElectroPlankton",
+            //                                               "ThighR",
+            //                                               new Vector3(0.21067F, 0.49094F, -0.08702F),
+            //                                               new Vector3(8.08377F, 285.087F, 164.4582F),
+            //                                               new Vector3(0.11243F, 0.11243F, 0.11243F)));
+
+            //itemDisplayRules.Add(CreateSupplyDropRuleGroup("BloodBook",
+            //                                               "Root",
+            //                                               new Vector3(2.19845F, -1.51445F, 1.59871F),
+            //                                               new Vector3(303.5005F, 271.0879F, 269.2205F),
+            //                                               new Vector3(0.12F, 0.12F, 0.12F)));
+            //itemDisplayRules.Add(CreateSupplyDropRuleGroup("QSGen",
+            //                                               "LowerArmL",
+            //                                               new Vector3(0.06003F, 0.1038F, -0.02042F),
+            //                                               new Vector3(0F, 18.75576F, 268.4665F),
+            //                                               new Vector3(0.12301F, 0.12301F, 0.12301F)));
+        }
+
+        public static GameObject LoadSupplyDropDisplay(string name) {
+            switch (name) {
+                case "Bones":
+                    return SupplyDrop.Items.HardenedBoneFragments.ItemBodyModelPrefab;
+                case "Berries":
+                    return SupplyDrop.Items.NumbingBerries.ItemBodyModelPrefab;
+                case "UnassumingTie":
+                    return SupplyDrop.Items.UnassumingTie.ItemBodyModelPrefab;
+                case "SalvagedWires":
+                    return SupplyDrop.Items.SalvagedWires.ItemBodyModelPrefab;
+
+                case "ShellPlating":
+                    return SupplyDrop.Items.ShellPlating.ItemBodyModelPrefab;
+                case "ElectroPlankton":
+                    return SupplyDrop.Items.ElectroPlankton.ItemBodyModelPrefab;
+                case "PlagueHat":
+                    return SupplyDrop.Items.PlagueHat.ItemBodyModelPrefab;
+                case "PlagueMask":
+                    GameObject masku = PrefabAPI.InstantiateClone(SupplyDrop.Items.PlagueMask.ItemBodyModelPrefab, "PlagueMask");
+                    masku.GetComponent<ItemDisplay>().rendererInfos[0].defaultMaterial.color = Color.green;
+
+                    return masku;
+
+                case "BloodBook":
+                    return SupplyDrop.Items.BloodBook.ItemBodyModelPrefab;
+                case "QSGen":
+                    return SupplyDrop.Items.QSGen.ItemBodyModelPrefab;
+            }
+            return null;
+        }
+        public static Object LoadSupplyDropKeyAsset(string name) {
+            switch (name) {
+                //would be cool if these are enums maybe
+                case "Bones":
+                    return SupplyDrop.Items.HardenedBoneFragments.instance.itemDef;
+                case "Berries":
+                    return SupplyDrop.Items.NumbingBerries.instance.itemDef;
+                case "UnassumingTie":
+                    return SupplyDrop.Items.UnassumingTie.instance.itemDef;
+                case "SalvagedWires":
+                    return SupplyDrop.Items.SalvagedWires.instance.itemDef;
+
+                case "ShellPlating":
+                    return SupplyDrop.Items.ShellPlating.instance.itemDef;
+                case "ElectroPlankton":
+                    return SupplyDrop.Items.ElectroPlankton.instance.itemDef;
+                case "PlagueHat":
+                    return SupplyDrop.Items.PlagueHat.instance.itemDef;
+                case "PlagueMask":
+                    return SupplyDrop.Items.PlagueMask.instance.itemDef;
+
+                case "BloodBook":
+                    return SupplyDrop.Items.BloodBook.instance.itemDef;
+                case "QSGen":
+                    return SupplyDrop.Items.QSGen.instance.itemDef;
+
+            }
+            return null;
+        }
+        #endregion
+
+        #region goldy
+        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+        private static void fixFuckinGoaldCoastDisplays() {
+
+            itemDisplayRules.Add(CreateGoldCoastRuleGroup("bigsword",
+                                                          "Chest",
+                                                          new Vector3(-0.000329F, 0.002482F, -0.001994F),
+                                                          new Vector3(351.7756F, 182.8893F, 176.6553F),
+                                                          new Vector3(0.00075F, 0.00075F, 0.00075F)));
+            itemDisplayRules.Add(CreateGoldCoastRuleGroup("eye",
+                                                          "Chest",
+                                                          new Vector3(-0.000013F, 0.00177F, 0.001923F),
+                                                          new Vector3(357.5498F, 279.5151F, 288.6346F),
+                                                          new Vector3(0.001F, 0.001F, 0.001F)));
+            itemDisplayRules.Add(CreateGoldCoastRuleGroup("knurl",
+                                                          "Chest",
+                                                          new Vector3(0.00344F, 0.00425F, -0.00053F),
+                                                          new Vector3(276.5326F, 108.8338F, 239.9354F),
+                                                          new Vector3(0.0016F, 0.0016F, 0.0016F)));
+
+        }
+        private static GameObject LoadGoldCoastDisplay(string name) {
+            switch (name) {
+                case "bigsword":
+                    return GoldenCoastPlus.GoldenCoastPlus.bigSwordDef.pickupModelPrefab;
+                case "eye":
+                    return GoldenCoastPlus.GoldenCoastPlus.laserEyeDef.pickupModelPrefab;
+                case "knurl":
+                    return GoldenCoastPlus.GoldenCoastPlus.goldenKnurlDef.pickupModelPrefab;
+            }
+            return null;
+        }
+        private static Object LoadGoldCoastKeyAsset(string name) {
+            switch (name) {
+                case "bigsword":
+                    return GoldenCoastPlus.GoldenCoastPlus.bigSwordDef;
+                case "eye":
+                    return GoldenCoastPlus.GoldenCoastPlus.laserEyeDef;
+                case "knurl":
+                    return GoldenCoastPlus.GoldenCoastPlus.goldenKnurlDef;
+            }
+            return null;
+        }
+
+        #endregion
+
+        #region sivs
+        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+        private static void AddSivsItemsDisplays() {
+
             if (DiggerPlugin.sivsItemsInstalled)
             {
-                list.Add(new ItemDisplayRuleSet.NamedRuleGroup
+                itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup
                 {
-                    name = "BeetlePlush",
+                   keyAsset = ItemDisplays.LoadSivKeyAsset("BeetlePlush"),
                     displayRuleGroup = new DisplayRuleGroup
                     {
                         rules = new ItemDisplayRule[]
@@ -2981,9 +3043,8 @@ namespace DiggerPlugin
                     }
                 });
 
-                list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-                {
-                    name = "BisonShield",
+                itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                    keyAsset = ItemDisplays.LoadSivKeyAsset("BisonShield"),
                     displayRuleGroup = new DisplayRuleGroup
                     {
                         rules = new ItemDisplayRule[]
@@ -3002,9 +3063,8 @@ namespace DiggerPlugin
                     }
                 });
 
-                list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-                {
-                    name = "FlameGland",
+                itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                    keyAsset = ItemDisplays.LoadSivKeyAsset("FlameGland"),
                     displayRuleGroup = new DisplayRuleGroup
                     {
                         rules = new ItemDisplayRule[]
@@ -3023,9 +3083,8 @@ namespace DiggerPlugin
                     }
                 });
 
-                list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-                {
-                    name = "Geode",
+                itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                    keyAsset = ItemDisplays.LoadSivKeyAsset("Geode"),
                     displayRuleGroup = new DisplayRuleGroup
                     {
                         rules = new ItemDisplayRule[]
@@ -3044,9 +3103,8 @@ namespace DiggerPlugin
                     }
                 });
 
-                list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-                {
-                    name = "ImpEye",
+                itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                    keyAsset = ItemDisplays.LoadSivKeyAsset("ImpEye"),
                     displayRuleGroup = new DisplayRuleGroup
                     {
                         rules = new ItemDisplayRule[]
@@ -3065,9 +3123,8 @@ namespace DiggerPlugin
                     }
                 });
 
-                list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-                {
-                    name = "NullSeed",
+                itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                    keyAsset = ItemDisplays.LoadSivKeyAsset("NullSeed"),
                     displayRuleGroup = new DisplayRuleGroup
                     {
                         rules = new ItemDisplayRule[]
@@ -3086,9 +3143,8 @@ namespace DiggerPlugin
                     }
                 });
 
-                list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-                {
-                    name = "Tarbine",
+                itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                    keyAsset = ItemDisplays.LoadSivKeyAsset("Tarbine"),
                     displayRuleGroup = new DisplayRuleGroup
                     {
                         rules = new ItemDisplayRule[]
@@ -3107,9 +3163,8 @@ namespace DiggerPlugin
                     }
                 });
 
-                list.Add(new ItemDisplayRuleSet.NamedRuleGroup
-                {
-                    name = "Tentacle",
+                itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                    keyAsset = ItemDisplays.LoadSivKeyAsset("Tentacle"),
                     displayRuleGroup = new DisplayRuleGroup
                     {
                         rules = new ItemDisplayRule[]
@@ -3128,124 +3183,10 @@ namespace DiggerPlugin
                     }
                 });
             }
-            #endregion
-            */
-
-            //apply displays here
-
-            BindingFlags bindingAttr = BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
-            ItemDisplayRuleSet.NamedRuleGroup[] value = list.ToArray();
-            ItemDisplayRuleSet.NamedRuleGroup[] value2 = list2.ToArray();
-            typeof(ItemDisplayRuleSet).GetField("namedItemRuleGroups", bindingAttr).SetValue(itemDisplayRuleSet, value);
-            typeof(ItemDisplayRuleSet).GetField("namedEquipmentRuleGroups", bindingAttr).SetValue(itemDisplayRuleSet, value2);
-
-            characterModel.itemDisplayRuleSet = itemDisplayRuleSet;
         }
 
-        private static GameObject LoadDisplay(string name)
-        {
-            if (itemDisplayPrefabs.ContainsKey(name.ToLower()))
-            {
-                if (itemDisplayPrefabs[name.ToLower()]) return itemDisplayPrefabs[name.ToLower()];
-            }
-            return null;
-        }
-
-        private static void PopulateDisplays()
-        {
-            /*
-            ItemDisplayRuleSet itemDisplayRuleSet = Resources.Load<GameObject>("Prefabs/CharacterBodies/CommandoBody").GetComponent<ModelLocator>().modelTransform.GetComponent<CharacterModel>().itemDisplayRuleSet;
-
-            capacitorPrefab = PrefabAPI.InstantiateClone(itemDisplayRuleSet.FindEquipmentDisplayRuleGroup("Lightning").rules[0].followerPrefab, "DisplayMinerLightning", true);
-            capacitorPrefab.AddComponent<UnityEngine.Networking.NetworkIdentity>();
-
-            var limbMatcher = capacitorPrefab.GetComponent<LimbMatcher>();
-
-            limbMatcher.limbPairs[0].targetChildLimb = "ShoulderL";
-            limbMatcher.limbPairs[1].targetChildLimb = "ElbowL";
-            limbMatcher.limbPairs[2].targetChildLimb = "HandL";
-
-            BindingFlags bindingAttr = BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
-            ItemDisplayRuleSet.NamedRuleGroup[] array = typeof(ItemDisplayRuleSet).GetField("namedItemRuleGroups", bindingAttr).GetValue(itemDisplayRuleSet) as ItemDisplayRuleSet.NamedRuleGroup[];
-            ItemDisplayRuleSet.NamedRuleGroup[] array2 = typeof(ItemDisplayRuleSet).GetField("namedEquipmentRuleGroups", bindingAttr).GetValue(itemDisplayRuleSet) as ItemDisplayRuleSet.NamedRuleGroup[];
-            ItemDisplayRuleSet.NamedRuleGroup[] array3 = array;
-
-            for (int i = 0; i < array3.Length; i++)
-            {
-                ItemDisplayRule[] rules = array3[i].displayRuleGroup.rules;
-                for (int j = 0; j < rules.Length; j++)
-                {
-                    GameObject followerPrefab = rules[j].followerPrefab;
-                    if (!(followerPrefab == null))
-                    {
-                        string name = followerPrefab.name;
-                        string key = (name != null) ? name.ToLower() : null;
-                        if (!itemDisplayPrefabs.ContainsKey(key))
-                        {
-                            itemDisplayPrefabs[key] = followerPrefab;
-                        }
-                    }
-                }
-            }
-
-            array3 = array2;
-            for (int i = 0; i < array3.Length; i++)
-            {
-                ItemDisplayRule[] rules = array3[i].displayRuleGroup.rules;
-                for (int j = 0; j < rules.Length; j++)
-                {
-                    GameObject followerPrefab2 = rules[j].followerPrefab;
-                    if (!(followerPrefab2 == null))
-                    {
-                        string name2 = followerPrefab2.name;
-                        string key2 = (name2 != null) ? name2.ToLower() : null;
-                        if (!itemDisplayPrefabs.ContainsKey(key2))
-                        {
-                            itemDisplayPrefabs[key2] = followerPrefab2;
-                        }
-                    }
-                }
-            }
-            */
-        }
-
-
+        //sorry siv habibi not 100% passionate about this one but if the community wants it fuck it
         [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
-        private static GameObject LoadAetheriumDisplay(string name)
-        {
-            switch (name)
-            {
-                case "AccursedPotion":
-                    return Aetherium.Items.AccursedPotion.ItemBodyModelPrefab;
-                case "AlienMagnet":
-                    return Aetherium.Items.AlienMagnet.ItemFollowerPrefab;
-                case "BlasterSword":
-                    return Aetherium.Items.BlasterSword.ItemBodyModelPrefab;
-                case "BloodSoakedShield":
-                    return Aetherium.Items.BloodSoakedShield.ItemBodyModelPrefab;
-                case "FeatheredPlume":
-                    return Aetherium.Items.FeatheredPlume.ItemBodyModelPrefab;
-                case "InspiringDrone":
-                    return Aetherium.Items.InspiringDrone.ItemFollowerPrefab;
-                case "JarOfReshaping":
-                    return Aetherium.Equipment.JarOfReshaping.ItemBodyModelPrefab;
-                case "SharkTeeth":
-                    return Aetherium.Items.SharkTeeth.ItemBodyModelPrefab;
-                case "ShieldingCore":
-                    return Aetherium.Items.ShieldingCore.ItemBodyModelPrefab;
-                case "UnstableDesign":
-                    return Aetherium.Items.UnstableDesign.ItemBodyModelPrefab;
-                case "VoidHeart":
-                    return Aetherium.Items.Voidheart.ItemBodyModelPrefab;
-                case "WeightedAnklet":
-                    return Aetherium.Items.WeightedAnklet.ItemBodyModelPrefab;
-                case "WitchesRing":
-                    return Aetherium.Items.WitchesRing.ItemBodyModelPrefab;
-            }
-            return null;
-        }
-
-        /*[MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
         private static GameObject LoadSivDisplay(string name)
         {
             switch (name)
@@ -3268,6 +3209,67 @@ namespace DiggerPlugin
                     return SivsItemsRoR2.Tentacle.displayPrefab;
             }
             return null;
-        }*/
+        }
+        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+        private static Object LoadSivKeyAsset(string name) {
+            switch (name) {
+                case "BeetlePlush":
+                    return SivsItemsRoR2.BeetlePlush.itemDef;
+                case "BisonShield":
+                    return SivsItemsRoR2.BisonShield.itemDef;
+                case "FlameGland":
+                    return SivsItemsRoR2.FlameGland.itemDef;
+                case "Geode":
+                    return SivsItemsRoR2.Geode.itemDef;
+                case "ImpEye":
+                    return SivsItemsRoR2.ImpEye.itemDef;
+                case "NullSeed":
+                    return SivsItemsRoR2.NullSeed.itemDef;
+                case "Tarbine":
+                    return SivsItemsRoR2.Tarbine.itemDef;
+                case "Tentacle":
+                    return SivsItemsRoR2.Tentacle.itemDef;
+            }
+            return null;
+        }
+        #endregion
+
+        private static ItemDisplayRuleSet.KeyAssetRuleGroup CreateSupplyDropRuleGroup(string itemName, string childName, Vector3 position, Vector3 rotation, Vector3 scale) {
+            return CreateGenericDisplayRuleGroup(LoadSupplyDropKeyAsset(itemName), LoadSupplyDropDisplay(itemName), childName, position, rotation, scale);
+        }
+
+        private static ItemDisplayRuleSet.KeyAssetRuleGroup CreateGoldCoastRuleGroup(string itemName, string childName, Vector3 position, Vector3 rotation, Vector3 scale) {
+            return CreateGenericDisplayRuleGroup(LoadGoldCoastKeyAsset(itemName), LoadGoldCoastDisplay(itemName), childName, position, rotation, scale);
+        }
+
+        private static ItemDisplayRuleSet.KeyAssetRuleGroup CreateGenericDisplayRuleGroup(Object keyAsset_, GameObject itemPrefab, string childName, Vector3 position, Vector3 rotation, Vector3 scale) {
+
+            ItemDisplayRule singleRule = CreateDisplayRule(itemPrefab, childName, position, rotation, scale);
+            return CreateDisplayRuleGroupWithRules(keyAsset_, singleRule);
+        }
+
+        private static ItemDisplayRule CreateDisplayRule(GameObject itemPrefab, string childName, Vector3 position, Vector3 rotation, Vector3 scale) {
+            return new ItemDisplayRule {
+                ruleType = ItemDisplayRuleType.ParentedPrefab,
+                childName = childName,
+                followerPrefab = itemPrefab,
+                limbMask = LimbFlags.None,
+                localPos = position,
+                localAngles = rotation,
+                localScale = scale
+            };
+        }
+
+        //they use these
+        //but use these ones yourself if you are doing multiple
+        private static ItemDisplayRuleSet.KeyAssetRuleGroup CreateDisplayRuleGroupWithRules(Object keyAsset_, params ItemDisplayRule[] rules) {
+            return new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = keyAsset_,
+                displayRuleGroup = new DisplayRuleGroup {
+                    rules = rules
+                }
+            };
+        }
+
     }
 }
