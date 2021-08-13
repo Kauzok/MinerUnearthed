@@ -162,6 +162,7 @@ namespace DiggerPlugin
             moltenSkinDefInfo.NameToken = "MINERBODY_MOLTEN_SKIN_NAME";
             moltenSkinDefInfo.RendererInfos = characterModel.baseRendererInfos;
             moltenSkinDefInfo.RootObject = model;
+            //moltenSkinDefInfo.UnlockableName = "MINER_MONSOONUNLOCKABLE_ACHIEVEMENT_NAME";
 
             rendererInfos = skinDefInfo.RendererInfos;
             array = new CharacterModel.RendererInfo[rendererInfos.Length];

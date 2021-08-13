@@ -30,7 +30,7 @@ namespace DiggerPlugin
     [BepInDependency("com.Skell.GoldenCoastPlus", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("com.TeamMoonstorm.Starstorm2", BepInDependency.DependencyFlags.SoftDependency)]
     [NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod, VersionStrictness.EveryoneNeedSameModVersion)]
-    [BepInPlugin(MODUID, "DiggerUnearthed", "1.5.3")]
+    [BepInPlugin(MODUID, "DiggerUnearthed", "1.5.4")]
     [R2APISubmoduleDependency(new string[]
     {
         "PrefabAPI",
@@ -71,13 +71,16 @@ namespace DiggerPlugin
                 "\n\nThe audio journal's screen sparks and pops, leaving you in complete darkness, complemented by the deafening silence brought about by the ominous last words of the miner.";
 
         public static DiggerPlugin instance;
+        public static BepInEx.Logging.ManualLogSource logger;
 
         public static GameObject characterPrefab;
-        //I do not know why I needed this hack
-        //paladin was able to grab the charactermodel from characterprefab.getcomponentinchildren but for some reason that got lost for miner by the time i'm setting up item displays
-        //I'd normally be in a whatever this works kinda mood but I'm very very curious what the actual code difference is that changes this. the new fancy modern prefab builder is basically the exact same code as is here
-        //thanks for coming to my ted talk
-        //have a lovely evening
+        // I do not know why I needed this hack
+        // paladin was able to grab the CharacterModel from characterPrefab.GetComponentInChildren just fine
+        //      but for some reason i can do that fine while i'm setting miner up, but it gets lost by the time i'm setting up item displays
+        //          it's not that it's broken. it works at one point and breaks later, which is much more infuriating
+        // I'd normally be in a whatever this works kinda mood but I'm very very curious what the actual code difference is that changes this. the new fancy modern prefab builder is basically the exact same code as is here
+        // thanks for coming to my ted talk
+        // have a lovely evening
         public static CharacterModel characterPrefabModel;
         public static GameObject characterDisplay;
 
@@ -133,6 +136,7 @@ namespace DiggerPlugin
         private void Awake()
         {
             instance = this;
+            logger = base.Logger;
 
             ConfigShit();
             Assets.PopulateAssets();
@@ -861,10 +865,10 @@ namespace DiggerPlugin
         private void RegisterCharacter()
         {
             string desc = "The Miner is a fast paced and highly mobile melee survivor who prioritizes getting long kill combos to build stacks of his passive.<color=#CCD3E0>" + Environment.NewLine + Environment.NewLine;
-            desc = desc + "< ! > Once you get a good number of stacks of Adrenaline, Crush will be your best source of damage." + Environment.NewLine + Environment.NewLine;
+            desc = desc + "< ! > Once you get a good number of stacks of Adrenaline, Gouge and Crush will be your best source of damage." + Environment.NewLine + Environment.NewLine;
             desc = desc + "< ! > Note that charging Drill Charge only affects damage dealt. Aim at the ground or into enemies to deal concentrated damage." + Environment.NewLine + Environment.NewLine;
             desc = desc + "< ! > You can tap Backblast to travel a short distance. Hold it to go further." + Environment.NewLine + Environment.NewLine;
-            desc = desc + "< ! > To The Stars when used low to the ground is great at dealing high amounts of damage to enemies with large hitboxes." + Environment.NewLine + Environment.NewLine;
+            desc = desc + "< ! > To the Stars when used low to the ground is great at dealing high amounts of damage to enemies with large hitboxes." + Environment.NewLine + Environment.NewLine;
 
             string outro = characterOutro;
 
@@ -1197,7 +1201,7 @@ namespace DiggerPlugin
         {
             LoadoutAPI.AddSkill(typeof(ToTheStars));
 
-            LanguageAPI.Add("MINER_SPECIAL_TOTHESTARS_NAME", "To The Stars!");
+            LanguageAPI.Add("MINER_SPECIAL_TOTHESTARS_NAME", "To the Stars!");
             LanguageAPI.Add("MINER_SPECIAL_TOTHESTARS_DESCRIPTION", "Jump into the air, shooting a wide spray of projectiles downwards for <style=cIsDamage>30x" + 100f * ToTheStars.damageCoefficient + "% damage</style> total.");
 
             SkillDef mySkillDef = ScriptableObject.CreateInstance<SkillDef>();

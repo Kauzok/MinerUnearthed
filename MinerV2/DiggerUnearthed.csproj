@@ -5,15 +5,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="digger" />
     <None Remove="DiggerBank.bnk" />
-    <None Remove="miner" />
-    <None Remove="MinerV2.bnk" />
+    <None Remove="DiggerV2.bnk" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="miner" />
+    <EmbeddedResource Include="digger" />
     <EmbeddedResource Include="DiggerBank.bnk" />
-    <EmbeddedResource Include="MinerV2.bnk" />
+    <EmbeddedResource Include="DiggerV2.bnk" />
   </ItemGroup>
 
   <ItemGroup>
@@ -140,7 +140,7 @@
   </ItemGroup>
 
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
-		<Exec Command="if &quot;$(Username)&quot; == &quot;Erikbir&quot; copy &quot;$(TargetPath)&quot; &quot;C:\Program Files (x86)\Steam\steamapps\common\Risk of Rain 2\r2modman\BepInEx\plugins\rob-MinerUnearthed&quot;" />
+		<Exec Command="if &quot;$(Username)&quot; == &quot;Erikbir&quot; copy &quot;$(TargetPath)&quot; &quot;C:\Program Files (x86)\Steam\steamapps\common\Risk of Rain 2\r2modman\BepInEx\plugins\rob-MinerUnearthed&quot;&#xD;&#xA;if &quot;$(Username)&quot; == &quot;Erikbir&quot; copy &quot;$(TargetPath)&quot; &quot;$(ProjectDir\..\..\Release&quot;" />
 	</Target>
 
 </Project>

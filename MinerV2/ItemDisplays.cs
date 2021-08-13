@@ -66,24 +66,48 @@ namespace DiggerPlugin
             //add item displays here
             SetVanillaDisplays();
 
-            if (DiggerPlugin.ancientScepterInstalled)
-                fixFuckinScepterDisplay();
+            try {
+                if (DiggerPlugin.ancientScepterInstalled)
+                    fixFuckinScepterDisplay();
+            }
+            catch (System.Exception e) {
+                DiggerPlugin.logger.LogWarning($"could not load fixed displays for ancientScepter\nWARNING: DISPLAY WILL BE HUGE\n{e}\n");
+            }
+            try {
+                if (DiggerPlugin.goldenCoastInstalled)
+                    fixFuckinGoaldCoastDisplays();
+            }
+            catch (System.Exception e) {
+                DiggerPlugin.logger.LogWarning($"could not load fixed displays for goldenCoast\nWARNING: DISPLAYS WILL BE HUGE\n{e}\n");
+            }
 
-            if (DiggerPlugin.aetheriumInstalled)
-                AddAetheriumDisplays();
+            try {
+                if (DiggerPlugin.supplyDropInstalled)
+                    AddSupplyDropDisplays();
+            }
+            catch (System.Exception e) {
+                DiggerPlugin.logger.LogWarning($"could not load displays for supplydrop\n{e}\n");
+            }
 
-            if (DiggerPlugin.supplyDropInstalled)
-                AddSupplyDropDisplays();
+            try {
+                if (DiggerPlugin.sivsItemsInstalled)
+                    AddSivsItemsDisplays();
+            }
+            catch (System.Exception e) {
+                DiggerPlugin.logger.LogWarning($"could not load displays for sivsitems\n{e}\n");
+            }
 
-            if (DiggerPlugin.sivsItemsInstalled)
-                AddSivsItemsDisplays();
+            try {
+                if (DiggerPlugin.aetheriumInstalled)
+                    AddAetheriumDisplays();
+            }
+            catch (System.Exception e) {
+                DiggerPlugin.logger.LogWarning($"could not load displays for aetherium\n{e}\n");
+            }
 
-            if (DiggerPlugin.goldenCoastInstalled)
-                fixFuckinGoaldCoastDisplays();
 
             //apply displays here
 
-            Debug.LogWarning(itemDisplayRuleSet.keyAssetRuleGroups.Length);
             itemDisplayRuleSet.keyAssetRuleGroups = itemDisplayRules.ToArray();
             itemDisplayRuleSet.GenerateRuntimeValues();
         }
@@ -2487,7 +2511,7 @@ namespace DiggerPlugin
 
         }
 
-        //scept
+        #region scept
         [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
         private static void fixFuckinScepterDisplay() {
             itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
@@ -2509,6 +2533,7 @@ namespace DiggerPlugin
                 }
             });
         }
+        #endregion
 
         #region aeth
         [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
@@ -2928,8 +2953,9 @@ namespace DiggerPlugin
                     return SupplyDrop.Items.PlagueHat.ItemBodyModelPrefab;
                 case "PlagueMask":
                     GameObject masku = PrefabAPI.InstantiateClone(SupplyDrop.Items.PlagueMask.ItemBodyModelPrefab, "PlagueMask");
-                    masku.GetComponent<ItemDisplay>().rendererInfos[0].defaultMaterial.color = Color.green;
-
+                    Material heeheehee = new Material(masku.GetComponent<ItemDisplay>().rendererInfos[0].defaultMaterial);
+                    heeheehee.color = Color.green; ;
+                    masku.GetComponent<ItemDisplay>().rendererInfos[0].defaultMaterial = heeheehee;
                     return masku;
 
                 case "BloodBook":
@@ -3235,11 +3261,25 @@ namespace DiggerPlugin
         #endregion
 
         private static ItemDisplayRuleSet.KeyAssetRuleGroup CreateSupplyDropRuleGroup(string itemName, string childName, Vector3 position, Vector3 rotation, Vector3 scale) {
-            return CreateGenericDisplayRuleGroup(LoadSupplyDropKeyAsset(itemName), LoadSupplyDropDisplay(itemName), childName, position, rotation, scale);
+            try {
+                return CreateGenericDisplayRuleGroup(LoadSupplyDropKeyAsset(itemName), LoadSupplyDropDisplay(itemName), childName, position, rotation, scale);
+            }
+            catch (System.Exception e) {
+
+                DiggerPlugin.logger.LogWarning($"could not create item display for supply drop's {itemName}. skipping.\n(Error: {e.Message})");
+                return new ItemDisplayRuleSet.KeyAssetRuleGroup();
+            }
         }
 
         private static ItemDisplayRuleSet.KeyAssetRuleGroup CreateGoldCoastRuleGroup(string itemName, string childName, Vector3 position, Vector3 rotation, Vector3 scale) {
-            return CreateGenericDisplayRuleGroup(LoadGoldCoastKeyAsset(itemName), LoadGoldCoastDisplay(itemName), childName, position, rotation, scale);
+            try {
+                return CreateGenericDisplayRuleGroup(LoadGoldCoastKeyAsset(itemName), LoadGoldCoastDisplay(itemName), childName, position, rotation, scale);
+            }
+            catch (System.Exception e) {
+
+                DiggerPlugin.logger.LogWarning($"could not create item display for gold coast's {itemName}. skipping.\n(Error: {e.Message})");
+                return new ItemDisplayRuleSet.KeyAssetRuleGroup();
+            }
         }
 
         private static ItemDisplayRuleSet.KeyAssetRuleGroup CreateGenericDisplayRuleGroup(Object keyAsset_, GameObject itemPrefab, string childName, Vector3 position, Vector3 rotation, Vector3 scale) {

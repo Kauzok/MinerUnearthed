@@ -51,7 +51,7 @@ namespace DiggerPlugin
         {
             if (mainAssetBundle == null)
             {
-                using (var assetStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("DiggerUnearthed.miner"))
+                using (var assetStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("DiggerUnearthed.digger"))
                 {
                     mainAssetBundle = AssetBundle.LoadFromStream(assetStream);
                 }
@@ -64,7 +64,7 @@ namespace DiggerPlugin
                 SoundAPI.SoundBanks.Add(array);
             }
 
-            using (Stream manifestResourceStream2 = Assembly.GetExecutingAssembly().GetManifestResourceStream("DiggerUnearthed.MinerV2.bnk"))
+            using (Stream manifestResourceStream2 = Assembly.GetExecutingAssembly().GetManifestResourceStream("DiggerUnearthed.DiggerV2.bnk"))
             {
                 byte[] array = new byte[manifestResourceStream2.Length];
                 manifestResourceStream2.Read(array, 0, array.Length);
