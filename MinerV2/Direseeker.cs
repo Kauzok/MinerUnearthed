@@ -485,7 +485,18 @@ namespace DiggerPlugin
 
                 #endregion model minerdire
 
-                survivorPrefab = GetDireBody();
+                //diredire
+                //resize
+                survivorPrefab.GetComponent<ModelLocator>().modelBaseTransform.gameObject.transform.localScale *= 0.75f;
+                survivorPrefab.transform.GetChild(0).localPosition = new Vector3(0, -2.75f, 0);
+                survivorPrefab.transform.GetChild(2).localPosition = new Vector3(0, 0.8f, 1.5f);
+
+                foreach (KinematicCharacterMotor kinematicCharacterMotor in survivorPrefab.GetComponentsInChildren<KinematicCharacterMotor>()) {
+                    kinematicCharacterMotor.SetCapsuleDimensions(kinematicCharacterMotor.Capsule.radius * 0.75f, kinematicCharacterMotor.Capsule.height * 0.75f, 0.75f);
+                }
+
+                if (DiggerPlugin.direseekerInstalled)
+                    SetDireseekerBodyFromMod();
 
                 //diredire
                 CharacterBody bodyComponent2 = survivorPrefab.GetComponent<CharacterBody>();
@@ -502,24 +513,15 @@ namespace DiggerPlugin
                 bodyComponent2.levelDamage = 4f;
                 bodyComponent2.isChampion = false;
                 bodyComponent2.portraitIcon = Assets.mainAssetBundle.LoadAsset<Sprite>("texDireseekerPlayerIcon").texture;
-                bodyComponent2.hideCrosshair = true;
+                bodyComponent2.hideCrosshair = false;
+                bodyComponent2.crosshairPrefab = Resources.Load<GameObject>("prefabs/crosshair/simpledotcrosshair");
 
                 //diredire
                 var stateMachine = survivorPrefab.GetComponentInChildren<EntityStateMachine>();
                 if (stateMachine) stateMachine.initialStateType = new SerializableEntityStateType(typeof(EntityStates.Direseeker.SpawnState));
 
-                //resize
 
                 //diredire
-                survivorPrefab.GetComponent<ModelLocator>().modelBaseTransform.gameObject.transform.localScale *= 0.75f;
-                survivorPrefab.transform.GetChild(0).localPosition = new Vector3(0, -2.75f, 0);
-                survivorPrefab.transform.GetChild(2).localPosition = new Vector3(0, 0.8f, 1.5f);
-
-                foreach (KinematicCharacterMotor kinematicCharacterMotor in survivorPrefab.GetComponentsInChildren<KinematicCharacterMotor>()) {
-                    kinematicCharacterMotor.SetCapsuleDimensions(kinematicCharacterMotor.Capsule.radius * 0.75f, kinematicCharacterMotor.Capsule.height * 0.75f, 0.75f);
-                }
-
-                //dire dire
                 survivorPrefab.GetComponent<DeathRewards>().logUnlockableDef = null;
                 survivorPrefab.GetComponent<Interactor>().maxInteractionDistance = 5f;
 
@@ -550,12 +552,19 @@ namespace DiggerPlugin
         }
 
         [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
-        private static GameObject GetDireBody() {
-            if (DiggerPlugin.direseekerInstalled) {
-                return PrefabAPI.InstantiateClone(DireseekerMod.Modules.Prefabs.bodyPrefab, "DireseekerPlayerBody");
-            }
+        private static void SetDireseekerBodyFromMod() {
 
-            return survivorPrefab;
+            survivorPrefab = PrefabAPI.InstantiateClone(DireseekerMod.Modules.Prefabs.bodyPrefab, "DireseekerPlayerBody");
+
+            //diredire
+            //resize
+            survivorPrefab.GetComponent<ModelLocator>().modelBaseTransform.gameObject.transform.localScale *= 0.65f;
+            survivorPrefab.transform.GetChild(0).localPosition = new Vector3(0, -2.75f, 0);
+            survivorPrefab.transform.GetChild(2).localPosition = new Vector3(0, 1f, 0f);
+
+            foreach (KinematicCharacterMotor kinematicCharacterMotor in survivorPrefab.GetComponentsInChildren<KinematicCharacterMotor>()) {
+                kinematicCharacterMotor.SetCapsuleDimensions(kinematicCharacterMotor.Capsule.radius * 0.65f, kinematicCharacterMotor.Capsule.height * 0.55f, 0.85f);
+            }
         }
 
         public static void LateSetup()

@@ -30,7 +30,7 @@ namespace DiggerPlugin
     [BepInDependency("com.Skell.GoldenCoastPlus", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("com.TeamMoonstorm.Starstorm2", BepInDependency.DependencyFlags.SoftDependency)]
     [NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod, VersionStrictness.EveryoneNeedSameModVersion)]
-    [BepInPlugin(MODUID, "DiggerUnearthed", "1.5.4")]
+    [BepInPlugin(MODUID, "DiggerUnearthed", "1.6.2")]
     [R2APISubmoduleDependency(new string[]
     {
         "PrefabAPI",
@@ -133,51 +133,14 @@ namespace DiggerPlugin
         public static ConfigEntry<KeyCode> tauntKeybind;
         public static ConfigEntry<KeyCode> jokeKeybind;
 
-        private void Awake()
-        {
+        private void Awake() {
             instance = this;
             logger = base.Logger;
 
             ConfigShit();
             Assets.PopulateAssets();
 
-            if (BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("com.TeamMoonstorm.Starstorm2"))
-            {
-                starstormInstalled = true;
-            }
-
-            //direseeker compat
-            if (BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("com.rob.Direseeker"))
-            {
-                direseekerInstalled = true;
-            }
-
-            //aetherium item displays- dll won't compile without a reference to aetherium
-            if (BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("com.KomradeSpectre.Aetherium")) {
-                aetheriumInstalled = true;
-            }
-
-            //aetherium item displays- dll won't compile without a reference to aetherium
-            if (BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("com.Skell.GoldenCoastPlus"))
-            {
-                goldenCoastInstalled = true;
-            }
-            //sivs item displays- dll won't compile without a reference
-            if (BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("com.Sivelos.SivsItems"))
-            {
-                sivsItemsInstalled = true;
-            }
-            //sivs item displays- dll won't compile without a reference
-            if (BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("com.K1454.SupplyDrop")) {
-                supplyDropInstalled = true;
-            }
-            //scepter stuff- dll won't compile without a reference to TILER2 and ClassicItems
-            if (BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("com.DestroyedClone.AncientScepter")) {
-                ancientScepterInstalled = true;
-                ScepterSkillSetup();
-                ScepterSetup();
-            }
-
+            SetupModCompat();
 
             Unlockables.RegisterUnlockables();
             CreateDisplayPrefab();
@@ -200,6 +163,63 @@ namespace DiggerPlugin
             new ContentPacks().Initialize();
 
             RoR2.ContentManagement.ContentManager.onContentPacksAssigned += LateSetup;
+        }
+
+        private void SetupModCompat() {
+            if (BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("com.TeamMoonstorm.Starstorm2")) {
+                starstormInstalled = true;
+            }
+
+            //direseeker compat
+            if (BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("com.rob.Direseeker")) {
+                direseekerInstalled = true;
+            }
+
+            //aetherium item displays- dll won't compile without a reference to aetherium
+            if (BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("com.KomradeSpectre.Aetherium")) {
+                aetheriumInstalled = true;
+            }
+
+            //aetherium item displays- dll won't compile without a reference to aetherium
+            if (BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("com.Skell.GoldenCoastPlus")) {
+                goldenCoastInstalled = true;
+            }
+            //sivs item displays- dll won't compile without a reference
+            if (BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("com.Sivelos.SivsItems")) {
+                sivsItemsInstalled = true;
+            }
+            //sivs item displays- dll won't compile without a reference
+            if (BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("com.K1454.SupplyDrop")) {
+                supplyDropInstalled = true;
+            }
+            //scepter stuff- dll won't compile without a reference to TILER2 and ClassicItems
+            if (BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("com.DestroyedClone.AncientScepter")) {
+                ancientScepterInstalled = true;
+                ScepterSkillSetup();
+                ScepterSetup();
+            }
+
+            try {
+                FixItemDisplays();
+            } catch {
+                Logger.LogInfo("tried to fix big item displays. Waiting on r2api update");
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+        private static void FixItemDisplays() {
+            string[] bods = new string[]
+            {
+                //"NemesisEnforcerBody",
+                "MinerBody",
+                //"CHEF",
+                //"ExecutionerBody",
+                //"NemmandoBody"
+            };
+
+            for (int i = 0; i < bods.Length; i++) {
+                ItemAPI.DoNotAutoIDRSFor(bods[i]);
+            }
         }
 
         private void LateSetup(HG.ReadOnlyArray<RoR2.ContentManagement.ReadOnlyContentPack> obj) {

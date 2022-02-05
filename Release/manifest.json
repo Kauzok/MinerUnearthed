@@ -1,8 +1,8 @@
 {
     "name": "MinerUnearthed",
-    "version_number": "1.5.4",
+    "version_number": "1.6.2",
     "website_url": "https://github.com/ArcPh1r3/MinerUnearthed",
-    "description": "Adds the Miner from Risk of Rain 1. Item displays fixed. No more giant models!",
+    "description": "Adds the Miner from Risk of Rain 1.",
     "dependencies": [
         "bbepis-BepInExPack-5.4.9",
         "tristanmcpherson-R2API-3.0.48"

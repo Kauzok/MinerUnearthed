@@ -31,9 +31,10 @@ namespace EntityStates.Digger
 
             if (NetworkServer.active) base.characterBody.AddBuff(RoR2Content.Buffs.HiddenInvincibility);
 
+            Vector3 theSpot = aimRay.origin + 2 * aimRay.direction;
+
             if (base.isAuthority)
             {
-                Vector3 theSpot = aimRay.origin + 2 * aimRay.direction;
 
                 BlastAttack blastAttack = new BlastAttack();
                 blastAttack.radius = CaveIn.blastRadius;
@@ -57,8 +58,9 @@ namespace EntityStates.Digger
 
                 base.characterMotor.velocity = -80 * aimRay.direction;
 
-                //succ
-                if (NetworkServer.active)
+            }
+            //succ
+            if (NetworkServer.active)
                 {
                     Collider[] array = Physics.OverlapSphere(theSpot, CaveIn.blastRadius, LayerIndex.defaultLayer.mask);
                     for (int i = 0; i < array.Length; i++)
@@ -104,7 +106,6 @@ namespace EntityStates.Digger
                         }
                     }
                 }
-            }
         }
 
         public override void OnExit()

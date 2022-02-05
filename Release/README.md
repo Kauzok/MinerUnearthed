@@ -2,7 +2,7 @@
 - Adds the Miner from Risk of Rain 1, a ground up rewrite of the original Miner Mod by Gnome
 - Fully multiplayer compatible and with more content planned
 - Has completed item displays, including some modded items
-- Has a bunch of ~~unlockable~~ skins and skills, ~~as well as a challenge to unlock him~~
+- Has a bunch of unlockable skins and skills, as well as a challenge to unlock him
 - Now includes Direseeker, a custom boss based on the original from RoR1
 
 [![](https://cdn.discordapp.com/attachments/469291841859092488/780784218816380938/unknown.png)]()
@@ -14,22 +14,13 @@
 join the discord to share feedback/bugs- https://discord.gg/HpQB9fC
 or ping/dm me- ~~@rob#2365~~ @TheTimesweeper#5727
 
-## New Mod?
-As we know, rob has recently left the modding community. Like Paladin, Miner is left in the hands of the community.
-rob, Gnome, TheTimesweeper, Papazach, all got together with the Enforcer gang, and we all worked on this guy too. Only makes sense he's uploaded here now.
-mainly rob and Gnome, let's not be mistaken
-
-#### What does this mean?
-nothing!
-I've kept the internal mod name the same, so configs and unlocks (when they're fixed) will carry over like it's just an update to the previous mod.
-
 ## Overview
-Miner is a high speed melee character, who uses high mobility and invincibility to help with combat. 
+Miner is a high speed melee character, who uses high mobility and invincibility fast-paced combat. 
 Sounds somewhat like Mercenary, but where Mercenary slips in and out, Miner rushes in and swings wildly like a crackhead.
 
 - His primaries, coupled with his passive `Gold Rush` encourage you to be offensive to build long kill combos.
-- `Drill Charge` and `Backblast` are high mobility options with invincibility during and slightly after the dash. 
-- `Drill Charge` increases damage by being held to charge longer, but will always go the full distance.
+- `Drill Charge` and `Backblast` are high mobility options with invincibility during and slightly after their dashes. 
+- `Drill Charge` will always go the full distance, and increases damage by being held to charge longer.
 - `Backblast` can be held to go backwards farther. Use as a long mobility option, or to stay in combos.
 - `To the Stars`, when used correctly, can land huge damage on larger enemies. Use lower to the ground to maximize its damage.
 
@@ -47,14 +38,14 @@ Direseeker is a massive Elder Lemurian with currently a new extremely powerful f
 [![](https://cdn.discordapp.com/attachments/747757793339244576/783952180834992128/direIconRed.png)]()
 
 ## Known Issues
-- Achivements currently not implemented
 - Plague mask isn't green
+- timesweeper doesn't have enough time to implement new skins that we already have modeled
 
 ## Credits
 Gnome - Made the original Miner mod, a fantastic base to work off of
 fuu - Made the Miner model
 rob - coding, rewrite, polish
-TheTimeSweeper - coding, adrenaline flame particles, various other help
+TheTimeSweeper - coding, adrenaline flame particles, various other help, maintaining
 PapaZach - Skill icons
 Jot - CSS animation
 redacted - Grand Mastery skin
@@ -63,6 +54,22 @@ Neik - Blacksmith concept
 Ruxbieno - Direseeker logbook entry
 
 ## Changelog
+`1.6.2`
+- Fixed cave-in not networked
+  - niggas put `networkserver.active` inside a `isauthority` lol
+- Didn't implement new skins cause I don't have time
+  - cough cough
+
+`1.6.1`
+- CRUSHHUNLOCKABLE
+
+`1.6.0`
+- fixed all achievements
+  - networked crush achievement
+- fixed direseeker survivor config breaking everything
+  - made direseeker survivor use the other mod version if it's installed
+- fixed giant item displays in a try{}. it'll work when r2api updates
+
 `1.5.4`
 - Fixed all item displays. Thanks minka for reaching out about them
 - Fixed modded item displays for aetherium and sivsitems

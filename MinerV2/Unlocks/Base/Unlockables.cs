@@ -37,7 +37,7 @@ namespace DiggerPlugin
             diggerMasteryUnlockableDef = UnlockableAPI.AddUnlockable<MasteryAchievementButEpic>();
             diggerGrandMasteryUnlockableDef = UnlockableAPI.AddUnlockable<GrandMasteryAchievement>();
 
-            crushUnlockableDef = UnlockableAPI.AddUnlockable<CrushAchievement>();
+            crushUnlockableDef = UnlockableAPI.AddUnlockable<CrushAchievement>(typeof(CrushAchievement.CrushAchievementServer));
             crackHammerUnlockableDef = UnlockableAPI.AddUnlockable<CrackHammerAchievement>();
             caveInUnlockableDef = UnlockableAPI.AddUnlockable<CaveInAchievement>();
 
