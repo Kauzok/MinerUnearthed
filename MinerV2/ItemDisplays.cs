@@ -71,14 +71,14 @@ namespace DiggerPlugin
                     fixFuckinScepterDisplay();
             }
             catch (System.Exception e) {
-                DiggerPlugin.logger.LogWarning($"could not load fixed displays for ancientScepter\nWARNING: DISPLAY WILL BE HUGE\n{e}\n");
+                //DiggerPlugin.logger.LogWarning($"could not load fixed displays for ancientScepter\nWARNING: DISPLAY WILL BE HUGE\n{e}\n");
             }
             try {
                 if (DiggerPlugin.goldenCoastInstalled)
                     fixFuckinGoaldCoastDisplays();
             }
             catch (System.Exception e) {
-                DiggerPlugin.logger.LogWarning($"could not load fixed displays for goldenCoast\nWARNING: DISPLAYS WILL BE HUGE\n{e}\n");
+                //DiggerPlugin.logger.LogWarning($"could not load fixed displays for goldenCoast\nWARNING: DISPLAYS WILL BE HUGE\n{e}\n");
             }
 
             try {
@@ -86,7 +86,7 @@ namespace DiggerPlugin
                     AddSupplyDropDisplays();
             }
             catch (System.Exception e) {
-                DiggerPlugin.logger.LogWarning($"could not load displays for supplydrop\n{e}\n");
+                //DiggerPlugin.logger.LogWarning($"could not load displays for supplydrop\n{e}\n");
             }
 
             try {
@@ -94,16 +94,16 @@ namespace DiggerPlugin
                     AddSivsItemsDisplays();
             }
             catch (System.Exception e) {
-                DiggerPlugin.logger.LogWarning($"could not load displays for sivsitems\n{e}\n");
+                //DiggerPlugin.logger.LogWarning($"could not load displays for sivsitems\n{e}\n");
             }
 
-            try {
-                if (DiggerPlugin.aetheriumInstalled)
-                    AddAetheriumDisplays();
-            }
-            catch (System.Exception e) {
-                DiggerPlugin.logger.LogWarning($"could not load displays for aetherium\n{e}\n");
-            }
+            //try {
+            //    if (DiggerPlugin.aetheriumInstalled)
+            //        AddAetheriumDisplays();
+            //}
+            //catch (System.Exception e) {
+            //    DiggerPlugin.logger.LogWarning($"could not load displays for aetherium\n{e}\n");
+            //}
 
 
             //apply displays here
@@ -3266,7 +3266,7 @@ namespace DiggerPlugin
             }
             catch (System.Exception e) {
 
-                DiggerPlugin.logger.LogWarning($"could not create item display for supply drop's {itemName}. skipping.\n(Error: {e.Message})");
+                //DiggerPlugin.logger.LogWarning($"could not create item display for supply drop's {itemName}. skipping.\n(Error: {e.Message})");
                 return new ItemDisplayRuleSet.KeyAssetRuleGroup();
             }
         }
@@ -3277,7 +3277,7 @@ namespace DiggerPlugin
             }
             catch (System.Exception e) {
 
-                DiggerPlugin.logger.LogWarning($"could not create item display for gold coast's {itemName}. skipping.\n(Error: {e.Message})");
+                //DiggerPlugin.logger.LogWarning($"could not create item display for gold coast's {itemName}. skipping.\n(Error: {e.Message})");
                 return new ItemDisplayRuleSet.KeyAssetRuleGroup();
             }
         }

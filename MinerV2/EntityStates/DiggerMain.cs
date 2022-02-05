@@ -91,6 +91,12 @@ namespace EntityStates.Digger
                 }
             }
 
+            if (Input.GetKeyDown(KeyCode.H) && UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "dampcavesimple") {
+                Ray ray = new Ray(new Vector3(76, -144.5f, -526), Vector3.down);
+                Debug.LogWarning(GetComponent<PingerController>() != null);
+                GetComponent<PingerController>()?.AttemptPing(ray, gameObject);
+            }
+
             if (base.isAuthority)
             {
                 this.HandleSecret();

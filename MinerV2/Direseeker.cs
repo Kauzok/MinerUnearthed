@@ -408,50 +408,22 @@ namespace DiggerPlugin
 
             if (DiggerPlugin.enableDireseekerSurvivor.Value)
             {
+                //minerdire
                 survivorPrefab = PrefabAPI.InstantiateClone(Resources.Load<GameObject>("Prefabs/CharacterBodies/LemurianBruiserBody"), "DireseekerPlayerBody");
 
-                CharacterBody bodyComponent2 = survivorPrefab.GetComponent<CharacterBody>();
-
-                bodyComponent2.name = "DireseekerPlayerBody";
-                bodyComponent2.baseNameToken = "DIRESEEKER_BODY_NAME";
-                bodyComponent2.subtitleNameToken = "DIRESEEKER_BODY_SUBTITLE";
-                bodyComponent2.baseMoveSpeed = 11f;
-                bodyComponent2.baseMaxHealth = 2200f;
-                bodyComponent2.levelMaxHealth = 800f;
-                bodyComponent2.baseRegen = 0.5f;
-                bodyComponent2.levelRegen = 0.2f;
-                bodyComponent2.baseDamage = 20f;
-                bodyComponent2.levelDamage = 4f;
-                bodyComponent2.isChampion = false;
-                bodyComponent2.portraitIcon = Assets.mainAssetBundle.LoadAsset<Sprite>("texDireseekerPlayerIcon").texture;
-                bodyComponent2.hideCrosshair = true;
-
+                //minerdire
                 SkillSetup(survivorPrefab);
 
-                var stateMachine = survivorPrefab.GetComponentInChildren<EntityStateMachine>();
-                if (stateMachine) stateMachine.initialStateType = new SerializableEntityStateType(typeof(EntityStates.Direseeker.SpawnState));
+                //minerdire
+                #region model minerdire
+                CharacterModel model = survivorPrefab.GetComponentInChildren<CharacterModel>();
 
-                //resize
-
-                survivorPrefab.GetComponent<ModelLocator>().modelBaseTransform.gameObject.transform.localScale *= 0.75f;
-                survivorPrefab.transform.GetChild(0).localPosition = new Vector3(0, -2.75f, 0);
-                survivorPrefab.transform.GetChild(2).localPosition = new Vector3(0, 0.8f, 1.5f);
-
-                foreach (KinematicCharacterMotor kinematicCharacterMotor in survivorPrefab.GetComponentsInChildren<KinematicCharacterMotor>())
-                {
-                    kinematicCharacterMotor.SetCapsuleDimensions(kinematicCharacterMotor.Capsule.radius * 0.75f, kinematicCharacterMotor.Capsule.height * 0.75f, 0.75f);
-                }
-
-                //
-
-                CharacterModel model2 = survivorPrefab.GetComponentInChildren<CharacterModel>();
-
-                Material newMat = UnityEngine.Object.Instantiate<Material>(model2.baseRendererInfos[0].defaultMaterial);
+                Material newMat = UnityEngine.Object.Instantiate<Material>(model.baseRendererInfos[0].defaultMaterial);
                 newMat.SetTexture("_MainTex", Assets.mainAssetBundle.LoadAsset<Material>("matDireseeker").GetTexture("_MainTex"));
                 newMat.SetTexture("_EmTex", Assets.mainAssetBundle.LoadAsset<Material>("matDireseeker").GetTexture("_EmissionMap"));
                 newMat.SetFloat("_EmPower", 50f);
 
-                model2.baseRendererInfos[0].defaultMaterial = newMat;
+                model.baseRendererInfos[0].defaultMaterial = newMat;
 
                 GameObject horn1b = Assets.mainAssetBundle.LoadAsset<GameObject>("DireHorn").InstantiateClone("DireseekerHorn", false);
                 GameObject horn2b = Assets.mainAssetBundle.LoadAsset<GameObject>("DireHornBroken").InstantiateClone("DireseekerHornBroken", false);
@@ -489,7 +461,7 @@ namespace DiggerPlugin
 
                 //add horns
 
-                CharacterModel.RendererInfo[] infos2 = model2.baseRendererInfos;
+                CharacterModel.RendererInfo[] infos2 = model.baseRendererInfos;
                 CharacterModel.RendererInfo[] newInfos2 = new CharacterModel.RendererInfo[]
                 {
                     infos2[0],
@@ -509,8 +481,45 @@ namespace DiggerPlugin
                     }
                 };
 
-                model2.baseRendererInfos = newInfos2;
+                model.baseRendererInfos = newInfos2;
 
+                #endregion model minerdire
+
+                survivorPrefab = GetDireBody();
+
+                //diredire
+                CharacterBody bodyComponent2 = survivorPrefab.GetComponent<CharacterBody>();
+
+                bodyComponent2.name = "DireseekerPlayerBody";
+                bodyComponent2.baseNameToken = "DIRESEEKER_BODY_NAME";
+                bodyComponent2.subtitleNameToken = "DIRESEEKER_BODY_SUBTITLE";
+                bodyComponent2.baseMoveSpeed = 11f;
+                bodyComponent2.baseMaxHealth = 2200f;
+                bodyComponent2.levelMaxHealth = 800f;
+                bodyComponent2.baseRegen = 0.5f;
+                bodyComponent2.levelRegen = 0.2f;
+                bodyComponent2.baseDamage = 20f;
+                bodyComponent2.levelDamage = 4f;
+                bodyComponent2.isChampion = false;
+                bodyComponent2.portraitIcon = Assets.mainAssetBundle.LoadAsset<Sprite>("texDireseekerPlayerIcon").texture;
+                bodyComponent2.hideCrosshair = true;
+
+                //diredire
+                var stateMachine = survivorPrefab.GetComponentInChildren<EntityStateMachine>();
+                if (stateMachine) stateMachine.initialStateType = new SerializableEntityStateType(typeof(EntityStates.Direseeker.SpawnState));
+
+                //resize
+
+                //diredire
+                survivorPrefab.GetComponent<ModelLocator>().modelBaseTransform.gameObject.transform.localScale *= 0.75f;
+                survivorPrefab.transform.GetChild(0).localPosition = new Vector3(0, -2.75f, 0);
+                survivorPrefab.transform.GetChild(2).localPosition = new Vector3(0, 0.8f, 1.5f);
+
+                foreach (KinematicCharacterMotor kinematicCharacterMotor in survivorPrefab.GetComponentsInChildren<KinematicCharacterMotor>()) {
+                    kinematicCharacterMotor.SetCapsuleDimensions(kinematicCharacterMotor.Capsule.radius * 0.75f, kinematicCharacterMotor.Capsule.height * 0.75f, 0.75f);
+                }
+
+                //dire dire
                 survivorPrefab.GetComponent<DeathRewards>().logUnlockableDef = null;
                 survivorPrefab.GetComponent<Interactor>().maxInteractionDistance = 5f;
 
@@ -531,11 +540,22 @@ namespace DiggerPlugin
                     primaryColor = Color.red,
                     bodyPrefab = survivorPrefab,
                     displayPrefab = displayPrefab,
-                    outroFlavorToken = "DIRESEEKER_BODY_OUTRO_FLAVOR"
+                    outroFlavorToken = "DIRESEEKER_BODY_OUTRO_FLAVOR",
+                    hidden = false,
+                    desiredSortPosition = 12f
                 };
-
-                SurvivorAPI.AddSurvivor(survivorDef);
+                DiggerPlugin.survivorDefs.Add(survivorDef);
+                //SurvivorAPI.AddSurvivor(survivorDef);
             }
+        }
+
+        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+        private static GameObject GetDireBody() {
+            if (DiggerPlugin.direseekerInstalled) {
+                return PrefabAPI.InstantiateClone(DireseekerMod.Modules.Prefabs.bodyPrefab, "DireseekerPlayerBody");
+            }
+
+            return survivorPrefab;
         }
 
         public static void LateSetup()
@@ -580,7 +600,6 @@ namespace DiggerPlugin
             skinDefInfo.NameToken = "DIRESEEKER_BODY_DEFAULT_SKIN_NAME";
             skinDefInfo.RendererInfos = characterModel.baseRendererInfos;
             skinDefInfo.RootObject = model;
-            skinDefInfo.UnlockableName = "";
 
             SkinDef defaultSkin = LoadoutAPI.CreateNewSkinDef(skinDefInfo);
 

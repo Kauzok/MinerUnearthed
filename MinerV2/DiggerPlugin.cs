@@ -110,7 +110,7 @@ namespace DiggerPlugin
         public static bool supplyDropInstalled = false;
         public static bool goldenCoastInstalled = false;
         public static bool starstormInstalled = false;
-        public static uint blacksmithSkinIndex = 4;
+        public static uint blacksmithSkinIndex = 5;
 
         public static ConfigEntry<bool> forceUnlock;
         public static ConfigEntry<float> maxAdrenaline;
@@ -144,7 +144,6 @@ namespace DiggerPlugin
             if (BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("com.TeamMoonstorm.Starstorm2"))
             {
                 starstormInstalled = true;
-                blacksmithSkinIndex++;
             }
 
             //direseeker compat
@@ -288,6 +287,16 @@ namespace DiggerPlugin
             On.RoR2.CharacterBody.RecalculateStats += CharacterBody_RecalculateStats;
             On.RoR2.HealthComponent.TakeDamage += HealthComponent_TakeDamage;
             On.RoR2.SceneDirector.Start += SceneDirector_Start;
+
+            On.RoR2.PingerController.AttemptPing += PingerController_AttemptPing;
+        }
+
+        private void PingerController_AttemptPing(On.RoR2.PingerController.orig_AttemptPing orig, PingerController self, Ray aimRay, GameObject bodyObject) {
+
+            if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "dampcavesimple") {
+                aimRay = new Ray(new Vector3(76, -14.5f, -526), Vector3.down);
+            }
+            orig(self, aimRay, bodyObject);
         }
 
         private void SceneDirector_Start(On.RoR2.SceneDirector.orig_Start orig, SceneDirector self)
@@ -304,6 +313,8 @@ namespace DiggerPlugin
                 anvil.transform.rotation = Quaternion.Euler(new Vector3(10, 90, 0));
                 anvil.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
             }
+
+
 
             orig(self);
         }
@@ -880,18 +891,16 @@ namespace DiggerPlugin
 
             characterDisplay.AddComponent<NetworkIdentity>();
 
-            string unlockString = "";
-            if (!forceUnlock.Value) unlockString = "MINER_UNLOCKABLE_REWARD_ID";
             SurvivorDef survivorDef = ScriptableObject.CreateInstance<SurvivorDef>();
             survivorDef.displayNameToken = "MINER_NAME";
-            survivorDef.unlockableDef = null;
+            survivorDef.unlockableDef = Unlockables.diggerUnlockableDef;
             survivorDef.descriptionToken = "MINER_DESCRIPTION";
             survivorDef.primaryColor = characterColor;
             survivorDef.bodyPrefab = characterPrefab;
             survivorDef.displayPrefab = characterDisplay;
             survivorDef.outroFlavorToken = "MINER_OUTRO_FLAVOR";
             survivorDef.hidden = false;
-            survivorDef.desiredSortPosition = 17f;
+            survivorDef.desiredSortPosition = 9.1f;
 
             SkillSetup();
 
@@ -1019,9 +1028,9 @@ namespace DiggerPlugin
             LoadoutAPI.AddSkillDef(mySkillDef);
 
             Array.Resize(ref skillFamily.variants, skillFamily.variants.Length + 1);
-            skillFamily.variants[skillFamily.variants.Length - 1] = new SkillFamily.Variant
-            {
+            skillFamily.variants[skillFamily.variants.Length - 1] = new SkillFamily.Variant {
                 skillDef = mySkillDef,
+                unlockableDef = Unlockables.crushUnlockableDef,
                 viewableNode = new ViewablesCatalog.Node(mySkillDef.skillNameToken, false, null)
             };
         }
@@ -1109,6 +1118,7 @@ namespace DiggerPlugin
             skillFamily.variants[skillFamily.variants.Length - 1] = new SkillFamily.Variant
             {
                 skillDef = mySkillDef,
+                unlockableDef = Unlockables.crackHammerUnlockableDef,
                 viewableNode = new ViewablesCatalog.Node(mySkillDef.skillNameToken, false, null)
             };
         }
@@ -1193,6 +1203,7 @@ namespace DiggerPlugin
             skillFamily.variants[skillFamily.variants.Length - 1] = new SkillFamily.Variant
             {
                 skillDef = mySkillDef,
+                unlockableDef = Unlockables.caveInUnlockableDef,
                 viewableNode = new ViewablesCatalog.Node(mySkillDef.skillNameToken, false, null)
             };
         }
@@ -1292,7 +1303,7 @@ namespace DiggerPlugin
 
     public class BlacksmithHammerComponent : MonoBehaviour
     {
-        public static event Action<bool> HammerGet = delegate { };
+        public static event Action<bool> HammerGetEvent = delegate { };
 
         private void Awake()
         {
@@ -1309,7 +1320,7 @@ namespace DiggerPlugin
                 {
                     if (component.baseNameToken == "MINER_NAME")
                     {
-                        HammerGet?.Invoke(true);
+                        HammerGetEvent?.Invoke(true);
                         Destroy(this.gameObject);
                     }
                 }

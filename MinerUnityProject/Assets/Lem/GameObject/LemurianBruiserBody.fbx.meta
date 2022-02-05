@@ -1,0 +1,375 @@
+fileFormatVersion: 2
+guid: bd1f70f47b3e54342b530af7dcb1db2c
+ModelImporter:
+  serializedVersion: 23
+  fileIDToRecycleName:
+    100000: AimAssist
+    100002: AimOrigin
+    100004: ballToToe.l
+    100006: ballToToe.r
+    100008: base
+    100010: calf.l
+    100012: calf.r
+    100014: CameraPivot
+    100016: chest
+    100018: clavicle.l
+    100020: clavicle.r
+    100022: DeathEffectOrigin
+    100024: Eyeball.l
+    100026: Eyeball.l_end
+    100028: Eyeball.r
+    100030: Eyeball.r_end
+    100032: EyelidLower.l
+    100034: EyelidLower.l_end
+    100036: EyelidLower.r
+    100038: EyelidLower.r_end
+    100040: EyelidUpper.l
+    100042: EyelidUpper.l_end
+    100044: EyelidUpper.r
+    100046: EyelidUpper.r_end
+    100048: finger1.l
+    100050: finger1.l_end
+    100052: finger1.r
+    100054: finger1.r_end
+    100056: finger2.l
+    100058: finger2.l_end
+    100060: finger2.r
+    100062: finger2.r_end
+    100064: finger3.l
+    100066: finger3.l_end
+    100068: finger3.r
+    100070: finger3.r_end
+    100072: foot.l
+    100074: foot.r
+    100076: hand.l
+    100078: hand.r
+    100080: head
+    100082: HealthBarOrigin
+    100084: HeelControl.l
+    100086: HeelControl.r
+    100088: heelToBall.l
+    100090: heelToBall.r
+    100092: hip
+    100094: HURTBOX, Lemmy Bruiser
+    100096: HURTBOX, Lemmy Bruiser 1
+    100098: HURTBOX, Lemmy Bruiser 10
+    100100: HURTBOX, Lemmy Bruiser 11
+    100102: HURTBOX, Lemmy Bruiser 12
+    100104: HURTBOX, Lemmy Bruiser 13
+    100106: HURTBOX, Lemmy Bruiser 14
+    100108: HURTBOX, Lemmy Bruiser 15
+    100110: HURTBOX, Lemmy Bruiser 16
+    100112: HURTBOX, Lemmy Bruiser 17
+    100114: HURTBOX, Lemmy Bruiser 18
+    100116: HURTBOX, Lemmy Bruiser 2
+    100118: HURTBOX, Lemmy Bruiser 3
+    100120: HURTBOX, Lemmy Bruiser 4
+    100122: HURTBOX, Lemmy Bruiser 5
+    100124: HURTBOX, Lemmy Bruiser 6
+    100126: HURTBOX, Lemmy Bruiser 7
+    100128: HURTBOX, Lemmy Bruiser 8
+    100130: HURTBOX, Lemmy Bruiser 9
+    100132: IKFootPole.l
+    100134: IKFootPole.l_end
+    100136: IKFootPole.r
+    100138: IKFootPole.r_end
+    100140: IKFootTarget.l
+    100142: IKFootTarget.r
+    100144: IKHandPole.l
+    100146: IKHandPole.l_end
+    100148: IKHandPole.r
+    100150: IKHandPole.r_end
+    100152: IKHandTarget.l
+    100154: IKHandTarget.r
+    100156: IKNeckPole
+    100158: IKNeckPole_end
+    100160: IKNeckTarget
+    100162: IKPassive.l
+    100164: IKPassive.r
+    100166: jaw
+    100168: LemurianBruiserArmature
+    100170: //RootNode
+    100172: LemurianBruiserBody
+    100174: LemurianBruiserMesh
+    100176: lower_arm.l
+    100178: lower_arm.r
+    100180: mdlLemurianBruiser
+    100182: ModelBase
+    100184: MouthMuzzle
+    100186: neck.1
+    100188: neck.2
+    100190: neck.3
+    100192: pauldron.l
+    100194: pauldron.l_end
+    100196: pauldron.r
+    100198: pauldron.r_end
+    100200: ROOT
+    100202: SpawnEffectOrigin
+    100204: stomach
+    100206: tail1
+    100208: tail2
+    100210: tail3
+    100212: tail4
+    100214: tail5
+    100216: tail5_end
+    100218: thigh.l
+    100220: thigh.r
+    100222: thumb.l
+    100224: thumb.l_end
+    100226: thumb.r
+    100228: thumb.r_end
+    100230: thumbtoe.l
+    100232: thumbtoe.l_end
+    100234: thumbtoe.r
+    100236: thumbtoe.r_end
+    100238: toe1.l
+    100240: toe1.l_end
+    100242: toe1.r
+    100244: toe1.r_end
+    100246: toe2.l
+    100248: toe2.l_end
+    100250: toe2.r
+    100252: toe2.r_end
+    100254: toe3.l
+    100256: toe3.l_end
+    100258: toe3.r
+    100260: toe3.r_end
+    100262: ToeControl.l
+    100264: ToeControl.r
+    100266: tongue.1
+    100268: tongue.2
+    100270: tongue.3
+    100272: tongue.4
+    100274: tongue.4_end
+    100276: upper_arm.l
+    100278: upper_arm.r
+    400000: AimAssist
+    400002: AimOrigin
+    400004: ballToToe.l
+    400006: ballToToe.r
+    400008: base
+    400010: calf.l
+    400012: calf.r
+    400014: CameraPivot
+    400016: chest
+    400018: clavicle.l
+    400020: clavicle.r
+    400022: DeathEffectOrigin
+    400024: Eyeball.l
+    400026: Eyeball.l_end
+    400028: Eyeball.r
+    400030: Eyeball.r_end
+    400032: EyelidLower.l
+    400034: EyelidLower.l_end
+    400036: EyelidLower.r
+    400038: EyelidLower.r_end
+    400040: EyelidUpper.l
+    400042: EyelidUpper.l_end
+    400044: EyelidUpper.r
+    400046: EyelidUpper.r_end
+    400048: finger1.l
+    400050: finger1.l_end
+    400052: finger1.r
+    400054: finger1.r_end
+    400056: finger2.l
+    400058: finger2.l_end
+    400060: finger2.r
+    400062: finger2.r_end
+    400064: finger3.l
+    400066: finger3.l_end
+    400068: finger3.r
+    400070: finger3.r_end
+    400072: foot.l
+    400074: foot.r
+    400076: hand.l
+    400078: hand.r
+    400080: head
+    400082: HealthBarOrigin
+    400084: HeelControl.l
+    400086: HeelControl.r
+    400088: heelToBall.l
+    400090: heelToBall.r
+    400092: hip
+    400094: HURTBOX, Lemmy Bruiser
+    400096: HURTBOX, Lemmy Bruiser 1
+    400098: HURTBOX, Lemmy Bruiser 10
+    400100: HURTBOX, Lemmy Bruiser 11
+    400102: HURTBOX, Lemmy Bruiser 12
+    400104: HURTBOX, Lemmy Bruiser 13
+    400106: HURTBOX, Lemmy Bruiser 14
+    400108: HURTBOX, Lemmy Bruiser 15
+    400110: HURTBOX, Lemmy Bruiser 16
+    400112: HURTBOX, Lemmy Bruiser 17
+    400114: HURTBOX, Lemmy Bruiser 18
+    400116: HURTBOX, Lemmy Bruiser 2
+    400118: HURTBOX, Lemmy Bruiser 3
+    400120: HURTBOX, Lemmy Bruiser 4
+    400122: HURTBOX, Lemmy Bruiser 5
+    400124: HURTBOX, Lemmy Bruiser 6
+    400126: HURTBOX, Lemmy Bruiser 7
+    400128: HURTBOX, Lemmy Bruiser 8
+    400130: HURTBOX, Lemmy Bruiser 9
+    400132: IKFootPole.l
+    400134: IKFootPole.l_end
+    400136: IKFootPole.r
+    400138: IKFootPole.r_end
+    400140: IKFootTarget.l
+    400142: IKFootTarget.r
+    400144: IKHandPole.l
+    400146: IKHandPole.l_end
+    400148: IKHandPole.r
+    400150: IKHandPole.r_end
+    400152: IKHandTarget.l
+    400154: IKHandTarget.r
+    400156: IKNeckPole
+    400158: IKNeckPole_end
+    400160: IKNeckTarget
+    400162: IKPassive.l
+    400164: IKPassive.r
+    400166: jaw
+    400168: LemurianBruiserArmature
+    400170: //RootNode
+    400172: LemurianBruiserBody
+    400174: LemurianBruiserMesh
+    400176: lower_arm.l
+    400178: lower_arm.r
+    400180: mdlLemurianBruiser
+    400182: ModelBase
+    400184: MouthMuzzle
+    400186: neck.1
+    400188: neck.2
+    400190: neck.3
+    400192: pauldron.l
+    400194: pauldron.l_end
+    400196: pauldron.r
+    400198: pauldron.r_end
+    400200: ROOT
+    400202: SpawnEffectOrigin
+    400204: stomach
+    400206: tail1
+    400208: tail2
+    400210: tail3
+    400212: tail4
+    400214: tail5
+    400216: tail5_end
+    400218: thigh.l
+    400220: thigh.r
+    400222: thumb.l
+    400224: thumb.l_end
+    400226: thumb.r
+    400228: thumb.r_end
+    400230: thumbtoe.l
+    400232: thumbtoe.l_end
+    400234: thumbtoe.r
+    400236: thumbtoe.r_end
+    400238: toe1.l
+    400240: toe1.l_end
+    400242: toe1.r
+    400244: toe1.r_end
+    400246: toe2.l
+    400248: toe2.l_end
+    400250: toe2.r
+    400252: toe2.r_end
+    400254: toe3.l
+    400256: toe3.l_end
+    400258: toe3.r
+    400260: toe3.r_end
+    400262: ToeControl.l
+    400264: ToeControl.r
+    400266: tongue.1
+    400268: tongue.2
+    400270: tongue.3
+    400272: tongue.4
+    400274: tongue.4_end
+    400276: upper_arm.l
+    400278: upper_arm.r
+    2100000: matLemurianBruiser
+    4300000: LemurianBruiserMesh
+    9500000: //RootNode
+    13700000: LemurianBruiserMesh
+  externalObjects: {}
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    useSRGBMaterialColor: 1
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    preserveHierarchy: 0
+    indexFormat: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+    previousCalculatedGlobalScale: 0.01
+    hasPreviousCalculatedGlobalScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

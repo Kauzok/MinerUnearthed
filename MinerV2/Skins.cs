@@ -162,7 +162,7 @@ namespace DiggerPlugin
             moltenSkinDefInfo.NameToken = "MINERBODY_MOLTEN_SKIN_NAME";
             moltenSkinDefInfo.RendererInfos = characterModel.baseRendererInfos;
             moltenSkinDefInfo.RootObject = model;
-            //moltenSkinDefInfo.UnlockableName = "MINER_MONSOONUNLOCKABLE_ACHIEVEMENT_NAME";
+            moltenSkinDefInfo.UnlockableDef = Unlockables.diggerMasteryUnlockableDef;
 
             rendererInfos = skinDefInfo.RendererInfos;
             array = new CharacterModel.RendererInfo[rendererInfos.Length];
@@ -186,6 +186,50 @@ namespace DiggerPlugin
             SkinDef moltenSkin = LoadoutAPI.CreateNewSkinDef(moltenSkinDefInfo);
             #endregion
 
+            #region GrandMastery
+            LoadoutAPI.SkinDefInfo grandMasterySkinDefInfo = default(LoadoutAPI.SkinDefInfo);
+            grandMasterySkinDefInfo.BaseSkins = Array.Empty<SkinDef>();
+            grandMasterySkinDefInfo.MinionSkinReplacements = new SkinDef.MinionSkinReplacement[0];
+            grandMasterySkinDefInfo.ProjectileGhostReplacements = new SkinDef.ProjectileGhostReplacement[0];
+            grandMasterySkinDefInfo.GameObjectActivations = getActivations(allObjects);
+            grandMasterySkinDefInfo.Icon = Assets.mainAssetBundle.LoadAsset<Sprite>("texGrandMasteryAchievement");
+            grandMasterySkinDefInfo.MeshReplacements = new SkinDef.MeshReplacement[]
+            {
+                new SkinDef.MeshReplacement
+                {
+                    renderer = mainRenderer,
+                    mesh = Assets.grandMasteryMesh
+                }
+            };
+            grandMasterySkinDefInfo.Name = "MINERBODY_TYPHOON_SKIN_NAME";
+            grandMasterySkinDefInfo.NameToken = "MINERBODY_TYPHOON_SKIN_NAME";
+            grandMasterySkinDefInfo.RendererInfos = characterModel.baseRendererInfos;
+            grandMasterySkinDefInfo.RootObject = model;
+
+            grandMasterySkinDefInfo.UnlockableDef = Unlockables.diggerGrandMasteryUnlockableDef; ;
+
+            rendererInfos = skinDefInfo.RendererInfos;
+            array = new CharacterModel.RendererInfo[rendererInfos.Length];
+            rendererInfos.CopyTo(array, 0);
+
+            material = array[0].defaultMaterial;
+
+            if (material)
+            {
+                material = UnityEngine.Object.Instantiate<Material>(material);
+                material.SetTexture("_MainTex", Assets.mainAssetBundle.LoadAsset<Material>("matMinerGM").GetTexture("_MainTex"));
+                material.SetColor("_EmColor", Color.white);
+                material.SetFloat("_EmPower", 0);
+                material.SetTexture("_EmTex", Assets.mainAssetBundle.LoadAsset<Material>("matMinerGM").GetTexture("_EmissionMap"));
+
+                array[0].defaultMaterial = material;
+            }
+
+            grandMasterySkinDefInfo.RendererInfos = array;
+
+            SkinDef grandMasterySkin = LoadoutAPI.CreateNewSkinDef(grandMasterySkinDefInfo);
+            #endregion
+
             #region Puple
             LoadoutAPI.SkinDefInfo pupleSkinDefInfo = default(LoadoutAPI.SkinDefInfo);
             pupleSkinDefInfo.BaseSkins = Array.Empty<SkinDef>();
@@ -205,6 +249,7 @@ namespace DiggerPlugin
             pupleSkinDefInfo.NameToken = "MINERBODY_PUPLE_SKIN_NAME";
             pupleSkinDefInfo.RendererInfos = characterModel.baseRendererInfos;
             pupleSkinDefInfo.RootObject = model;
+            pupleSkinDefInfo.UnlockableDef = Unlockables.pupleUnlockableDef;
 
             rendererInfos = skinDefInfo.RendererInfos;
             array = new CharacterModel.RendererInfo[rendererInfos.Length];
@@ -247,6 +292,7 @@ namespace DiggerPlugin
             tundraSkinDefInfo.NameToken = "MINERBODY_TUNDRA_SKIN_NAME";
             tundraSkinDefInfo.RendererInfos = characterModel.baseRendererInfos;
             tundraSkinDefInfo.RootObject = model;
+            tundraSkinDefInfo.UnlockableDef = Unlockables.tundraUnlockableDef;
 
             rendererInfos = skinDefInfo.RendererInfos;
             array = new CharacterModel.RendererInfo[rendererInfos.Length];
@@ -270,25 +316,26 @@ namespace DiggerPlugin
             SkinDef tundraSkin = LoadoutAPI.CreateNewSkinDef(tundraSkinDefInfo);
             #endregion
 
-            #region GrandMastery
-            LoadoutAPI.SkinDefInfo grandMasterySkinDefInfo = default(LoadoutAPI.SkinDefInfo);
-            grandMasterySkinDefInfo.BaseSkins = Array.Empty<SkinDef>();
-            grandMasterySkinDefInfo.MinionSkinReplacements = new SkinDef.MinionSkinReplacement[0];
-            grandMasterySkinDefInfo.ProjectileGhostReplacements = new SkinDef.ProjectileGhostReplacement[0];
-            grandMasterySkinDefInfo.GameObjectActivations = getActivations(allObjects);
-            grandMasterySkinDefInfo.Icon = Assets.mainAssetBundle.LoadAsset<Sprite>("texGrandMasteryAchievement");
-            grandMasterySkinDefInfo.MeshReplacements = new SkinDef.MeshReplacement[]
+            #region Blacksmith
+            LoadoutAPI.SkinDefInfo blacksmithSkinDefInfo = default(LoadoutAPI.SkinDefInfo);
+            blacksmithSkinDefInfo.BaseSkins = Array.Empty<SkinDef>();
+            blacksmithSkinDefInfo.MinionSkinReplacements = new SkinDef.MinionSkinReplacement[0];
+            blacksmithSkinDefInfo.ProjectileGhostReplacements = new SkinDef.ProjectileGhostReplacement[0];
+            blacksmithSkinDefInfo.GameObjectActivations = getActivations(allObjects);
+            blacksmithSkinDefInfo.Icon = Assets.mainAssetBundle.LoadAsset<Sprite>("texBlacksmithAchievement");
+            blacksmithSkinDefInfo.MeshReplacements = new SkinDef.MeshReplacement[]
             {
                 new SkinDef.MeshReplacement
                 {
                     renderer = mainRenderer,
-                    mesh = Assets.grandMasteryMesh
+                    mesh = Assets.blacksmithMesh
                 }
             };
-            grandMasterySkinDefInfo.Name = "MINERBODY_TYPHOON_SKIN_NAME";
-            grandMasterySkinDefInfo.NameToken = "MINERBODY_TYPHOON_SKIN_NAME";
-            grandMasterySkinDefInfo.RendererInfos = characterModel.baseRendererInfos;
-            grandMasterySkinDefInfo.RootObject = model;
+            blacksmithSkinDefInfo.Name = "MINERBODY_BLACKSMITH_SKIN_NAME";
+            blacksmithSkinDefInfo.NameToken = "MINERBODY_BLACKSMITH_SKIN_NAME";
+            blacksmithSkinDefInfo.RendererInfos = characterModel.baseRendererInfos;
+            blacksmithSkinDefInfo.RootObject = model;
+            blacksmithSkinDefInfo.UnlockableDef = Unlockables.blacksmithUnlockableDef;
 
             rendererInfos = skinDefInfo.RendererInfos;
             array = new CharacterModel.RendererInfo[rendererInfos.Length];
@@ -299,17 +346,17 @@ namespace DiggerPlugin
             if (material)
             {
                 material = UnityEngine.Object.Instantiate<Material>(material);
-                material.SetTexture("_MainTex", Assets.mainAssetBundle.LoadAsset<Material>("matMinerGM").GetTexture("_MainTex"));
+                material.SetTexture("_MainTex", Assets.mainAssetBundle.LoadAsset<Material>("matBlacksmith").GetTexture("_MainTex"));
                 material.SetColor("_EmColor", Color.white);
-                material.SetFloat("_EmPower", 0);
-                material.SetTexture("_EmTex", Assets.mainAssetBundle.LoadAsset<Material>("matMinerGM").GetTexture("_EmissionMap"));
+                material.SetFloat("_EmPower", 0f);
+                material.SetTexture("_EmTex", Assets.mainAssetBundle.LoadAsset<Material>("matBlacksmith").GetTexture("_EmissionMap"));
 
                 array[0].defaultMaterial = material;
             }
 
-            grandMasterySkinDefInfo.RendererInfos = array;
+            blacksmithSkinDefInfo.RendererInfos = array;
 
-            SkinDef grandMasterySkin = LoadoutAPI.CreateNewSkinDef(grandMasterySkinDefInfo);
+            SkinDef blacksmithSkin = LoadoutAPI.CreateNewSkinDef(blacksmithSkinDefInfo);
             #endregion
 
             #region Iron
@@ -352,7 +399,6 @@ namespace DiggerPlugin
 
             SkinDef ironSkin = LoadoutAPI.CreateNewSkinDef(ironSkinDefInfo);
             #endregion
-
             #region Gold
             LoadoutAPI.SkinDefInfo goldSkinDefInfo = default(LoadoutAPI.SkinDefInfo);
             goldSkinDefInfo.BaseSkins = Array.Empty<SkinDef>();
@@ -394,7 +440,6 @@ namespace DiggerPlugin
 
             SkinDef goldSkin = LoadoutAPI.CreateNewSkinDef(goldSkinDefInfo);
 #endregion
-
             #region Diamond
             LoadoutAPI.SkinDefInfo diamondSkinDefInfo = default(LoadoutAPI.SkinDefInfo);
             diamondSkinDefInfo.BaseSkins = Array.Empty<SkinDef>();
@@ -435,48 +480,6 @@ namespace DiggerPlugin
             diamondSkinDefInfo.RendererInfos = array;
 
             SkinDef diamondSkin = LoadoutAPI.CreateNewSkinDef(diamondSkinDefInfo);
-            #endregion
-
-            #region Blacksmith
-            LoadoutAPI.SkinDefInfo blacksmithSkinDefInfo = default(LoadoutAPI.SkinDefInfo);
-            blacksmithSkinDefInfo.BaseSkins = Array.Empty<SkinDef>();
-            blacksmithSkinDefInfo.MinionSkinReplacements = new SkinDef.MinionSkinReplacement[0];
-            blacksmithSkinDefInfo.ProjectileGhostReplacements = new SkinDef.ProjectileGhostReplacement[0];
-            blacksmithSkinDefInfo.GameObjectActivations = getActivations(allObjects);
-            blacksmithSkinDefInfo.Icon = Assets.mainAssetBundle.LoadAsset<Sprite>("texBlacksmithAchievement");
-            blacksmithSkinDefInfo.MeshReplacements = new SkinDef.MeshReplacement[]
-            {
-                new SkinDef.MeshReplacement
-                {
-                    renderer = mainRenderer,
-                    mesh = Assets.blacksmithMesh
-                }
-            };
-            blacksmithSkinDefInfo.Name = "MINERBODY_BLACKSMITH_SKIN_NAME";
-            blacksmithSkinDefInfo.NameToken = "MINERBODY_BLACKSMITH_SKIN_NAME";
-            blacksmithSkinDefInfo.RendererInfos = characterModel.baseRendererInfos;
-            blacksmithSkinDefInfo.RootObject = model;
-
-            rendererInfos = skinDefInfo.RendererInfos;
-            array = new CharacterModel.RendererInfo[rendererInfos.Length];
-            rendererInfos.CopyTo(array, 0);
-
-            material = array[0].defaultMaterial;
-
-            if (material)
-            {
-                material = UnityEngine.Object.Instantiate<Material>(material);
-                material.SetTexture("_MainTex", Assets.mainAssetBundle.LoadAsset<Material>("matBlacksmith").GetTexture("_MainTex"));
-                material.SetColor("_EmColor", Color.white);
-                material.SetFloat("_EmPower", 0f);
-                material.SetTexture("_EmTex", Assets.mainAssetBundle.LoadAsset<Material>("matBlacksmith").GetTexture("_EmissionMap"));
-
-                array[0].defaultMaterial = material;
-            }
-
-            blacksmithSkinDefInfo.RendererInfos = array;
-
-            SkinDef blacksmithSkin = LoadoutAPI.CreateNewSkinDef(blacksmithSkinDefInfo);
             #endregion
 
             #region Drip
@@ -565,8 +568,6 @@ namespace DiggerPlugin
 
             var skinDefs = new List<SkinDef>();
 
-            if (DiggerPlugin.starstormInstalled)
-            {
                 skinDefs = new List<SkinDef>()
                 {
                     defaultSkin,
@@ -576,18 +577,6 @@ namespace DiggerPlugin
                     pupleSkin,
                     blacksmithSkin
                 };
-            }
-            else
-            {
-                skinDefs = new List<SkinDef>()
-                {
-                    defaultSkin,
-                    moltenSkin,
-                    tundraSkin,
-                    pupleSkin,
-                    blacksmithSkin
-                };
-            }
 
             if (DiggerPlugin.extraSkins.Value)
             {
