@@ -54,6 +54,9 @@ Neik - Blacksmith concept
 Ruxbieno - Direseeker logbook entry
 
 ## Changelog
+`1.6.3`
+- fixed unlockableapi
+
 `1.6.2`
 - Fixed cave-in not networked
   - niggas put `networkserver.active` inside a `isauthority` lol

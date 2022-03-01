@@ -30,7 +30,7 @@ namespace DiggerPlugin
     [BepInDependency("com.Skell.GoldenCoastPlus", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("com.TeamMoonstorm.Starstorm2", BepInDependency.DependencyFlags.SoftDependency)]
     [NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod, VersionStrictness.EveryoneNeedSameModVersion)]
-    [BepInPlugin(MODUID, "DiggerUnearthed", "1.6.2")]
+    [BepInPlugin(MODUID, "DiggerUnearthed", "1.6.3")]
     [R2APISubmoduleDependency(new string[]
     {
         "PrefabAPI",
@@ -40,7 +40,7 @@ namespace DiggerPlugin
         "LanguageAPI",
         "SoundAPI",
         "EffectAPI",
-        "UnlockablesAPI"
+        "UnlockableAPI"
     })]
 
     public class DiggerPlugin : BaseUnityPlugin
