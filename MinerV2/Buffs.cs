@@ -15,8 +15,8 @@ namespace DiggerPlugin
 
         internal static void RegisterBuffs()
         {
-            goldRushBuff = AddNewBuff("GoldRush", Resources.Load<Sprite>("Textures/BuffIcons/texBuffOnFireIcon"), DiggerPlugin.characterColor, true, false);
-            cleaveBuff = AddNewBuff("Cleave", Resources.Load<Sprite>("Textures/BuffIcons/texBuffPulverizeIcon"), DiggerPlugin.characterColor, true, true);
+            goldRushBuff = AddNewBuff("GoldRush", LegacyResourcesAPI.Load<Sprite>("Textures/BuffIcons/texBuffOnFireIcon"), DiggerPlugin.characterColor, true, false);
+            cleaveBuff = AddNewBuff("Cleave", LegacyResourcesAPI.Load<Sprite>("Textures/BuffIcons/texBuffPulverizeIcon"), DiggerPlugin.characterColor, true, true);
         }
 
         // simple helper method

@@ -13,9 +13,9 @@ namespace EntityStates.Digger
         public static float styleCoefficient = 0.7f;
 
         private float duration;
-        public GameObject explodePrefab = Resources.Load<GameObject>("prefabs/effects/omnieffect/OmniExplosionVFX");
-        public GameObject slashPrefab = Resources.Load<GameObject>("prefabs/effects/omnieffect/OmniImpactVFXSlash");
-        public GameObject swingPrefab = Resources.Load<GameObject>("prefabs/effects/lemurianbitetrail");
+        public GameObject explodePrefab = LegacyResourcesAPI.Load<GameObject>("prefabs/effects/omnieffect/OmniExplosionVFX");
+        public GameObject slashPrefab = LegacyResourcesAPI.Load<GameObject>("prefabs/effects/omnieffect/OmniImpactVFXSlash");
+        public GameObject swingPrefab = LegacyResourcesAPI.Load<GameObject>("prefabs/effects/lemurianbitetrail");
         private bool hasFired;
         private float hitPauseTimer;
         private OverlapAttack attack;
@@ -133,7 +133,7 @@ namespace EntityStates.Digger
                     //blastAttack.baseForce = 3f;
                     //blastAttack.teamIndex = TeamComponent.GetObjectTeam(blastAttack.attacker);
                     //blastAttack.damageType = DamageType.Generic;
-                    //blastAttack.attackerFiltering = AttackerFiltering.NeverHit;
+                    //blastAttack.attackerFiltering = AttackerFiltering.NeverHitSelf;
                     //BlastAttack.Result result = blastAttack.Fire();
 
                     Transform swingCenter = base.GetModelChildLocator().FindChild("CrushMuzzleExplosion").transform;

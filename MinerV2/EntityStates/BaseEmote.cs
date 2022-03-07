@@ -84,7 +84,7 @@ namespace EntityStates.Digger
                 effectData.origin = base.characterBody.footPosition;
                 effectData.scale = 32;
 
-                EffectManager.SpawnEffect(Resources.Load<GameObject>("Prefabs/Effects/OmniEffect/OmniExplosionVFX"), effectData, false);
+                EffectManager.SpawnEffect(LegacyResourcesAPI.Load<GameObject>("Prefabs/Effects/OmniEffect/OmniExplosionVFX"), effectData, false);
                 Util.PlaySound(DiggerPlugin.Sounds.ToTheStarsExplosion, base.gameObject);
             }
         }
@@ -137,6 +137,7 @@ namespace EntityStates.Digger
 
             if (this.duration > 0 && base.fixedAge >= this.duration) flag = true;
 
+            //TODO: CONVERT TO NEW CAMERA SYSTEM
             CameraTargetParams ctp = base.cameraTargetParams;
             float denom = (1 + Time.fixedTime - this.initialTime);
             float smoothFactor = 8 / Mathf.Pow(denom, 2);

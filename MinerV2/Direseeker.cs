@@ -28,7 +28,7 @@ namespace DiggerPlugin
 
         public static void PerroGrande()
         {
-            GameObject fatAcridPrefab = PrefabAPI.InstantiateClone(Resources.Load<GameObject>("Prefabs/CharacterBodies/CrocoBody"), "DireseekerBody");
+            GameObject fatAcridPrefab = PrefabAPI.InstantiateClone(LegacyResourcesAPI.Load<GameObject>("Prefabs/CharacterBodies/CrocoBody"), "DireseekerBody");
 
             CharacterBody bodyComponent = fatAcridPrefab.GetComponent<CharacterBody>();
 
@@ -66,7 +66,7 @@ namespace DiggerPlugin
 
             model.baseRendererInfos[0].defaultMaterial = newMat;
 
-            GameObject acridMasterPrefab = PrefabAPI.InstantiateClone(Resources.Load<GameObject>("Prefabs/CharacterMasters/LemurianBruiserMaster"), "FatAcridMaster");
+            GameObject acridMasterPrefab = PrefabAPI.InstantiateClone(LegacyResourcesAPI.Load<GameObject>("Prefabs/CharacterMasters/LemurianBruiserMaster"), "FatAcridMaster");
 
             CharacterMaster master = acridMasterPrefab.GetComponent<CharacterMaster>();
 
@@ -94,7 +94,6 @@ namespace DiggerPlugin
             {
                 spawnCard = characterSpawnCard,
                 selectionWeight = 1,
-                allowAmbushSpawn = false,
                 preventOverhead = false,
                 minimumStageCompletions = 5,
                 spawnDistance = DirectorCore.MonsterSpawnDistance.Close
@@ -121,14 +120,14 @@ namespace DiggerPlugin
 
         public static void CreateProjectiles()
         {
-            fireballPrefab = PrefabAPI.InstantiateClone(Resources.Load<GameObject>("Prefabs/Projectiles/ArchWispCannon"), "DireseekerFireball", true);
-            fireballGroundPrefab = PrefabAPI.InstantiateClone(Resources.Load<GameObject>("Prefabs/Projectiles/ArchWispGroundCannon"), "DireseekerGroundFireball", true);
+            fireballPrefab = PrefabAPI.InstantiateClone(LegacyResourcesAPI.Load<GameObject>("Prefabs/Projectiles/ArchWispCannon"), "DireseekerFireball", true);
+            fireballGroundPrefab = PrefabAPI.InstantiateClone(LegacyResourcesAPI.Load<GameObject>("Prefabs/Projectiles/ArchWispGroundCannon"), "DireseekerGroundFireball", true);
 
             var controller = fireballPrefab.GetComponent<ProjectileController>();
-            controller.ghostPrefab = Resources.Load<GameObject>("Prefabs/Projectiles/LemurianBigFireball").GetComponent<ProjectileController>().ghostPrefab;
+            controller.ghostPrefab = LegacyResourcesAPI.Load<GameObject>("Prefabs/Projectiles/LemurianBigFireball").GetComponent<ProjectileController>().ghostPrefab;
             controller.startSound = "Play_lemurianBruiser_m1_shoot";
 
-            GameObject explosion = Resources.Load<GameObject>("Prefabs/Projectiles/LemurianBigFireball").GetComponent<ProjectileImpactExplosion>().impactEffect;
+            GameObject explosion = LegacyResourcesAPI.Load<GameObject>("Prefabs/Projectiles/LemurianBigFireball").GetComponent<ProjectileImpactExplosion>().impactEffect;
 
             var impact = fireballPrefab.GetComponent<ProjectileImpactExplosion>();
             impact.childrenProjectilePrefab = fireballGroundPrefab;
@@ -137,7 +136,7 @@ namespace DiggerPlugin
             impact.blastDamageCoefficient = 1f;
             impact.blastProcCoefficient = 1f;
 
-            fireballGroundPrefab.GetComponent<ProjectileController>().ghostPrefab = Resources.Load<GameObject>("Prefabs/Projectiles/MagmaOrbProjectile").GetComponent<ProjectileController>().ghostPrefab;
+            fireballGroundPrefab.GetComponent<ProjectileController>().ghostPrefab = LegacyResourcesAPI.Load<GameObject>("Prefabs/Projectiles/MagmaOrbProjectile").GetComponent<ProjectileController>().ghostPrefab;
             fireballGroundPrefab.GetComponent<ProjectileImpactExplosion>().impactEffect = explosion;
 
             fireTrailPrefab = PrefabAPI.InstantiateClone(fireballGroundPrefab.GetComponent<ProjectileDamageTrail>().trailPrefab, "DireseekerFireTrail", true);
@@ -180,12 +179,12 @@ namespace DiggerPlugin
             mySkillDef.requiredStock = 1;
             mySkillDef.stockToConsume = 1;
 
-            LoadoutAPI.AddSkillDef(mySkillDef);
+            ContentAddition.AddSkillDef(mySkillDef);
 
             skillLocator.primary = sx.AddComponent<GenericSkill>();
             SkillFamily newFamily = ScriptableObject.CreateInstance<SkillFamily>();
             newFamily.variants = new SkillFamily.Variant[1];
-            LoadoutAPI.AddSkillFamily(newFamily);
+            ContentAddition.AddSkillFamily(newFamily);
             skillLocator.primary.SetFieldValue("_skillFamily", newFamily);
             SkillFamily skillFamily = skillLocator.primary.skillFamily;
 
@@ -212,12 +211,12 @@ namespace DiggerPlugin
             mySkillDef.requiredStock = 1;
             mySkillDef.stockToConsume = 0;
 
-            LoadoutAPI.AddSkillDef(mySkillDef);
+            ContentAddition.AddSkillDef(mySkillDef);
 
             skillLocator.secondary = sx.AddComponent<GenericSkill>();
             newFamily = ScriptableObject.CreateInstance<SkillFamily>();
             newFamily.variants = new SkillFamily.Variant[1];
-            LoadoutAPI.AddSkillFamily(newFamily);
+            ContentAddition.AddSkillFamily(newFamily);
             skillLocator.secondary.SetFieldValue("_skillFamily", newFamily);
             skillFamily = skillLocator.secondary.skillFamily;
 
@@ -251,7 +250,7 @@ namespace DiggerPlugin
 
             if (!DiggerPlugin.direseekerInstalled)
             {
-                bodyPrefab = PrefabAPI.InstantiateClone(Resources.Load<GameObject>("Prefabs/CharacterBodies/LemurianBruiserBody"), "DireseekerBody");
+                bodyPrefab = PrefabAPI.InstantiateClone(LegacyResourcesAPI.Load<GameObject>("Prefabs/CharacterBodies/LemurianBruiserBody"), "DireseekerBody");
 
                 CharacterBody bodyComponent = bodyPrefab.GetComponent<CharacterBody>();
 
@@ -321,7 +320,7 @@ namespace DiggerPlugin
 
                 bodyPrefab.AddComponent<DireseekerController>().burstFlame = burstFlame.GetComponent<ParticleSystem>();
 
-                Shader hotpoo = Resources.Load<Shader>("Shaders/Deferred/hgstandard");
+                Shader hotpoo = LegacyResourcesAPI.Load<Shader>("Shaders/Deferred/hgstandard");
 
                 Material hornMat = horn1.GetComponentInChildren<MeshRenderer>().material;
                 hornMat.shader = hotpoo;
@@ -350,7 +349,7 @@ namespace DiggerPlugin
 
                 model.baseRendererInfos = newInfos;
 
-                masterPrefab = PrefabAPI.InstantiateClone(Resources.Load<GameObject>("Prefabs/CharacterMasters/LemurianBruiserMaster"), "DireseekerMaster");
+                masterPrefab = PrefabAPI.InstantiateClone(LegacyResourcesAPI.Load<GameObject>("Prefabs/CharacterMasters/LemurianBruiserMaster"), "DireseekerMaster");
 
                 CharacterMaster master = masterPrefab.GetComponent<CharacterMaster>();
 
@@ -380,7 +379,6 @@ namespace DiggerPlugin
                     {
                         spawnCard = characterSpawnCard,
                         selectionWeight = 1,
-                        allowAmbushSpawn = false,
                         preventOverhead = false,
                         minimumStageCompletions = 2,
                         spawnDistance = DirectorCore.MonsterSpawnDistance.Close
@@ -409,7 +407,7 @@ namespace DiggerPlugin
             if (DiggerPlugin.enableDireseekerSurvivor.Value)
             {
                 //minerdire
-                survivorPrefab = PrefabAPI.InstantiateClone(Resources.Load<GameObject>("Prefabs/CharacterBodies/LemurianBruiserBody"), "DireseekerPlayerBody");
+                survivorPrefab = PrefabAPI.InstantiateClone(LegacyResourcesAPI.Load<GameObject>("Prefabs/CharacterBodies/LemurianBruiserBody"), "DireseekerPlayerBody");
 
                 //minerdire
                 SkillSetup(survivorPrefab);
@@ -454,7 +452,7 @@ namespace DiggerPlugin
 
                 survivorPrefab.AddComponent<DireseekerController>().burstFlame = burstFlame2.GetComponent<ParticleSystem>();
 
-                Shader hotpoo = Resources.Load<Shader>("Shaders/Deferred/hgstandard");
+                Shader hotpoo = LegacyResourcesAPI.Load<Shader>("Shaders/Deferred/hgstandard");
 
                 Material hornMat = horn1b.GetComponentInChildren<MeshRenderer>().material;
                 hornMat.shader = hotpoo;
@@ -514,7 +512,7 @@ namespace DiggerPlugin
                 bodyComponent2.isChampion = false;
                 bodyComponent2.portraitIcon = Assets.mainAssetBundle.LoadAsset<Sprite>("texDireseekerPlayerIcon").texture;
                 bodyComponent2.hideCrosshair = false;
-                bodyComponent2.crosshairPrefab = Resources.Load<GameObject>("prefabs/crosshair/simpledotcrosshair");
+                bodyComponent2._defaultCrosshairPrefab = LegacyResourcesAPI.Load<GameObject>("prefabs/crosshair/simpledotcrosshair");
 
                 //diredire
                 var stateMachine = survivorPrefab.GetComponentInChildren<EntityStateMachine>();

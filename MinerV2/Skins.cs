@@ -69,7 +69,7 @@ namespace DiggerPlugin
 
             skinDefInfo.GameObjectActivations = getActivations(allObjects);
 
-            skinDefInfo.Icon = Resources.Load<GameObject>("Prefabs/CharacterBodies/CommandoBody").GetComponentInChildren<ModelSkinController>().skins[0].icon;
+            skinDefInfo.Icon = LegacyResourcesAPI.Load<GameObject>("Prefabs/CharacterBodies/CommandoBody").GetComponentInChildren<ModelSkinController>().skins[0].icon;
             skinDefInfo.MeshReplacements = new SkinDef.MeshReplacement[]
             {
                 new SkinDef.MeshReplacement
@@ -87,7 +87,7 @@ namespace DiggerPlugin
             CharacterModel.RendererInfo[] array = new CharacterModel.RendererInfo[rendererInfos.Length];
             rendererInfos.CopyTo(array, 0);
 
-            Material commandoMat = Resources.Load<GameObject>("Prefabs/CharacterBodies/CommandoBody").GetComponentInChildren<CharacterModel>().baseRendererInfos[0].defaultMaterial;
+            Material commandoMat = LegacyResourcesAPI.Load<GameObject>("Prefabs/CharacterBodies/CommandoBody").GetComponentInChildren<CharacterModel>().baseRendererInfos[0].defaultMaterial;
 
             //clone commando material for that spicy hopoo shader
             Material material = array[0].defaultMaterial;
@@ -365,7 +365,7 @@ namespace DiggerPlugin
             ironSkinDefInfo.MinionSkinReplacements = new SkinDef.MinionSkinReplacement[0];
             ironSkinDefInfo.ProjectileGhostReplacements = new SkinDef.ProjectileGhostReplacement[0];
             ironSkinDefInfo.GameObjectActivations = getActivations(allObjects);
-            ironSkinDefInfo.Icon = Resources.Load<GameObject>("Prefabs/CharacterBodies/HuntressBody").GetComponentInChildren<ModelSkinController>().skins[1].icon;
+            ironSkinDefInfo.Icon = LegacyResourcesAPI.Load<GameObject>("Prefabs/CharacterBodies/HuntressBody").GetComponentInChildren<ModelSkinController>().skins[1].icon;
             ironSkinDefInfo.MeshReplacements = new SkinDef.MeshReplacement[]
             {
                 new SkinDef.MeshReplacement
@@ -405,7 +405,7 @@ namespace DiggerPlugin
             goldSkinDefInfo.MinionSkinReplacements = new SkinDef.MinionSkinReplacement[0];
             goldSkinDefInfo.ProjectileGhostReplacements = new SkinDef.ProjectileGhostReplacement[0];
             goldSkinDefInfo.GameObjectActivations = getActivations(allObjects);
-            goldSkinDefInfo.Icon = Resources.Load<GameObject>("Prefabs/CharacterBodies/CommandoBody").GetComponentInChildren<ModelSkinController>().skins[1].icon;
+            goldSkinDefInfo.Icon = LegacyResourcesAPI.Load<GameObject>("Prefabs/CharacterBodies/CommandoBody").GetComponentInChildren<ModelSkinController>().skins[1].icon;
             goldSkinDefInfo.MeshReplacements = new SkinDef.MeshReplacement[]
             {
                 new SkinDef.MeshReplacement
@@ -446,7 +446,7 @@ namespace DiggerPlugin
             diamondSkinDefInfo.MinionSkinReplacements = new SkinDef.MinionSkinReplacement[0];
             diamondSkinDefInfo.ProjectileGhostReplacements = new SkinDef.ProjectileGhostReplacement[0];
             diamondSkinDefInfo.GameObjectActivations = getActivations(allObjects);
-            diamondSkinDefInfo.Icon = Resources.Load<GameObject>("Prefabs/CharacterBodies/MercBody").GetComponentInChildren<ModelSkinController>().skins[0].icon;
+            diamondSkinDefInfo.Icon = LegacyResourcesAPI.Load<GameObject>("Prefabs/CharacterBodies/MercBody").GetComponentInChildren<ModelSkinController>().skins[0].icon;
             diamondSkinDefInfo.MeshReplacements = new SkinDef.MeshReplacement[]
             {
                 new SkinDef.MeshReplacement
@@ -530,7 +530,7 @@ namespace DiggerPlugin
             steveSkinDefInfo.MinionSkinReplacements = new SkinDef.MinionSkinReplacement[0];
             steveSkinDefInfo.ProjectileGhostReplacements = new SkinDef.ProjectileGhostReplacement[0];
             steveSkinDefInfo.GameObjectActivations = getActivations(allObjects, diamondPickL, diamondPickR);
-            steveSkinDefInfo.Icon = Resources.Load<GameObject>("Prefabs/CharacterBodies/CommandoBody").GetComponentInChildren<ModelSkinController>().skins[0].icon;
+            steveSkinDefInfo.Icon = LegacyResourcesAPI.Load<GameObject>("Prefabs/CharacterBodies/CommandoBody").GetComponentInChildren<ModelSkinController>().skins[0].icon;
             steveSkinDefInfo.MeshReplacements = new SkinDef.MeshReplacement[]
             {
                 new SkinDef.MeshReplacement

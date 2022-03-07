@@ -1108,7 +1108,7 @@
             Return true if the submodule is loaded.
             </summary>
         </member>
-        <member name="M:R2API.EffectAPI.AddEffect(UnityEngine.GameObject)">
+        <member name="M:R2API.R2API.ContentAddition.AddEffect(UnityEngine.GameObject)">
             <summary>
             Creates an EffectDef from a prefab and adds it to the EffectCatalog.
             The prefab must have an the following components: EffectComponent, VFXAttributes
@@ -1117,7 +1117,7 @@
             <param name="effect">The prefab of the effect to be added</param>
             <returns>True if the effect was added</returns>
         </member>
-        <member name="M:R2API.EffectAPI.AddEffect(RoR2.EffectDef)">
+        <member name="M:R2API.R2API.ContentAddition.AddEffect(RoR2.EffectDef)">
             <summary>
             Adds an EffectDef to the EffectCatalog when the catalog inits.
             </summary>
@@ -1467,7 +1467,7 @@
             <typeparam name="T">The state type</typeparam>
             <returns>The created SerializableEntityStateType</returns>
         </member>
-        <member name="M:R2API.LoadoutAPI.AddSkillDef(RoR2.Skills.SkillDef)">
+        <member name="M:R2API.ContentAddition.AddSkillDef(RoR2.Skills.SkillDef)">
             <summary>
             Registers an event to add a SkillDef to the SkillDefCatalog.
             Must be called before Catalog init (during Awake() or OnEnable())
@@ -1475,7 +1475,7 @@
             <param name="s">The SkillDef to add</param>
             <returns>True if the event was registered</returns>
         </member>
-        <member name="M:R2API.LoadoutAPI.AddSkillFamily(RoR2.Skills.SkillFamily)">
+        <member name="M:R2API.ContentAddition.AddSkillFamily(RoR2.Skills.SkillFamily)">
             <summary>
             Registers an event to add a SkillFamily to the SkillFamiliesCatalog
             Must be called before Catalog init (during Awake() or OnEnable())
@@ -2360,7 +2360,7 @@
         </member>
         <member name="T:R2API.UnbundledResourcesProvider">
             <summary>
-            This class allows loading of resources not stored in an assetbundle with Resources.Load. Primary use would be for generating an item icon in code.
+            This class allows loading of resources not stored in an assetbundle with LegacyResourcesAPI.Load. Primary use would be for generating an item icon in code.
             </summary>
         </member>
         <member name="T:R2API.IModdedUnlockableDataProvider">

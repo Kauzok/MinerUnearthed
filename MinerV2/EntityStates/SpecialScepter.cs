@@ -14,10 +14,10 @@ namespace EntityStates.Digger
 
         private bool hasFallen;
         private float duration;
-        public GameObject hitEffectPrefab = Resources.Load<GameObject>("Prefabs/Effects/ImpactEffects/MissileExplosionVFX");
-        public GameObject tracerEffectPrefab = Resources.Load<GameObject>("Prefabs/Effects/Tracers/TracerEmbers");
-        public GameObject smokeEffectPrefab = Resources.Load<GameObject>("Prefabs/Effects/MuzzleFlashes/MuzzleFlashLoader");
-        public GameObject flashEffectPrefab = Resources.Load<GameObject>("Prefabs/Effects/MuzzleFlashes/MuzzleFlashFire");
+        public GameObject hitEffectPrefab = LegacyResourcesAPI.Load<GameObject>("Prefabs/Effects/ImpactEffects/MissileExplosionVFX");
+        public GameObject tracerEffectPrefab = LegacyResourcesAPI.Load<GameObject>("Prefabs/Effects/Tracers/TracerEmbers");
+        public GameObject smokeEffectPrefab = LegacyResourcesAPI.Load<GameObject>("Prefabs/Effects/MuzzleFlashes/MuzzleFlashLoader");
+        public GameObject flashEffectPrefab = LegacyResourcesAPI.Load<GameObject>("Prefabs/Effects/MuzzleFlashes/MuzzleFlashFire");
 
         private Quaternion major = Quaternion.FromToRotation(Vector3.forward, Vector3.down);
         private ParticleSystem cometParticle;
@@ -49,7 +49,7 @@ namespace EntityStates.Digger
                 temporaryOverlay.animateShaderAlpha = true;
                 temporaryOverlay.alphaCurve = AnimationCurve.EaseInOut(0f, 1f, 1f, 0f);
                 temporaryOverlay.destroyComponentOnEnd = true;
-                temporaryOverlay.originalMaterial = Resources.Load<Material>("Materials/matDoppelganger");
+                temporaryOverlay.originalMaterial = LegacyResourcesAPI.Load<Material>("Materials/matDoppelganger");
                 temporaryOverlay.AddToCharacerModel(modelTransform.GetComponent<CharacterModel>());
             }
 
@@ -117,7 +117,7 @@ namespace EntityStates.Digger
                 blastAttack.baseForce = 2000f;
                 blastAttack.teamIndex = TeamComponent.GetObjectTeam(blastAttack.attacker);
                 blastAttack.damageType = DamageType.PercentIgniteOnHit;
-                blastAttack.attackerFiltering = AttackerFiltering.NeverHit;
+                blastAttack.attackerFiltering = AttackerFiltering.NeverHitSelf;
                 blastAttack.Fire();
 
                 EffectData effectData = new EffectData();
@@ -151,7 +151,7 @@ namespace EntityStates.Digger
                     temporaryOverlay.animateShaderAlpha = true;
                     temporaryOverlay.alphaCurve = AnimationCurve.EaseInOut(0f, 1f, 1f, 0f);
                     temporaryOverlay.destroyComponentOnEnd = true;
-                    temporaryOverlay.originalMaterial = Resources.Load<Material>("Materials/matOnFire");
+                    temporaryOverlay.originalMaterial = LegacyResourcesAPI.Load<Material>("Materials/matOnFire");
                     temporaryOverlay.AddToCharacerModel(modelTransform.GetComponent<CharacterModel>());
                 }
 

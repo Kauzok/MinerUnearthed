@@ -57,6 +57,7 @@ namespace DiggerPlugin
                 }
             }
 
+            //TODO: GENERATE SOUNDBANK WITH NEW WWISE VERSION
             using (Stream manifestResourceStream2 = Assembly.GetExecutingAssembly().GetManifestResourceStream("DiggerUnearthed.DiggerBank.bnk"))
             {
                 byte[] array = new byte[manifestResourceStream2.Length];
@@ -64,6 +65,7 @@ namespace DiggerPlugin
                 SoundAPI.SoundBanks.Add(array);
             }
 
+            //TODO: GENERATE SOUNDBANK WITH NEW WWISE VERSION
             using (Stream manifestResourceStream2 = Assembly.GetExecutingAssembly().GetManifestResourceStream("DiggerUnearthed.DiggerV2.bnk"))
             {
                 byte[] array = new byte[manifestResourceStream2.Length];
@@ -73,10 +75,10 @@ namespace DiggerPlugin
 
             blacksmithHammer = mainAssetBundle.LoadAsset<GameObject>("BlacksmithHammer");
             blacksmithHammer.AddComponent<BlacksmithHammerComponent>();
-            blacksmithHammer.GetComponentInChildren<MeshRenderer>().material.shader = Resources.Load<Shader>("Shaders/Deferred/hgstandard");
+            blacksmithHammer.GetComponentInChildren<MeshRenderer>().material.shader = LegacyResourcesAPI.Load<Shader>("Shaders/Deferred/hgstandard");
 
             blacksmithAnvil = mainAssetBundle.LoadAsset<GameObject>("BlacksmithAnvil");
-            blacksmithAnvil.GetComponentInChildren<MeshRenderer>().material.shader = Resources.Load<Shader>("Shaders/Deferred/hgstandard");
+            blacksmithAnvil.GetComponentInChildren<MeshRenderer>().material.shader = LegacyResourcesAPI.Load<Shader>("Shaders/Deferred/hgstandard");
             blacksmithAnvil.gameObject.layer = LayerIndex.world.intVal;
 
             charPortrait = mainAssetBundle.LoadAsset<Texture>("texMinerIcon");
@@ -135,7 +137,7 @@ namespace DiggerPlugin
             effect.positionAtReferencedTransform = true;
             effect.soundName = soundName;
 
-            EffectAPI.AddEffect(newEffect);
+            R2API.ContentAddition.AddEffect(newEffect);
 
             return newEffect;
         }

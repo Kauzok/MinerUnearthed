@@ -11,10 +11,10 @@ namespace EntityStates.Digger
         public static float damageCoefficient = 0.9f;
 
         private float duration;
-        public GameObject hitEffectPrefab = Resources.Load<GameObject>("prefabs/effects/impacteffects/MissileExplosionVFX");
-        public GameObject tracerEffectPrefab = Resources.Load<GameObject>("prefabs/effects/tracers/tracerembers");
-        public GameObject smokeEffectPrefab = Resources.Load<GameObject>("prefabs/effects/muzzleflashes/muzzleflashLoader");
-        public GameObject flashEffectPrefab = Resources.Load<GameObject>("prefabs/effects/muzzleflashes/muzzleflashfire");
+        public GameObject hitEffectPrefab = LegacyResourcesAPI.Load<GameObject>("prefabs/effects/impacteffects/MissileExplosionVFX");
+        public GameObject tracerEffectPrefab = LegacyResourcesAPI.Load<GameObject>("prefabs/effects/tracers/tracerembers");
+        public GameObject smokeEffectPrefab = LegacyResourcesAPI.Load<GameObject>("prefabs/effects/muzzleflashes/muzzleflashLoader");
+        public GameObject flashEffectPrefab = LegacyResourcesAPI.Load<GameObject>("prefabs/effects/muzzleflashes/muzzleflashfire");
 
         private Quaternion major = Quaternion.FromToRotation(Vector3.forward, Vector3.down);
 
