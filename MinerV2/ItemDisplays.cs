@@ -30,7 +30,7 @@ namespace DiggerPlugin
         }
 
         private static void PopulateFromBody(string bodyName) {
-            ItemDisplayRuleSet itemDisplayRuleSet = Resources.Load<GameObject>("Prefabs/CharacterBodies/" + bodyName + "Body").GetComponent<ModelLocator>().modelTransform.GetComponent<CharacterModel>().itemDisplayRuleSet;
+            ItemDisplayRuleSet itemDisplayRuleSet = LegacyResourcesAPI.Load<GameObject>("Prefabs/CharacterBodies/" + bodyName + "Body").GetComponent<ModelLocator>().modelTransform.GetComponent<CharacterModel>().itemDisplayRuleSet;
 
             ItemDisplayRuleSet.KeyAssetRuleGroup[] item = itemDisplayRuleSet.keyAssetRuleGroups;
 
@@ -1549,7 +1549,7 @@ namespace DiggerPlugin
                 }
             });
 
-            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+            /*itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
                 keyAsset = RoR2Content.Items.CooldownOnCrit,
                 displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
@@ -1566,7 +1566,7 @@ namespace DiggerPlugin
                         }
                     }
                 }
-            });
+            });*/
 
             itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
                 keyAsset = RoR2Content.Items.Phasing,
@@ -1900,7 +1900,7 @@ namespace DiggerPlugin
                 }
             });
 
-            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+            /*itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
                 keyAsset = RoR2Content.Items.Incubator,
                 displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
@@ -1917,7 +1917,7 @@ namespace DiggerPlugin
                         }
                     }
                 }
-            });
+            });*/
 
             itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
                 keyAsset = RoR2Content.Items.FireballsOnHit,
@@ -2206,7 +2206,7 @@ namespace DiggerPlugin
             });
 
             itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
-                keyAsset = RoR2Content.Items.BurnNearby,
+                keyAsset = RoR2Content.Equipment.BurnNearby,
                 displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]
                     {

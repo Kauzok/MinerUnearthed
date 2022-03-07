@@ -39,7 +39,7 @@ namespace EntityStates.Digger
                 temporaryOverlay.animateShaderAlpha = true;
                 temporaryOverlay.alphaCurve = AnimationCurve.EaseInOut(0f, 1f, 1f, 0f);
                 temporaryOverlay.destroyComponentOnEnd = true;
-                temporaryOverlay.originalMaterial = Resources.Load<Material>("Materials/matOnFire");
+                temporaryOverlay.originalMaterial = LegacyResourcesAPI.Load<Material>("Materials/matOnFire");
                 temporaryOverlay.AddToCharacerModel(modelTransform.GetComponent<CharacterModel>());
             }
 
@@ -105,7 +105,7 @@ namespace EntityStates.Digger
         public static float styleCoefficient = 0.4f;
 
         private float duration;
-        public GameObject explodePrefab = Resources.Load<GameObject>("prefabs/effects/omnieffect/OmniExplosionVFX");
+        public GameObject explodePrefab = LegacyResourcesAPI.Load<GameObject>("prefabs/effects/omnieffect/OmniExplosionVFX");
         private EffectData effectData;
 
         private int frameCounter = 0;
@@ -132,7 +132,7 @@ namespace EntityStates.Digger
                 temporaryOverlay.animateShaderAlpha = true;
                 temporaryOverlay.alphaCurve = AnimationCurve.EaseInOut(0f, 15f, 1f, 0f);
                 temporaryOverlay.destroyComponentOnEnd = true;
-                temporaryOverlay.originalMaterial = Resources.Load<Material>("Materials/matOnFire");
+                temporaryOverlay.originalMaterial = LegacyResourcesAPI.Load<Material>("Materials/matOnFire");
                 temporaryOverlay.AddToCharacerModel(modelTransform.GetComponent<CharacterModel>());
             }
 
@@ -178,7 +178,7 @@ namespace EntityStates.Digger
                     falloffModel = BlastAttack.FalloffModel.None,
                     baseForce = 3f,
                     damageType = DamageType.Generic,
-                    attackerFiltering = AttackerFiltering.NeverHit,
+                    attackerFiltering = AttackerFiltering.NeverHitSelf,
                 };
                 blastAttack.teamIndex = TeamComponent.GetObjectTeam(blastAttack.attacker);
 

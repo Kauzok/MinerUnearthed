@@ -47,7 +47,7 @@ namespace EntityStates.Digger
                 blastAttack.baseForce = 0f;
                 blastAttack.teamIndex = TeamComponent.GetObjectTeam(blastAttack.attacker);
                 blastAttack.damageType = DamageType.Stun1s;
-                blastAttack.attackerFiltering = AttackerFiltering.NeverHit;
+                blastAttack.attackerFiltering = AttackerFiltering.NeverHitSelf;
                 blastAttack.Fire();
 
                 EffectData effectData = new EffectData();
@@ -167,8 +167,8 @@ namespace EntityStates.Digger
     {
         public float baseDuration = 0.3f;
         private float duration;
-        //public GameObject effectPrefab = Resources.Load<GameObject>("prefabs/effects/omnieffect/OmniExplosionVFX");
-        public GameObject slashPrefab = Resources.Load<GameObject>("prefabs/effects/omnieffect/OmniImpactVFXSlash");
+        //public GameObject effectPrefab = LegacyResourcesAPI.Load<GameObject>("prefabs/effects/omnieffect/OmniExplosionVFX");
+        public GameObject slashPrefab = LegacyResourcesAPI.Load<GameObject>("prefabs/effects/omnieffect/OmniImpactVFXSlash");
 
         BlastAttack blastAttack;
         List<CharacterBody> victimBodyList = new List<CharacterBody>();
@@ -193,7 +193,7 @@ namespace EntityStates.Digger
                 blastAttack.baseForce = 3f;
                 blastAttack.teamIndex = TeamComponent.GetObjectTeam(blastAttack.attacker);
                 blastAttack.damageType = DamageType.Stun1s;
-                blastAttack.attackerFiltering = AttackerFiltering.NeverHit;
+                blastAttack.attackerFiltering = AttackerFiltering.NeverHitSelf;
                 blastAttack.Fire();
 
                 EffectData effectData = new EffectData();

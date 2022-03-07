@@ -35,11 +35,8 @@ namespace DiggerPlugin
     {
         "PrefabAPI",
         "SurvivorAPI",
-        "LoadoutAPI",
-        "BuffAPI",
         "LanguageAPI",
         "SoundAPI",
-        "EffectAPI",
         "UnlockableAPI"
     })]
 
@@ -279,7 +276,7 @@ namespace DiggerPlugin
 
         private void RegisterEffects()
         {
-            backblastEffect = PrefabAPI.InstantiateClone(Resources.Load<GameObject>("prefabs/effects/omnieffect/OmniExplosionVFX"), "MinerBackblastEffect", true);
+            backblastEffect = PrefabAPI.InstantiateClone(LegacyResourcesAPI.Load<GameObject>("prefabs/effects/omnieffect/OmniExplosionVFX"), "MinerBackblastEffect", true);
 
             if (!backblastEffect.GetComponent<EffectComponent>()) backblastEffect.AddComponent<EffectComponent>();
             if (!backblastEffect.GetComponent<VFXAttributes>()) backblastEffect.AddComponent<VFXAttributes>();
@@ -287,9 +284,10 @@ namespace DiggerPlugin
 
             backblastEffect.GetComponent<VFXAttributes>().vfxPriority = VFXAttributes.VFXPriority.Always;
 
-            EffectAPI.AddEffect(backblastEffect);
+            
+            R2API.ContentAddition.AddEffect(backblastEffect);
 
-            crushExplosionEffect = PrefabAPI.InstantiateClone(Resources.Load<GameObject>("prefabs/effects/omnieffect/OmniExplosionVFX"), "DiggerCrushExplosionEffect", true);
+            crushExplosionEffect = PrefabAPI.InstantiateClone(LegacyResourcesAPI.Load<GameObject>("prefabs/effects/omnieffect/OmniExplosionVFX"), "DiggerCrushExplosionEffect", true);
 
             if (!crushExplosionEffect.GetComponent<EffectComponent>()) crushExplosionEffect.AddComponent<EffectComponent>();
             if (!crushExplosionEffect.GetComponent<VFXAttributes>()) crushExplosionEffect.AddComponent<VFXAttributes>();
@@ -299,7 +297,7 @@ namespace DiggerPlugin
             crushExplosionEffect.GetComponent<EffectComponent>().applyScale = true;
             crushExplosionEffect.GetComponent<EffectComponent>().parentToReferencedTransform = true;
 
-            EffectAPI.AddEffect(crushExplosionEffect);
+            R2API.ContentAddition.AddEffect(crushExplosionEffect);
         }
 
         private void Hook()
@@ -474,7 +472,7 @@ namespace DiggerPlugin
         private static void CreateDisplayPrefab()
         {
             //spaghetti incoming
-            GameObject tempDisplay = PrefabAPI.InstantiateClone(Resources.Load<GameObject>("Prefabs/CharacterBodies/CommandoBody"), "MinerDisplay");
+            GameObject tempDisplay = PrefabAPI.InstantiateClone(LegacyResourcesAPI.Load<GameObject>("Prefabs/CharacterBodies/CommandoBody"), "MinerDisplay");
 
             GameObject model = CreateModel(1);
 
@@ -544,7 +542,7 @@ namespace DiggerPlugin
             characterModel.invisibilityCount = 0;
             characterModel.temporaryOverlays = new List<TemporaryOverlay>();
 
-            Shader hotpoo = Resources.Load<Shader>("Shaders/Deferred/hgstandard");
+            Shader hotpoo = LegacyResourcesAPI.Load<Shader>("Shaders/Deferred/hgstandard");
             characterModel.baseRendererInfos[0].defaultMaterial.shader = hotpoo;
             characterModel.baseRendererInfos[1].defaultMaterial.shader = hotpoo;
             characterModel.baseRendererInfos[2].defaultMaterial.shader = hotpoo;
@@ -567,7 +565,7 @@ namespace DiggerPlugin
 
         private static void CreatePrefab()
         {
-            characterPrefab = PrefabAPI.InstantiateClone(Resources.Load<GameObject>("Prefabs/CharacterBodies/CommandoBody"), "MinerBody");
+            characterPrefab = PrefabAPI.InstantiateClone(LegacyResourcesAPI.Load<GameObject>("Prefabs/CharacterBodies/CommandoBody"), "MinerBody");
 
             characterPrefab.GetComponent<NetworkIdentity>().localPlayerAuthority = true;
 
@@ -638,7 +636,7 @@ namespace DiggerPlugin
             bodyComponent.sprintingSpeedMultiplier = 1.45f;
             bodyComponent.wasLucky = false;
             bodyComponent.hideCrosshair = false;
-            bodyComponent.crosshairPrefab = Resources.Load<GameObject>("Prefabs/Crosshair/SimpleDotCrosshair");
+            bodyComponent._defaultCrosshairPrefab = LegacyResourcesAPI.Load<GameObject>("Prefabs/Crosshair/SimpleDotCrosshair");
             bodyComponent.aimOriginTransform = aimOrigin.transform;
             bodyComponent.hullClassification = HullClassification.Human;
             bodyComponent.portraitIcon = Assets.charPortrait;
@@ -647,11 +645,11 @@ namespace DiggerPlugin
             bodyComponent.skinIndex = 0U;
             bodyComponent.bodyColor = characterColor;
 
-            LoadoutAPI.AddSkill(typeof(DiggerMain));
-            LoadoutAPI.AddSkill(typeof(BaseEmote));
-            LoadoutAPI.AddSkill(typeof(Rest));
-            LoadoutAPI.AddSkill(typeof(Taunt));
-            LoadoutAPI.AddSkill(typeof(Joke));
+            ContentAddition.AddEntityState<DiggerMain>(out bool wasAdded);
+            ContentAddition.AddEntityState<BaseEmote>(out bool wasAdded2);
+            ContentAddition.AddEntityState<Rest>(out bool wasAdded3);
+            ContentAddition.AddEntityState<Taunt>(out bool wasAdded4);
+            ContentAddition.AddEntityState<FallingComet>(out bool wasAdded5);
 
             EntityStateMachine stateMachine = bodyComponent.GetComponent<EntityStateMachine>();
             stateMachine.mainStateType = new SerializableEntityStateType(typeof(DiggerMain));
@@ -666,11 +664,11 @@ namespace DiggerPlugin
             characterMotor.generateParametersOnAwake = true;
 
             CameraTargetParams cameraTargetParams = characterPrefab.GetComponent<CameraTargetParams>();
-            cameraTargetParams.cameraParams = Resources.Load<GameObject>("Prefabs/CharacterBodies/MercBody").GetComponent<CameraTargetParams>().cameraParams;
+            cameraTargetParams.cameraParams = LegacyResourcesAPI.Load<GameObject>("Prefabs/CharacterBodies/MercBody").GetComponent<CameraTargetParams>().cameraParams;
             cameraTargetParams.cameraPivotTransform = null;
-            cameraTargetParams.aimMode = CameraTargetParams.AimType.Standard;
+            //cameraTargetParams.aimMode = CameraTargetParams.AimType.Standard;
             cameraTargetParams.recoil = Vector2.zero;
-            cameraTargetParams.idealLocalCameraPos = Vector3.zero;
+            //cameraTargetParams.idealLocalCameraPos = Vector3.zero;
             cameraTargetParams.dontRaycastToPivot = false;
 
             ModelLocator modelLocator = characterPrefab.GetComponent<ModelLocator>();
@@ -717,7 +715,7 @@ namespace DiggerPlugin
             characterModel.invisibilityCount = 0;
             characterModel.temporaryOverlays = new List<TemporaryOverlay>();
 
-            Shader hotpoo = Resources.Load<Shader>("Shaders/Deferred/hgstandard");
+            Shader hotpoo = LegacyResourcesAPI.Load<Shader>("Shaders/Deferred/hgstandard");
             characterModel.baseRendererInfos[0].defaultMaterial.shader = hotpoo;
             characterModel.baseRendererInfos[1].defaultMaterial.shader = hotpoo;
             characterModel.baseRendererInfos[2].defaultMaterial.shader = hotpoo;
@@ -853,11 +851,11 @@ namespace DiggerPlugin
             footstepHandler.baseFootstepString = "Play_player_footstep";
             footstepHandler.sprintFootstepOverrideString = "";
             footstepHandler.enableFootstepDust = true;
-            footstepHandler.footstepDustPrefab = Resources.Load<GameObject>("Prefabs/GenericFootstepDust");
+            footstepHandler.footstepDustPrefab = LegacyResourcesAPI.Load<GameObject>("Prefabs/GenericFootstepDust");
 
             RagdollController ragdollController = model.GetComponent<RagdollController>();
 
-            PhysicMaterial physicMat = Resources.Load<GameObject>("Prefabs/CharacterBodies/CommandoBody").GetComponentInChildren<RagdollController>().bones[1].GetComponent<Collider>().material;
+            PhysicMaterial physicMat = LegacyResourcesAPI.Load<GameObject>("Prefabs/CharacterBodies/CommandoBody").GetComponentInChildren<RagdollController>().bones[1].GetComponent<Collider>().material;
 
             foreach (Transform i in ragdollController.bones)
             {
@@ -930,7 +928,7 @@ namespace DiggerPlugin
 
         private void CreateDoppelganger()
         {
-            doppelganger = PrefabAPI.InstantiateClone(Resources.Load<GameObject>("Prefabs/CharacterMasters/MercMonsterMaster"), "MinerMonsterMaster");
+            doppelganger = PrefabAPI.InstantiateClone(LegacyResourcesAPI.Load<GameObject>("Prefabs/CharacterMasters/MercMonsterMaster"), "MinerMonsterMaster");
             doppelganger.GetComponent<CharacterMaster>().bodyPrefab = characterPrefab;
 
             masterPrefabs.Add(doppelganger);
@@ -965,7 +963,7 @@ namespace DiggerPlugin
 
         private void PrimarySetup()
         {
-            LoadoutAPI.AddSkill(typeof(Gouge));
+            ContentAddition.AddEntityState<Gouge>(out bool wasAdded);
 
             LanguageAPI.Add("KEYWORD_CLEAVING", "<style=cKeywordName>Cleaving</style><style=cSub>Applies a stacking debuff that lowers <style=cIsDamage>armor</style> by <style=cIsHealth>3 per stack</style>.</style>");
 
@@ -999,12 +997,12 @@ namespace DiggerPlugin
                 "KEYWORD_CLEAVING"
             };
 
-            LoadoutAPI.AddSkillDef(mySkillDef);
+            ContentAddition.AddSkillDef(mySkillDef);
 
             skillLocator.primary = characterPrefab.AddComponent<GenericSkill>();
             SkillFamily newFamily = ScriptableObject.CreateInstance<SkillFamily>();
             newFamily.variants = new SkillFamily.Variant[1];
-            LoadoutAPI.AddSkillFamily(newFamily);
+            ContentAddition.AddSkillFamily(newFamily);
             skillLocator.primary.SetFieldValue("_skillFamily", newFamily);
             SkillFamily skillFamily = skillLocator.primary.skillFamily;
 
@@ -1013,8 +1011,8 @@ namespace DiggerPlugin
                 skillDef = mySkillDef,
                 viewableNode = new ViewablesCatalog.Node(mySkillDef.skillNameToken, false, null)
             };
-
-            LoadoutAPI.AddSkill(typeof(Crush));
+            
+            ContentAddition.AddEntityState<Crush>(out bool wasAdded2);
 
             desc = "<style=cIsUtility>Agile.</style> Crush nearby enemies for <style=cIsDamage>" + 100f * crushDamage.Value + "% damage</style>. <style=cIsUtility>Range increases with attack speed</style>.";
 
@@ -1045,7 +1043,7 @@ namespace DiggerPlugin
                 "KEYWORD_AGILE"
             };
 
-            LoadoutAPI.AddSkillDef(mySkillDef);
+            ContentAddition.AddSkillDef(mySkillDef);
 
             Array.Resize(ref skillFamily.variants, skillFamily.variants.Length + 1);
             skillFamily.variants[skillFamily.variants.Length - 1] = new SkillFamily.Variant {
@@ -1057,8 +1055,8 @@ namespace DiggerPlugin
 
         private void SecondarySetup()
         {
-            LoadoutAPI.AddSkill(typeof(DrillChargeStart));
-            LoadoutAPI.AddSkill(typeof(DrillCharge));
+            ContentAddition.AddEntityState<DrillChargeStart>(out bool wasAdded1);
+            ContentAddition.AddEntityState<DrillCharge>(out bool wasAdded2);
 
             string desc = "Charge up for 1 second, then dash into enemies for up to <style=cIsDamage>6x" + 100f * drillChargeDamage.Value + "% damage</style>. <style=cIsUtility>You cannot be hit during and following the dash.</style>";
 
@@ -1087,12 +1085,12 @@ namespace DiggerPlugin
             mySkillDef.skillName = "MINER_SECONDARY_CHARGE_NAME";
             mySkillDef.skillNameToken = "MINER_SECONDARY_CHARGE_NAME";
 
-            LoadoutAPI.AddSkillDef(mySkillDef);
+            ContentAddition.AddSkillDef(mySkillDef);
 
             skillLocator.secondary = characterPrefab.AddComponent<GenericSkill>();
             SkillFamily newFamily = ScriptableObject.CreateInstance<SkillFamily>();
             newFamily.variants = new SkillFamily.Variant[1];
-            LoadoutAPI.AddSkillFamily(newFamily);
+            ContentAddition.AddSkillFamily(newFamily);
             skillLocator.secondary.SetFieldValue("_skillFamily", newFamily);
             SkillFamily skillFamily = skillLocator.secondary.skillFamily;
 
@@ -1102,8 +1100,9 @@ namespace DiggerPlugin
                 viewableNode = new ViewablesCatalog.Node(mySkillDef.skillNameToken, false, null)
             };
 
-            LoadoutAPI.AddSkill(typeof(DrillBreakStart));
-            LoadoutAPI.AddSkill(typeof(DrillBreak));
+
+            ContentAddition.AddEntityState<DrillBreakStart>(out bool wasAdded3);
+            ContentAddition.AddEntityState<DrillBreak>(out bool wasAdded4);
 
             desc = "Dash forward, exploding for <style=cIsDamage>2x" + 100f * drillBreakDamage.Value + "% damage</style> on contact with an enemy. <style=cIsUtility>You cannot be hit during and following the dash.</style>";
 
@@ -1132,7 +1131,7 @@ namespace DiggerPlugin
             mySkillDef.skillName = "MINER_SECONDARY_BREAK_NAME";
             mySkillDef.skillNameToken = "MINER_SECONDARY_BREAK_NAME";
 
-            LoadoutAPI.AddSkillDef(mySkillDef);
+            ContentAddition.AddSkillDef(mySkillDef);
 
             Array.Resize(ref skillFamily.variants, skillFamily.variants.Length + 1);
             skillFamily.variants[skillFamily.variants.Length - 1] = new SkillFamily.Variant
@@ -1144,7 +1143,7 @@ namespace DiggerPlugin
         }
         private void UtilitySetup()
         {
-            LoadoutAPI.AddSkill(typeof(BackBlast));
+            ContentAddition.AddEntityState<BackBlast>(out bool wasAdded1);
 
             LanguageAPI.Add("MINER_UTILITY_BACKBLAST_NAME", "Backblast");
             LanguageAPI.Add("MINER_UTILITY_BACKBLAST_DESCRIPTION", "<style=cIsUtility>Stunning.</style> Blast backwards a variable distance, hitting all enemies in a large radius for <style=cIsDamage>" + 100f * BackBlast.damageCoefficient + "% damage</style>. <style=cIsUtility>You cannot be hit while dashing.</style>");
@@ -1173,12 +1172,12 @@ namespace DiggerPlugin
                 "KEYWORD_STUNNING"
             };
 
-            LoadoutAPI.AddSkillDef(mySkillDef);
+            ContentAddition.AddSkillDef(mySkillDef);
 
             skillLocator.utility = characterPrefab.AddComponent<GenericSkill>();
             SkillFamily newFamily = ScriptableObject.CreateInstance<SkillFamily>();
             newFamily.variants = new SkillFamily.Variant[1];
-            LoadoutAPI.AddSkillFamily(newFamily);
+            ContentAddition.AddSkillFamily(newFamily);
             skillLocator.utility.SetFieldValue("_skillFamily", newFamily);
             SkillFamily skillFamily = skillLocator.utility.skillFamily;
 
@@ -1188,7 +1187,7 @@ namespace DiggerPlugin
                 viewableNode = new ViewablesCatalog.Node(mySkillDef.skillNameToken, false, null)
             };
 
-            LoadoutAPI.AddSkill(typeof(CaveIn));
+            ContentAddition.AddEntityState<CaveIn>(out bool wasAdded);
 
             LanguageAPI.Add("MINER_UTILITY_CAVEIN_NAME", "Cave In");
             LanguageAPI.Add("MINER_UTILITY_CAVEIN_DESCRIPTION", "<style=cIsUtility>Stunning.</style> Blast backwards a short distance, <style=cIsUtility>pulling</style> together all enemies in a large radius. You cannot be hit while dashing.");
@@ -1217,7 +1216,7 @@ namespace DiggerPlugin
                 "KEYWORD_STUNNING"
             };
 
-            LoadoutAPI.AddSkillDef(mySkillDef);
+            ContentAddition.AddSkillDef(mySkillDef);
 
             Array.Resize(ref skillFamily.variants, skillFamily.variants.Length + 1);
             skillFamily.variants[skillFamily.variants.Length - 1] = new SkillFamily.Variant
@@ -1230,7 +1229,7 @@ namespace DiggerPlugin
 
         private void SpecialSetup()
         {
-            LoadoutAPI.AddSkill(typeof(ToTheStars));
+            ContentAddition.AddEntityState<ToTheStars>(out bool wasAdded);
 
             LanguageAPI.Add("MINER_SPECIAL_TOTHESTARS_NAME", "To the Stars!");
             LanguageAPI.Add("MINER_SPECIAL_TOTHESTARS_DESCRIPTION", "Jump into the air, shooting a wide spray of projectiles downwards for <style=cIsDamage>30x" + 100f * ToTheStars.damageCoefficient + "% damage</style> total.");
@@ -1256,12 +1255,12 @@ namespace DiggerPlugin
             mySkillDef.skillName = "MINER_SPECIAL_TOTHESTARS_NAME";
             mySkillDef.skillNameToken = "MINER_SPECIAL_TOTHESTARS_NAME";
 
-            LoadoutAPI.AddSkillDef(mySkillDef);
+            ContentAddition.AddSkillDef(mySkillDef);
 
             skillLocator.special = characterPrefab.AddComponent<GenericSkill>();
             SkillFamily newFamily = ScriptableObject.CreateInstance<SkillFamily>();
             newFamily.variants = new SkillFamily.Variant[1];
-            LoadoutAPI.AddSkillFamily(newFamily);
+            ContentAddition.AddSkillFamily(newFamily);
             skillLocator.special.SetFieldValue("_skillFamily", newFamily);
             SkillFamily skillFamily = skillLocator.special.skillFamily;
 
@@ -1274,7 +1273,7 @@ namespace DiggerPlugin
 
         private void ScepterSkillSetup()
         {
-            LoadoutAPI.AddSkill(typeof(FallingComet));
+            ContentAddition.AddEntityState<FallingComet>(out bool wasAdded);
 
             LanguageAPI.Add("MINER_SPECIAL_SCEPTERTOTHESTARS_NAME", "Falling Comet");
             LanguageAPI.Add("MINER_SPECIAL_SCEPTERTOTHESTARS_DESCRIPTION", "Jump into the air, shooting a wide spray of explosive projectiles downwards for <style=cIsDamage>30x" + 100f * FallingComet.damageCoefficient + "% damage</style> total, then fall downwards creating a huge blast on impact that deals <style=cIsDamage>" + 100f * FallingComet.blastDamageCoefficient + "% damage</style> and <style=cIsDamage>ignites</style> enemies hit.");
@@ -1300,7 +1299,8 @@ namespace DiggerPlugin
             mySkillDef.skillName = "MINER_SPECIAL_SCEPTERTOTHESTARS_NAME";
             mySkillDef.skillNameToken = "MINER_SPECIAL_SCEPTERTOTHESTARS_NAME";
 
-            LoadoutAPI.AddSkillDef(mySkillDef);
+            ContentAddition.AddSkillDef(mySkillDef);
+            
 
             scepterSpecialSkillDef = mySkillDef;
         }

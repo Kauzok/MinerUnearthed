@@ -67,7 +67,7 @@ namespace EntityStates.Digger
             this.attack.hitBoxGroup = hitBoxGroup;
             this.attack.isCrit = base.RollCrit();
             this.attack.impactSound = DiggerPlugin.Assets.pickHitEventDef.index;
-            if (this.isSlash) this.attack.impactSound = Resources.Load<NetworkSoundEventDef>("NetworkSoundEventDefs/nseMercSwordImpact").index;
+            if (this.isSlash) this.attack.impactSound = LegacyResourcesAPI.Load<NetworkSoundEventDef>("NetworkSoundEventDefs/nseMercSwordImpact").index;
         }
 
         public override void OnExit()
