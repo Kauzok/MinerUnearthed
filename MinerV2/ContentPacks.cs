@@ -20,16 +20,17 @@ namespace DiggerPlugin
         public System.Collections.IEnumerator LoadStaticContentAsync(LoadStaticContentAsyncArgs args)
         {
             this.contentPack.identifier = this.identifier;
-            contentPack.bodyPrefabs.Add(DiggerPlugin.bodyPrefabs.ToArray());
-            contentPack.buffDefs.Add(Buffs.buffDefs.ToArray());
+            //contentPack.bodyPrefabs.Add(DiggerPlugin.bodyPrefabs.ToArray());
+            //contentPack.buffDefs.Add(Buffs.buffDefs.ToArray());
+            //contentPack.masterPrefabs.Add(DiggerPlugin.masterPrefabs.ToArray());
+            //contentPack.networkSoundEventDefs.Add(Assets.networkSoundEventDefs.ToArray());
+            //contentPack.survivorDefs.Add(DiggerPlugin.survivorDefs.ToArray());
+            //
             //contentPack.effectDefs.Add(Assets.effectDefs.ToArray());
             //contentPack.entityStateTypes.Add(States.entityStates.ToArray());
-            contentPack.masterPrefabs.Add(DiggerPlugin.masterPrefabs.ToArray());
-            contentPack.networkSoundEventDefs.Add(Assets.networkSoundEventDefs.ToArray());
             //contentPack.projectilePrefabs.Add(Prefabs.projectilePrefabs.ToArray());
             //contentPack.skillDefs.Add(Skills.skillDefs.ToArray());
             //contentPack.skillFamilies.Add(DiggerPlugin.skillFamilies.ToArray());
-            contentPack.survivorDefs.Add(DiggerPlugin.survivorDefs.ToArray());
             //contentPack.unlockableDefs.Add(Unlockables.unlockableDefs.ToArray());
 
             args.ReportProgress(1f);

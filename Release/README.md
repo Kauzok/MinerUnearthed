@@ -54,6 +54,15 @@ Neik - Blacksmith concept
 Ruxbieno - Direseeker logbook entry
 
 ## Changelog
+`1.6.4`
+- fixed for The Second CUMming
+- item displays removed
+- sounds had to be redone. let me know if they're too loud/quiet/missing anywhere
+
+- tweaked m1 anims again
+- added impact sound to Crush m1
+- tweaked menu sound to actually kinda be in timing now
+
 `1.6.3`
 - fixed unlockableapi
 

@@ -73,8 +73,8 @@ namespace DiggerPlugin
             master.bodyPrefab = fatAcridPrefab;
             master.isBoss = true;
 
-            DiggerPlugin.bodyPrefabs.Add(fatAcridPrefab);
-            DiggerPlugin.masterPrefabs.Add(acridMasterPrefab);
+            R2API.ContentAddition.AddBody(fatAcridPrefab);
+            R2API.ContentAddition.AddMaster(acridMasterPrefab);
 
             CharacterSpawnCard characterSpawnCard = ScriptableObject.CreateInstance<CharacterSpawnCard>();
             characterSpawnCard.name = "cscFatAcrid";
@@ -149,18 +149,19 @@ namespace DiggerPlugin
             fireTrailPrefab.GetComponent<DamageTrail>().segmentPrefab = fireSegmentPrefab;
             fireballGroundPrefab.GetComponent<ProjectileDamageTrail>().trailPrefab = fireTrailPrefab;
 
-            DiggerPlugin.projectilePrefabs.Add(fireballPrefab);
-            DiggerPlugin.projectilePrefabs.Add(fireballGroundPrefab);
+            R2API.ContentAddition.AddProjectile(fireballPrefab);
+            R2API.ContentAddition.AddProjectile(fireballGroundPrefab);
         }
 
         public static void SkillSetup(GameObject sx)
         {
+
+            Modules.Skills.CreateSkillFamilies(sx, 1 | 2);
+
             foreach (GenericSkill obj in sx.GetComponentsInChildren<GenericSkill>())
             {
                 DiggerPlugin.DestroyImmediate(obj);
             }
-
-            SkillLocator skillLocator = sx.GetComponentInChildren<SkillLocator>();
 
             SkillDef mySkillDef = ScriptableObject.CreateInstance<SkillDef>();
             mySkillDef.activationState = new SerializableEntityStateType(typeof(EntityStates.Direseeker.ChargeUltraFireball));
@@ -179,55 +180,27 @@ namespace DiggerPlugin
             mySkillDef.requiredStock = 1;
             mySkillDef.stockToConsume = 1;
 
-            ContentAddition.AddSkillDef(mySkillDef);
+            Modules.Skills.AddPrimarySkills(sx, mySkillDef);
 
-            skillLocator.primary = sx.AddComponent<GenericSkill>();
-            SkillFamily newFamily = ScriptableObject.CreateInstance<SkillFamily>();
-            newFamily.variants = new SkillFamily.Variant[1];
-            ContentAddition.AddSkillFamily(newFamily);
-            skillLocator.primary.SetFieldValue("_skillFamily", newFamily);
-            SkillFamily skillFamily = skillLocator.primary.skillFamily;
+            SkillDef mySkillDef2 = ScriptableObject.CreateInstance<SkillDef>();
+            mySkillDef2.activationState = new SerializableEntityStateType(typeof(EntityStates.LemurianBruiserMonster.Flamebreath));
+            mySkillDef2.activationStateMachineName = "Body";
+            mySkillDef2.baseMaxStock = 1;
+            mySkillDef2.baseRechargeInterval = 0f;
+            mySkillDef2.beginSkillCooldownOnSkillEnd = false;
+            mySkillDef2.canceledFromSprinting = false;
+            mySkillDef2.fullRestockOnAssign = true;
+            mySkillDef2.interruptPriority = InterruptPriority.Any;
+            mySkillDef2.resetCooldownTimerOnUse = false;
+            mySkillDef2.isCombatSkill = true;
+            mySkillDef2.mustKeyPress = false;
+            mySkillDef2.cancelSprintingOnActivation = false;
+            mySkillDef2.rechargeStock = 1;
+            mySkillDef2.requiredStock = 1;
+            mySkillDef2.stockToConsume = 0;
 
-            skillFamily.variants[0] = new SkillFamily.Variant
-            {
-                skillDef = mySkillDef,
-                viewableNode = new ViewablesCatalog.Node(mySkillDef.skillNameToken, false, null)
-            };
-
-            mySkillDef = ScriptableObject.CreateInstance<SkillDef>();
-            mySkillDef.activationState = new SerializableEntityStateType(typeof(EntityStates.LemurianBruiserMonster.Flamebreath));
-            mySkillDef.activationStateMachineName = "Body";
-            mySkillDef.baseMaxStock = 1;
-            mySkillDef.baseRechargeInterval = 0f;
-            mySkillDef.beginSkillCooldownOnSkillEnd = false;
-            mySkillDef.canceledFromSprinting = false;
-            mySkillDef.fullRestockOnAssign = true;
-            mySkillDef.interruptPriority = InterruptPriority.Any;
-            mySkillDef.resetCooldownTimerOnUse = false;
-            mySkillDef.isCombatSkill = true;
-            mySkillDef.mustKeyPress = false;
-            mySkillDef.cancelSprintingOnActivation = false;
-            mySkillDef.rechargeStock = 1;
-            mySkillDef.requiredStock = 1;
-            mySkillDef.stockToConsume = 0;
-
-            ContentAddition.AddSkillDef(mySkillDef);
-
-            skillLocator.secondary = sx.AddComponent<GenericSkill>();
-            newFamily = ScriptableObject.CreateInstance<SkillFamily>();
-            newFamily.variants = new SkillFamily.Variant[1];
-            ContentAddition.AddSkillFamily(newFamily);
-            skillLocator.secondary.SetFieldValue("_skillFamily", newFamily);
-            skillFamily = skillLocator.secondary.skillFamily;
-
-            skillFamily.variants[0] = new SkillFamily.Variant
-            {
-                skillDef = mySkillDef,
-                viewableNode = new ViewablesCatalog.Node(mySkillDef.skillNameToken, false, null)
-            };
+            Modules.Skills.AddSecondarySkills(sx, mySkillDef2);
         }
-
-
 
         public static void CreateDireseeker()
         {
@@ -244,9 +217,9 @@ namespace DiggerPlugin
             LanguageAPI.Add("DIRESEEKER_BODY_OUTRO_FLAVOR", "..and so it left, in search of new prey.");
 
             //skills and states
-            LoadoutAPI.AddSkill(typeof(EntityStates.Direseeker.SpawnState));
-            LoadoutAPI.AddSkill(typeof(EntityStates.Direseeker.ChargeUltraFireball));
-            LoadoutAPI.AddSkill(typeof(EntityStates.Direseeker.FireUltraFireball));
+            ContentAddition.AddEntityState<EntityStates.Direseeker.SpawnState>(out bool _);
+            ContentAddition.AddEntityState<EntityStates.Direseeker.ChargeUltraFireball>(out bool _);
+            ContentAddition.AddEntityState<EntityStates.Direseeker.FireUltraFireball>(out bool _);
 
             if (!DiggerPlugin.direseekerInstalled)
             {
@@ -356,8 +329,8 @@ namespace DiggerPlugin
                 master.bodyPrefab = bodyPrefab;
                 master.isBoss = false;
 
-                DiggerPlugin.bodyPrefabs.Add(bodyPrefab);
-                DiggerPlugin.masterPrefabs.Add(masterPrefab);
+                R2API.ContentAddition.AddBody(bodyPrefab);
+                R2API.ContentAddition.AddMaster(masterPrefab);
 
                 if (DiggerPlugin.enableDireseeker.Value && !DiggerPlugin.direseekerInstalled)
                 {
@@ -527,7 +500,7 @@ namespace DiggerPlugin
 
                 SkinSetup();
 
-                DiggerPlugin.bodyPrefabs.Add(survivorPrefab);
+                R2API.ContentAddition.AddBody(survivorPrefab);
 
                 GameObject displayPrefab = PrefabAPI.InstantiateClone(survivorPrefab.GetComponent<ModelLocator>().modelTransform.gameObject, "DireseekerDisplay", true);
                 displayPrefab.AddComponent<NetworkIdentity>();
@@ -544,8 +517,7 @@ namespace DiggerPlugin
                     hidden = false,
                     desiredSortPosition = 12f
                 };
-                DiggerPlugin.survivorDefs.Add(survivorDef);
-                //SurvivorAPI.AddSurvivor(survivorDef);
+                R2API.ContentAddition.AddSurvivorDef(survivorDef);
             }
         }
 

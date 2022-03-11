@@ -13,7 +13,6 @@
   <ItemGroup>
     <EmbeddedResource Include="digger" />
     <EmbeddedResource Include="DiggerBank.bnk" />
-    <EmbeddedResource Include="DiggerV2.bnk" />
   </ItemGroup>
 
   <ItemGroup>

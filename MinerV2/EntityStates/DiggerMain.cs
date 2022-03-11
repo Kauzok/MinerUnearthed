@@ -6,8 +6,8 @@ using UnityEngine.Networking;
 
 namespace EntityStates.Digger
 {
-    public class DiggerMain : GenericCharacterMain
-    {
+    public class DiggerMain : GenericCharacterMain {
+
         //public static float passiveStyleCoefficient = 0.4f;
         public static float maxEmission = 25f;
         public static float minEmission = 0f;

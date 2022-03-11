@@ -1,6 +1,7 @@
 ﻿using RoR2;
 using UnityEngine;
 using System;
+using static RoR2.CameraTargetParams;
 
 namespace EntityStates.Digger
 {
@@ -14,11 +15,22 @@ namespace EntityStates.Digger
 
         private bool hasExploded;
         private uint activePlayID;
-        private float initialTime;
         private Animator animator;
         private ChildLocator childLocator;
 
         public LocalUser localUser;
+
+        private CharacterCameraParamsData emoteCameraParams = new CharacterCameraParamsData() {
+            maxPitch = 70,
+            minPitch = -70,
+            pivotVerticalOffset = 1f,
+            idealLocalCameraPos = emoteCameraPosition,
+            wallCushion = 0.1f,
+        };
+
+        public static Vector3 emoteCameraPosition = new Vector3(0, 0.0f, -7.9f);
+
+        private CameraParamsOverrideHandle camOverrideHandle;
 
         public override void OnEnter()
         {
@@ -40,7 +52,13 @@ namespace EntityStates.Digger
 
             this.activePlayID = Util.PlaySound(soundString, base.gameObject);
 
-            this.initialTime = Time.fixedTime;
+            CameraParamsOverrideRequest request = new CameraParamsOverrideRequest {
+                cameraParamsData = emoteCameraParams,
+                priority = 0,
+            };
+
+            camOverrideHandle = base.cameraTargetParams.AddParamsOverride(request, 0.5f);
+
         }
 
         public override void OnExit()
@@ -58,6 +76,8 @@ namespace EntityStates.Digger
 
             this.childLocator.FindChild("PickL").localScale = Vector3.one;
             this.childLocator.FindChild("PickR").localScale = Vector3.one;
+
+            base.cameraTargetParams.RemoveParamsOverride(camOverrideHandle, 0.5f);
         }
 
         private void Explode()
@@ -86,6 +106,7 @@ namespace EntityStates.Digger
 
                 EffectManager.SpawnEffect(LegacyResourcesAPI.Load<GameObject>("Prefabs/Effects/OmniEffect/OmniExplosionVFX"), effectData, false);
                 Util.PlaySound(DiggerPlugin.Sounds.ToTheStarsExplosion, base.gameObject);
+                Util.PlaySound(DiggerPlugin.Sounds.Beep, base.gameObject);
             }
         }
 
@@ -100,7 +121,7 @@ namespace EntityStates.Digger
                 if (!base.characterMotor.isGrounded) flag = true;
                 if (base.characterMotor.velocity != Vector3.zero) flag = true;
             }
-
+             
             if (base.inputBank)
             {
                 if (base.inputBank.skill1.down) flag = true;
@@ -137,12 +158,6 @@ namespace EntityStates.Digger
 
             if (this.duration > 0 && base.fixedAge >= this.duration) flag = true;
 
-            //TODO: CONVERT TO NEW CAMERA SYSTEM
-            CameraTargetParams ctp = base.cameraTargetParams;
-            float denom = (1 + Time.fixedTime - this.initialTime);
-            float smoothFactor = 8 / Mathf.Pow(denom, 2);
-            Vector3 smoothVector = new Vector3(-3 / 20, 1 / 16, -1);
-            ctp.idealLocalCameraPos = new Vector3(0f, -1.4f, -6f) + smoothFactor * smoothVector;
 
             if (this.explosive && base.fixedAge >= this.duration && base.isAuthority)
             {

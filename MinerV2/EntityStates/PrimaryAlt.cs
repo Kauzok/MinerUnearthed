@@ -20,6 +20,7 @@ namespace EntityStates.Digger
         private float earlyExitDuration;
         private float duration;
         private bool hasFired;
+        private bool hasFiredSound;
         private float hitPauseTimer;
         private OverlapAttack attack;
         private bool inHitPause;
@@ -75,12 +76,15 @@ namespace EntityStates.Digger
             base.OnExit();
         }
 
+        public void FireSound() {
+            Util.PlayAttackSpeedSound(DiggerPlugin.Sounds.Swing, base.gameObject, this.attackSpeedStat);
+        }
+
         public void FireAttack()
         {
             if (!this.hasFired)
             {
                 this.hasFired = true;
-                Util.PlayAttackSpeedSound(DiggerPlugin.Sounds.Swing, base.gameObject, this.attackSpeedStat);
 
                 if (base.isAuthority)
                 {
@@ -144,8 +148,14 @@ namespace EntityStates.Digger
                 if (base.characterMotor) base.characterMotor.velocity = Vector3.zero;
                 if (this.animator) this.animator.SetFloat("Swing.playbackRate", 0f);
             }
-            
-            if (this.stopwatch >= this.duration * 0.2f && (!this.hasFired || this.stopwatch <= this.duration * 0.569f))
+
+
+            if (this.stopwatch >= this.duration * 0.189f && !hasFiredSound) {
+                FireSound();
+                hasFiredSound = true;
+            }
+
+            if (this.stopwatch >= this.duration * 0.245f && (!this.hasFired || this.stopwatch <= this.duration * 0.469f))
             {
                 this.FireAttack();
             }

@@ -17,6 +17,7 @@ namespace EntityStates.Digger
         public GameObject slashPrefab = LegacyResourcesAPI.Load<GameObject>("prefabs/effects/omnieffect/OmniImpactVFXSlash");
         public GameObject swingPrefab = LegacyResourcesAPI.Load<GameObject>("prefabs/effects/lemurianbitetrail");
         private bool hasFired;
+        private bool hasFiredSound;
         private float hitPauseTimer;
         private OverlapAttack attack;
         private bool inHitPause;
@@ -53,6 +54,7 @@ namespace EntityStates.Digger
             this.attack.hitEffectPrefab = Loader.SwingChargedFist.overchargeImpactEffectPrefab;
             this.attack.forceVector = Vector3.zero;
             this.attack.pushAwayForce = 1f;
+            this.attack.impactSound = DiggerPlugin.Assets.pickHitEventDef.index;
             this.attack.hitBoxGroup = hitBoxGroup;
             this.attack.isCrit = base.RollCrit();
         }
@@ -60,6 +62,11 @@ namespace EntityStates.Digger
         public override void OnExit()
         {
             base.OnExit();
+        }
+
+
+        public void FireSound() {
+            Util.PlayAttackSpeedSound(DiggerPlugin.Sounds.Crush, base.gameObject, this.attackSpeedStat);
         }
 
         public void FireAttack() 
@@ -101,7 +108,6 @@ namespace EntityStates.Digger
             if (!this.hasFired) 
             {
                 this.hasFired = true;
-                Util.PlaySound(DiggerPlugin.Sounds.Crush, base.gameObject);
 
                 base.AddRecoil(-1f * Crush.attackRecoil * speedScale, 
                                -2f * Crush.attackRecoil * speedScale, 
@@ -185,7 +191,12 @@ namespace EntityStates.Digger
                 if (this.animator) this.animator.SetFloat("Crush.playbackRate", 0f);
             }
 
-            if (this.stopwatch >= this.duration * 0.3f && (!this.hasFired || this.stopwatch <= this.duration * 0.59f))
+            if (this.stopwatch >= this.duration * 0.27f && !hasFiredSound) {
+                FireSound();
+                hasFiredSound = true;
+            }
+
+            if (this.stopwatch >= this.duration * 0.341f && (!this.hasFired || this.stopwatch <= this.duration * 0.5f))
             {
                 this.FireAttack();
             }

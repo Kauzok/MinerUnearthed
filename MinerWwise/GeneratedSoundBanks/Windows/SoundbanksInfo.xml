@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SoundBanksInfo Platform="Windows" BasePlatform="Windows" SchemaVersion="12" SoundbankVersion="135">
+	<RootPaths>
+		<ProjectRoot>E:\Abbas's stuff VII I think\1337 haxx\ror2lol\Chikara ga minegitte kuru\MinerUnearthed\MinerWwise\</ProjectRoot>
+		<SourceFilesRoot>E:\Abbas's stuff VII I think\1337 haxx\ror2lol\Chikara ga minegitte kuru\MinerUnearthed\MinerWwise\.cache\Windows\</SourceFilesRoot>
+		<SoundBanksRoot>E:\Abbas's stuff VII I think\1337 haxx\ror2lol\Chikara ga minegitte kuru\MinerUnearthed\MinerWwise\GeneratedSoundBanks\Windows\</SoundBanksRoot>
+		<ExternalSourcesInputFile></ExternalSourcesInputFile>
+		<ExternalSourcesOutputRoot>E:\Abbas's stuff VII I think\1337 haxx\ror2lol\Chikara ga minegitte kuru\MinerUnearthed\MinerWwise\GeneratedSoundBanks\Windows</ExternalSourcesOutputRoot>
+	</RootPaths>
+	<DialogueEvents/>
+	<StreamedFiles/>
+	<MediaFilesNotInAnyBank/>
+	<SoundBanks>
+		<SoundBank Id="638671505" Language="SFX" Hash="1471562934">
+			<ObjectPath>\SoundBanks\Default Work Unit\DiggerBank</ObjectPath>
+			<ShortName>DiggerBank</ShortName>
+			<Path>DiggerBank.bnk</Path>
+			<IncludedEvents>
+				<Event Id="1375840419" Name="Play_Backblast" ObjectPath="\Events\Default Work Unit\Play_Backblast"/>
+				<Event Id="2063165418" Name="Play_Beep" ObjectPath="\Events\Default Work Unit\Play_Beep"/>
+				<Event Id="145184946" Name="Play_CrackHammer" ObjectPath="\Events\Default Work Unit\Play_CrackHammer"/>
+				<Event Id="439788023" Name="Play_Crush" ObjectPath="\Events\Default Work Unit\Play_Crush"/>
+				<Event Id="621738565" Name="Play_DrillCharge" ObjectPath="\Events\Default Work Unit\Play_DrillCharge"/>
+				<Event Id="3137130808" Name="Play_DrillCharging" ObjectPath="\Events\Default Work Unit\Play_DrillCharging"/>
+				<Event Id="3610964375" Name="Play_Explosive" ObjectPath="\Events\Default Work Unit\Play_Explosive"/>
+				<Event Id="2785418078" Name="Play_MinerHit" ObjectPath="\Events\Default Work Unit\Play_MinerHit"/>
+				<Event Id="1329372271" Name="Play_MinerSelect" ObjectPath="\Events\Default Work Unit\Play_MinerSelect"/>
+				<Event Id="4138094083" Name="Play_MinerSwing" ObjectPath="\Events\Default Work Unit\Play_MinerSwing"/>
+				<Event Id="831403053" Name="Play_ToTheStars" ObjectPath="\Events\Default Work Unit\Play_ToTheStars"/>
+			</IncludedEvents>
+			<IncludedMemoryFiles>
+				<File Id="5013187" Language="SFX">
+					<ShortName>338996033.wav</ShortName>
+					<Path>SFX\338996033_05842A19.wem</Path>
+				</File>
+				<File Id="56209296" Language="SFX">
+					<ShortName>MinerSelect.wav</ShortName>
+					<Path>SFX\MinerSelect_05842A19.wem</Path>
+				</File>
+				<File Id="273473450" Language="SFX">
+					<ShortName>174201832.wav</ShortName>
+					<Path>SFX\174201832_05842A19.wem</Path>
+				</File>
+				<File Id="288571524" Language="SFX">
+					<ShortName>941876801.wav</ShortName>
+					<Path>SFX\941876801_05842A19.wem</Path>
+				</File>
+				<File Id="384590695" Language="SFX">
+					<ShortName>734590529.wav</ShortName>
+					<Path>SFX\734590529_05842A19.wem</Path>
+				</File>
+				<File Id="428859829" Language="SFX">
+					<ShortName>560220192.wav</ShortName>
+					<Path>SFX\560220192_05842A19.wem</Path>
+				</File>
+				<File Id="446607293" Language="SFX">
+					<ShortName>33834541.wav</ShortName>
+					<Path>SFX\33834541_05842A19.wem</Path>
+				</File>
+				<File Id="626094313" Language="SFX">
+					<ShortName>MinerHit3.wav</ShortName>
+					<Path>SFX\MinerHit3_05842A19.wem</Path>
+				</File>
+				<File Id="650431704" Language="SFX">
+					<ShortName>MinerHit2.wav</ShortName>
+					<Path>SFX\MinerHit2_05842A19.wem</Path>
+				</File>
+				<File Id="708573323" Language="SFX">
+					<ShortName>ToTheStarsGun1.wav</ShortName>
+					<Path>SFX\ToTheStarsGun1_05842A19.wem</Path>
+				</File>
+				<File Id="734909237" Language="SFX">
+					<ShortName>745081522.wav</ShortName>
+					<Path>SFX\745081522_05842A19.wem</Path>
+				</File>
+				<File Id="753666289" Language="SFX">
+					<ShortName>MinerHit.wav</ShortName>
+					<Path>SFX\MinerHit_05842A19.wem</Path>
+				</File>
+				<File Id="892933936" Language="SFX">
+					<ShortName>ToTheStarsGun2.wav</ShortName>
+					<Path>SFX\ToTheStarsGun2_05842A19.wem</Path>
+				</File>
+				<File Id="958932328" Language="SFX">
+					<ShortName>521613536.wav</ShortName>
+					<Path>SFX\521613536_05842A19.wem</Path>
+				</File>
+				<File Id="1069166790" Language="SFX">
+					<ShortName>57145588.wav</ShortName>
+					<Path>SFX\57145588_05842A19.wem</Path>
+				</File>
+			</IncludedMemoryFiles>
+			<GameParameters>
+				<GameParameter Id="3673881719" Name="Volume_SFX" ObjectPath="\Game Parameters\Default Work Unit\Volume_SFX"/>
+			</GameParameters>
+		</SoundBank>
+		<SoundBank Id="1355168291" Language="SFX" Hash="1799594306">
+			<ObjectPath>Init</ObjectPath>
+			<ShortName>Init</ShortName>
+			<Path>Init.bnk</Path>
+		</SoundBank>
+	</SoundBanks>
+</SoundBanksInfo>

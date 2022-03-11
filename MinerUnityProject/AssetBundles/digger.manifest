@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 2831421283
+CRC: 4155747081
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 88d5213a6771e5c97b3f3f828885ebb6
+    Hash: b6fc4449708a43e1028238b2576e629d
   TypeTreeHash:
     serializedVersion: 2
     Hash: 8615316d04f527ccc888cdd43c6e8e6d
@@ -90,6 +90,7 @@ Assets:
 - Assets/Miner/Textures/texMinerTundraEmission.png
 - Assets/Miner/Direseeker/DireHorn.prefab
 - Assets/Miner/meshMinerGM.mesh
+- Assets/Miner/Animations/Crush 1.anim
 - Assets/Miner/Textures/texMinerMolten.png
 - Assets/Miner/VFX/matMinerImpact2.mat
 - Assets/Miner/Direseeker/texDireseeker.png
@@ -132,6 +133,7 @@ Assets:
 - Assets/Miner/Textures/texMinerMoltenEmission.png
 - Assets/Miner/VFX/texMinerImpact.png
 - Assets/Miner/Animations/MenuIdle.anim
+- Assets/Miner/Animations/Swing4.anim
 - Assets/Miner/FireParticle.mesh
 - Assets/Miner/Materials/matMinerDiamond.mat
 - Assets/Miner/Animations/Backblast.anim
@@ -210,6 +212,7 @@ Assets:
 - Assets/Miner/Animations/RunB.anim
 - Assets/Miner/mdlMiner.prefab
 - Assets/Miner/Materials/matDripMiner.mat
+- Assets/Miner/Animations/Swing3.anim
 - Assets/Miner/Icons/texGrandMasteryAchievement.png
 - Assets/Miner/Textures/texMiner.png
 - Assets/Miner/Icons/texSecondaryAchievement.png

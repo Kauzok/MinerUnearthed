@@ -1,0 +1,33 @@
+Event	ID	Name			Wwise Object Path	Notes
+	145184946	Play_CrackHammer			\Default Work Unit\Play_CrackHammer	
+	439788023	Play_Crush			\Default Work Unit\Play_Crush	
+	621738565	Play_DrillCharge			\Default Work Unit\Play_DrillCharge	
+	831403053	Play_ToTheStars			\Default Work Unit\Play_ToTheStars	
+	1329372271	Play_MinerSelect			\Default Work Unit\Play_MinerSelect	
+	1375840419	Play_Backblast			\Default Work Unit\Play_Backblast	
+	2063165418	Play_Beep			\Default Work Unit\Play_Beep	
+	2785418078	Play_MinerHit			\Default Work Unit\Play_MinerHit	
+	3137130808	Play_DrillCharging			\Default Work Unit\Play_DrillCharging	
+	3610964375	Play_Explosive			\Default Work Unit\Play_Explosive	
+	4138094083	Play_MinerSwing			\Default Work Unit\Play_MinerSwing	
+
+Game Parameter	ID	Name			Wwise Object Path	Notes
+	3673881719	Volume_SFX			\Default Work Unit\Volume_SFX	
+
+In Memory Audio	ID	Name	Audio source file		Wwise Object Path	Notes	Data Size
+	5013187	Swing3	E:\Abbas's stuff VII I think\1337 haxx\ror2lol\Chikara ga minegitte kuru\MinerUnearthed\MinerWwise\.cache\Windows\SFX\338996033_05842A19.wem		\Actor-Mixer Hierarchy\Default Work Unit\Sfx Mixxer\MinerSwing\Swing3		6583
+	56209296	MinerSelect	E:\Abbas's stuff VII I think\1337 haxx\ror2lol\Chikara ga minegitte kuru\MinerUnearthed\MinerWwise\.cache\Windows\SFX\MinerSelect_05842A19.wem		\Actor-Mixer Hierarchy\Default Work Unit\Sfx Mixxer\MinerSelect		24520
+	273473450	Swing2	E:\Abbas's stuff VII I think\1337 haxx\ror2lol\Chikara ga minegitte kuru\MinerUnearthed\MinerWwise\.cache\Windows\SFX\174201832_05842A19.wem		\Actor-Mixer Hierarchy\Default Work Unit\Sfx Mixxer\MinerSwing\Swing2		7090
+	288571524	DrillCharging	E:\Abbas's stuff VII I think\1337 haxx\ror2lol\Chikara ga minegitte kuru\MinerUnearthed\MinerWwise\.cache\Windows\SFX\941876801_05842A19.wem		\Actor-Mixer Hierarchy\Default Work Unit\Sfx Mixxer\DrillCharging		12234
+	384590695	ToTheStars	E:\Abbas's stuff VII I think\1337 haxx\ror2lol\Chikara ga minegitte kuru\MinerUnearthed\MinerWwise\.cache\Windows\SFX\734590529_05842A19.wem		\Actor-Mixer Hierarchy\Default Work Unit\Sfx Mixxer\ToTheStars		43249
+	428859829	Crush	E:\Abbas's stuff VII I think\1337 haxx\ror2lol\Chikara ga minegitte kuru\MinerUnearthed\MinerWwise\.cache\Windows\SFX\560220192_05842A19.wem		\Actor-Mixer Hierarchy\Default Work Unit\Sfx Mixxer\Crush		6273
+	446607293	Swing1	E:\Abbas's stuff VII I think\1337 haxx\ror2lol\Chikara ga minegitte kuru\MinerUnearthed\MinerWwise\.cache\Windows\SFX\33834541_05842A19.wem		\Actor-Mixer Hierarchy\Default Work Unit\Sfx Mixxer\MinerSwing\Swing1		6242
+	626094313	MinerHit3	E:\Abbas's stuff VII I think\1337 haxx\ror2lol\Chikara ga minegitte kuru\MinerUnearthed\MinerWwise\.cache\Windows\SFX\MinerHit3_05842A19.wem		\Actor-Mixer Hierarchy\Default Work Unit\Sfx Mixxer\MinerHit\MinerHit3		5707
+	650431704	MinerHit2	E:\Abbas's stuff VII I think\1337 haxx\ror2lol\Chikara ga minegitte kuru\MinerUnearthed\MinerWwise\.cache\Windows\SFX\MinerHit2_05842A19.wem		\Actor-Mixer Hierarchy\Default Work Unit\Sfx Mixxer\MinerHit\MinerHit2		4192
+	708573323	614666773	E:\Abbas's stuff VII I think\1337 haxx\ror2lol\Chikara ga minegitte kuru\MinerUnearthed\MinerWwise\.cache\Windows\SFX\ToTheStarsGun1_05842A19.wem		\Actor-Mixer Hierarchy\Default Work Unit\Sfx Mixxer\ToTheStarsButGunshotsOrSomething\614666773		8596
+	734909237	DrillCharge	E:\Abbas's stuff VII I think\1337 haxx\ror2lol\Chikara ga minegitte kuru\MinerUnearthed\MinerWwise\.cache\Windows\SFX\745081522_05842A19.wem		\Actor-Mixer Hierarchy\Default Work Unit\Sfx Mixxer\DrillCharge		14941
+	753666289	MinerHit	E:\Abbas's stuff VII I think\1337 haxx\ror2lol\Chikara ga minegitte kuru\MinerUnearthed\MinerWwise\.cache\Windows\SFX\MinerHit_05842A19.wem		\Actor-Mixer Hierarchy\Default Work Unit\Sfx Mixxer\MinerHit\MinerHit		6246
+	892933936	646778860	E:\Abbas's stuff VII I think\1337 haxx\ror2lol\Chikara ga minegitte kuru\MinerUnearthed\MinerWwise\.cache\Windows\SFX\ToTheStarsGun2_05842A19.wem		\Actor-Mixer Hierarchy\Default Work Unit\Sfx Mixxer\ToTheStarsButGunshotsOrSomething\646778860		6211
+	958932328	Backblast	E:\Abbas's stuff VII I think\1337 haxx\ror2lol\Chikara ga minegitte kuru\MinerUnearthed\MinerWwise\.cache\Windows\SFX\521613536_05842A19.wem		\Actor-Mixer Hierarchy\Default Work Unit\Sfx Mixxer\Backblast		7560
+	1069166790	Beep	E:\Abbas's stuff VII I think\1337 haxx\ror2lol\Chikara ga minegitte kuru\MinerUnearthed\MinerWwise\.cache\Windows\SFX\57145588_05842A19.wem		\Actor-Mixer Hierarchy\Default Work Unit\Sfx Mixxer\Beep		1969
+

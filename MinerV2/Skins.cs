@@ -31,7 +31,7 @@ namespace DiggerPlugin
 
         public static void RegisterSkins()
         {
-            GameObject bodyPrefab = DiggerPlugin.characterPrefab;
+            GameObject bodyPrefab = DiggerPlugin.characterBodyPrefab;
 
             GameObject model = bodyPrefab.GetComponentInChildren<ModelLocator>().modelTransform.gameObject;
             CharacterModel characterModel = model.GetComponent<CharacterModel>();

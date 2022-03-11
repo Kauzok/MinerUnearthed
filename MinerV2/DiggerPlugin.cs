@@ -18,8 +18,7 @@ using System.Security.Permissions;
 [module: UnverifiableCode]
 [assembly: SecurityPermission(SecurityAction.RequestMinimum, SkipVerification = true)]
 
-namespace DiggerPlugin
-{
+namespace DiggerPlugin {
     [BepInDependency("com.bepis.r2api", BepInDependency.DependencyFlags.HardDependency)]
     [BepInDependency("com.rob.Aatrox", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("com.rob.Direseeker", BepInDependency.DependencyFlags.SoftDependency)]
@@ -70,7 +69,7 @@ namespace DiggerPlugin
         public static DiggerPlugin instance;
         public static BepInEx.Logging.ManualLogSource logger;
 
-        public static GameObject characterPrefab;
+        public static GameObject characterBodyPrefab;
         // I do not know why I needed this hack
         // paladin was able to grab the CharacterModel from characterPrefab.GetComponentInChildren just fine
         //      but for some reason i can do that fine while i'm setting miner up, but it gets lost by the time i'm setting up item displays
@@ -80,11 +79,6 @@ namespace DiggerPlugin
         // have a lovely evening
         public static CharacterModel characterPrefabModel;
         public static GameObject characterDisplay;
-
-        public static List<GameObject> bodyPrefabs = new List<GameObject>();
-        public static List<GameObject> masterPrefabs = new List<GameObject>();
-        public static List<GameObject> projectilePrefabs = new List<GameObject>();
-        public static List<SurvivorDef> survivorDefs = new List<SurvivorDef>();
 
         public GameObject doppelganger;
 
@@ -130,7 +124,8 @@ namespace DiggerPlugin
         public static ConfigEntry<KeyCode> tauntKeybind;
         public static ConfigEntry<KeyCode> jokeKeybind;
 
-        private void Awake() {
+        private void Start() {
+            Logger.LogInfo("[Initializing Miner]");
             instance = this;
             logger = base.Logger;
 
@@ -157,9 +152,11 @@ namespace DiggerPlugin
             //ILHook();
             Hook();
 
-            new ContentPacks().Initialize();
+            //new ContentPacks().Initialize();
 
             RoR2.ContentManagement.ContentManager.onContentPacksAssigned += LateSetup;
+
+            AddStyle();
         }
 
         private void SetupModCompat() {
@@ -224,7 +221,7 @@ namespace DiggerPlugin
         }
 
 
-        private void Start()
+        private void AddStyle()
         {
             if (styleUI.Value && BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("com.rob.Aatrox"))
             {
@@ -558,25 +555,25 @@ namespace DiggerPlugin
 
         void Update() {
             if (Input.GetKeyDown(KeyCode.N) && Input.GetKeyDown(KeyCode.LeftAlt)) {
-                var nig = Instantiate(characterPrefab, null);
+                var nig = Instantiate(characterBodyPrefab, null);
             }
         }
 
 
         private static void CreatePrefab()
         {
-            characterPrefab = PrefabAPI.InstantiateClone(LegacyResourcesAPI.Load<GameObject>("Prefabs/CharacterBodies/CommandoBody"), "MinerBody");
+            characterBodyPrefab = PrefabAPI.InstantiateClone(LegacyResourcesAPI.Load<GameObject>("Prefabs/CharacterBodies/CommandoBody"), "MinerBody");
 
-            characterPrefab.GetComponent<NetworkIdentity>().localPlayerAuthority = true;
+            characterBodyPrefab.GetComponent<NetworkIdentity>().localPlayerAuthority = true;
 
-            Destroy(characterPrefab.transform.Find("ModelBase").gameObject);
-            Destroy(characterPrefab.transform.Find("CameraPivot").gameObject);
-            Destroy(characterPrefab.transform.Find("AimOrigin").gameObject);
+            Destroy(characterBodyPrefab.transform.Find("ModelBase").gameObject);
+            Destroy(characterBodyPrefab.transform.Find("CameraPivot").gameObject);
+            Destroy(characterBodyPrefab.transform.Find("AimOrigin").gameObject);
 
             GameObject model = CreateModel(0);
 
             GameObject modelBase = new GameObject("ModelBase");
-            modelBase.transform.parent = characterPrefab.transform;
+            modelBase.transform.parent = characterBodyPrefab.transform;
             modelBase.transform.localPosition = new Vector3(0f, -0.9f, 0f);
             modelBase.transform.localRotation = Quaternion.identity;
             modelBase.transform.localScale = new Vector3(1f, 1f, 1f);
@@ -597,7 +594,7 @@ namespace DiggerPlugin
             model.transform.localPosition = Vector3.zero;
             model.transform.localRotation = Quaternion.identity;
 
-            CharacterDirection characterDirection = characterPrefab.GetComponent<CharacterDirection>();
+            CharacterDirection characterDirection = characterBodyPrefab.GetComponent<CharacterDirection>();
             characterDirection.moveVector = Vector3.zero;
             characterDirection.targetTransform = modelBase.transform;
             characterDirection.overrideAnimatorForwardTransform = null;
@@ -606,7 +603,7 @@ namespace DiggerPlugin
             characterDirection.driveFromRootRotation = false;
             characterDirection.turnSpeed = 720f;
 
-            CharacterBody bodyComponent = characterPrefab.GetComponent<CharacterBody>();
+            CharacterBody bodyComponent = characterBodyPrefab.GetComponent<CharacterBody>();
             bodyComponent.name = "MinerBody";
             bodyComponent.baseNameToken = "MINER_NAME";
             bodyComponent.subtitleNameToken = "MINER_SUBTITLE";
@@ -645,16 +642,16 @@ namespace DiggerPlugin
             bodyComponent.skinIndex = 0U;
             bodyComponent.bodyColor = characterColor;
 
-            ContentAddition.AddEntityState<DiggerMain>(out bool wasAdded);
-            ContentAddition.AddEntityState<BaseEmote>(out bool wasAdded2);
-            ContentAddition.AddEntityState<Rest>(out bool wasAdded3);
-            ContentAddition.AddEntityState<Taunt>(out bool wasAdded4);
-            ContentAddition.AddEntityState<FallingComet>(out bool wasAdded5);
+            ContentAddition.AddEntityState<DiggerMain>(out bool _);
+            ContentAddition.AddEntityState<BaseEmote>(out bool _);
+            ContentAddition.AddEntityState<Rest>(out bool _);
+            ContentAddition.AddEntityState<Taunt>(out bool _);
+            ContentAddition.AddEntityState<FallingComet>(out bool _);
 
             EntityStateMachine stateMachine = bodyComponent.GetComponent<EntityStateMachine>();
             stateMachine.mainStateType = new SerializableEntityStateType(typeof(DiggerMain));
 
-            CharacterMotor characterMotor = characterPrefab.GetComponent<CharacterMotor>();
+            CharacterMotor characterMotor = characterBodyPrefab.GetComponent<CharacterMotor>();
             characterMotor.walkSpeedPenaltyCoefficient = 1f;
             characterMotor.characterDirection = characterDirection;
             characterMotor.muteWalkMotion = false;
@@ -663,7 +660,7 @@ namespace DiggerPlugin
             characterMotor.disableAirControlUntilCollision = false;
             characterMotor.generateParametersOnAwake = true;
 
-            CameraTargetParams cameraTargetParams = characterPrefab.GetComponent<CameraTargetParams>();
+            CameraTargetParams cameraTargetParams = characterBodyPrefab.GetComponent<CameraTargetParams>();
             cameraTargetParams.cameraParams = LegacyResourcesAPI.Load<GameObject>("Prefabs/CharacterBodies/MercBody").GetComponent<CameraTargetParams>().cameraParams;
             cameraTargetParams.cameraPivotTransform = null;
             //cameraTargetParams.aimMode = CameraTargetParams.AimType.Standard;
@@ -671,7 +668,7 @@ namespace DiggerPlugin
             //cameraTargetParams.idealLocalCameraPos = Vector3.zero;
             cameraTargetParams.dontRaycastToPivot = false;
 
-            ModelLocator modelLocator = characterPrefab.GetComponent<ModelLocator>();
+            ModelLocator modelLocator = characterBodyPrefab.GetComponent<ModelLocator>();
             modelLocator.modelTransform = model.transform;
             modelLocator.modelBaseTransform = modelBase.transform;
 
@@ -724,12 +721,12 @@ namespace DiggerPlugin
             characterModel.SetFieldValue("mainSkinnedMeshRenderer", characterModel.baseRendererInfos[0].renderer.gameObject.GetComponent<SkinnedMeshRenderer>());
 
             TeamComponent teamComponent = null;
-            if (characterPrefab.GetComponent<TeamComponent>() != null) teamComponent = characterPrefab.GetComponent<TeamComponent>();
-            else teamComponent = characterPrefab.GetComponent<TeamComponent>();
+            if (characterBodyPrefab.GetComponent<TeamComponent>() != null) teamComponent = characterBodyPrefab.GetComponent<TeamComponent>();
+            else teamComponent = characterBodyPrefab.GetComponent<TeamComponent>();
             teamComponent.hideAllyCardDisplay = false;
             teamComponent.teamIndex = TeamIndex.None;
 
-            HealthComponent healthComponent = characterPrefab.GetComponent<HealthComponent>();
+            HealthComponent healthComponent = characterBodyPrefab.GetComponent<HealthComponent>();
             healthComponent.shield = 0f;
             healthComponent.barrier = 0f;
             healthComponent.magnetiCharge = 0f;
@@ -737,14 +734,14 @@ namespace DiggerPlugin
             healthComponent.dontShowHealthbar = false;
             healthComponent.globalDeathEventChanceCoefficient = 1f;
 
-            characterPrefab.GetComponent<Interactor>().maxInteractionDistance = 3f;
-            characterPrefab.GetComponent<InteractionDriver>().highlightInteractor = true;
+            characterBodyPrefab.GetComponent<Interactor>().maxInteractionDistance = 3f;
+            characterBodyPrefab.GetComponent<InteractionDriver>().highlightInteractor = true;
 
-            CharacterDeathBehavior characterDeathBehavior = characterPrefab.GetComponent<CharacterDeathBehavior>();
-            characterDeathBehavior.deathStateMachine = characterPrefab.GetComponent<EntityStateMachine>();
+            CharacterDeathBehavior characterDeathBehavior = characterBodyPrefab.GetComponent<CharacterDeathBehavior>();
+            characterDeathBehavior.deathStateMachine = characterBodyPrefab.GetComponent<EntityStateMachine>();
             //characterDeathBehavior.deathState = new SerializableEntityStateType(typeof(GenericCharacterDeath));
 
-            SfxLocator sfxLocator = characterPrefab.GetComponent<SfxLocator>();
+            SfxLocator sfxLocator = characterBodyPrefab.GetComponent<SfxLocator>();
             //sfxLocator.deathSound = Sounds.DeathSound;
             sfxLocator.barkSound = "";
             sfxLocator.openSound = "";
@@ -753,7 +750,7 @@ namespace DiggerPlugin
             sfxLocator.aliveLoopStart = "";
             sfxLocator.aliveLoopStop = "";
 
-            Rigidbody rigidbody = characterPrefab.GetComponent<Rigidbody>();
+            Rigidbody rigidbody = characterBodyPrefab.GetComponent<Rigidbody>();
             rigidbody.mass = 100f;
             rigidbody.drag = 0f;
             rigidbody.angularDrag = 0f;
@@ -763,7 +760,7 @@ namespace DiggerPlugin
             rigidbody.collisionDetectionMode = CollisionDetectionMode.Discrete;
             rigidbody.constraints = RigidbodyConstraints.None;
 
-            CapsuleCollider capsuleCollider = characterPrefab.GetComponent<CapsuleCollider>();
+            CapsuleCollider capsuleCollider = characterBodyPrefab.GetComponent<CapsuleCollider>();
             capsuleCollider.isTrigger = false;
             capsuleCollider.material = null;
             capsuleCollider.center = new Vector3(0f, 0f, 0f);
@@ -771,7 +768,7 @@ namespace DiggerPlugin
             capsuleCollider.height = 1.82f;
             capsuleCollider.direction = 1;
 
-            KinematicCharacterMotor kinematicCharacterMotor = characterPrefab.GetComponent<KinematicCharacterMotor>();
+            KinematicCharacterMotor kinematicCharacterMotor = characterBodyPrefab.GetComponent<KinematicCharacterMotor>();
             kinematicCharacterMotor.CharacterController = characterMotor;
             kinematicCharacterMotor.Capsule = capsuleCollider;
             kinematicCharacterMotor.Rigidbody = rigidbody;
@@ -882,12 +879,12 @@ namespace DiggerPlugin
             aimAnimator.pitchGiveupRange = 30f;
             aimAnimator.yawGiveupRange = 10f;
             aimAnimator.giveupDuration = 3f;
-            aimAnimator.inputBank = characterPrefab.GetComponent<InputBankTest>();
+            aimAnimator.inputBank = characterBodyPrefab.GetComponent<InputBankTest>();
 
             GameObject particlesObject = childLocator.FindChild("AdrenalineFire").gameObject;
             if (particlesObject)
             {
-                characterPrefab.AddComponent<AdrenalineParticleTimer>().init(particlesObject);
+                characterBodyPrefab.AddComponent<AdrenalineParticleTimer>().init(particlesObject);
             }
         }
 
@@ -914,7 +911,7 @@ namespace DiggerPlugin
             survivorDef.unlockableDef = Unlockables.diggerUnlockableDef;
             survivorDef.descriptionToken = "MINER_DESCRIPTION";
             survivorDef.primaryColor = characterColor;
-            survivorDef.bodyPrefab = characterPrefab;
+            survivorDef.bodyPrefab = characterBodyPrefab;
             survivorDef.displayPrefab = characterDisplay;
             survivorDef.outroFlavorToken = "MINER_OUTRO_FLAVOR";
             survivorDef.hidden = false;
@@ -922,28 +919,26 @@ namespace DiggerPlugin
 
             SkillSetup();
 
-            bodyPrefabs.Add(characterPrefab);
-            survivorDefs.Add(survivorDef);
+            R2API.ContentAddition.AddBody(characterBodyPrefab);
+            R2API.ContentAddition.AddSurvivorDef(survivorDef);
         }
 
         private void CreateDoppelganger()
         {
             doppelganger = PrefabAPI.InstantiateClone(LegacyResourcesAPI.Load<GameObject>("Prefabs/CharacterMasters/MercMonsterMaster"), "MinerMonsterMaster");
-            doppelganger.GetComponent<CharacterMaster>().bodyPrefab = characterPrefab;
+            doppelganger.GetComponent<CharacterMaster>().bodyPrefab = characterBodyPrefab;
 
-            masterPrefabs.Add(doppelganger);
+            R2API.ContentAddition.AddMaster(doppelganger);
         }
 
         private void SkillSetup()
         {
-            foreach (GenericSkill obj in characterPrefab.GetComponentsInChildren<GenericSkill>())
-            {
-                BaseUnityPlugin.DestroyImmediate(obj);
-            }
+            skillLocator = characterBodyPrefab.GetComponent<SkillLocator>();
 
-            skillLocator = characterPrefab.GetComponent<SkillLocator>();
+            Modules.Skills.CreateSkillFamilies(characterBodyPrefab);
 
             PassiveSetup();
+
             PrimarySetup();
             SecondarySetup();
             UtilitySetup();
@@ -963,7 +958,7 @@ namespace DiggerPlugin
 
         private void PrimarySetup()
         {
-            ContentAddition.AddEntityState<Gouge>(out bool wasAdded);
+            ContentAddition.AddEntityState<Gouge>(out bool _);
 
             LanguageAPI.Add("KEYWORD_CLEAVING", "<style=cKeywordName>Cleaving</style><style=cSub>Applies a stacking debuff that lowers <style=cIsDamage>armor</style> by <style=cIsHealth>3 per stack</style>.</style>");
 
@@ -997,66 +992,46 @@ namespace DiggerPlugin
                 "KEYWORD_CLEAVING"
             };
 
-            ContentAddition.AddSkillDef(mySkillDef);
-
-            skillLocator.primary = characterPrefab.AddComponent<GenericSkill>();
-            SkillFamily newFamily = ScriptableObject.CreateInstance<SkillFamily>();
-            newFamily.variants = new SkillFamily.Variant[1];
-            ContentAddition.AddSkillFamily(newFamily);
-            skillLocator.primary.SetFieldValue("_skillFamily", newFamily);
-            SkillFamily skillFamily = skillLocator.primary.skillFamily;
-
-            skillFamily.variants[0] = new SkillFamily.Variant
-            {
-                skillDef = mySkillDef,
-                viewableNode = new ViewablesCatalog.Node(mySkillDef.skillNameToken, false, null)
-            };
-            
-            ContentAddition.AddEntityState<Crush>(out bool wasAdded2);
+            //alt
+            ContentAddition.AddEntityState<Crush>(out bool _);
 
             desc = "<style=cIsUtility>Agile.</style> Crush nearby enemies for <style=cIsDamage>" + 100f * crushDamage.Value + "% damage</style>. <style=cIsUtility>Range increases with attack speed</style>.";
 
             LanguageAPI.Add("MINER_PRIMARY_CRUSH_NAME", "Crush");
             LanguageAPI.Add("MINER_PRIMARY_CRUSH_DESCRIPTION", desc);
 
-            mySkillDef = ScriptableObject.CreateInstance<SkillDef>();
-            mySkillDef.activationState = new SerializableEntityStateType(typeof(Crush));
-            mySkillDef.activationStateMachineName = "Weapon";
-            mySkillDef.baseMaxStock = 1;
-            mySkillDef.baseRechargeInterval = 0f;
-            mySkillDef.beginSkillCooldownOnSkillEnd = false;
-            mySkillDef.canceledFromSprinting = false;
-            mySkillDef.fullRestockOnAssign = true;
-            mySkillDef.interruptPriority = InterruptPriority.Any;
-            mySkillDef.resetCooldownTimerOnUse = false;
-            mySkillDef.isCombatSkill = true;
-            mySkillDef.mustKeyPress = false;
-            mySkillDef.cancelSprintingOnActivation = false;
-            mySkillDef.rechargeStock = 1;
-            mySkillDef.requiredStock = 1;
-            mySkillDef.stockToConsume = 1;
-            mySkillDef.icon = Assets.icon1B;
-            mySkillDef.skillDescriptionToken = "MINER_PRIMARY_CRUSH_DESCRIPTION";
-            mySkillDef.skillName = "MINER_PRIMARY_CRUSH_NAME";
-            mySkillDef.skillNameToken = "MINER_PRIMARY_CRUSH_NAME";
-            mySkillDef.keywordTokens = new string[] {
+            SkillDef mySkillDef2 = ScriptableObject.CreateInstance<SkillDef>();
+            mySkillDef2.activationState = new SerializableEntityStateType(typeof(Crush));
+            mySkillDef2.activationStateMachineName = "Weapon";
+            mySkillDef2.baseMaxStock = 1;
+            mySkillDef2.baseRechargeInterval = 0f;
+            mySkillDef2.beginSkillCooldownOnSkillEnd = false;
+            mySkillDef2.canceledFromSprinting = false;
+            mySkillDef2.fullRestockOnAssign = true;
+            mySkillDef2.interruptPriority = InterruptPriority.Any;
+            mySkillDef2.resetCooldownTimerOnUse = false;
+            mySkillDef2.isCombatSkill = true;
+            mySkillDef2.mustKeyPress = false;
+            mySkillDef2.cancelSprintingOnActivation = false;
+            mySkillDef2.rechargeStock = 1;
+            mySkillDef2.requiredStock = 1;
+            mySkillDef2.stockToConsume = 1;
+            mySkillDef2.icon = Assets.icon1B;
+            mySkillDef2.skillDescriptionToken = "MINER_PRIMARY_CRUSH_DESCRIPTION";
+            mySkillDef2.skillName = "MINER_PRIMARY_CRUSH_NAME";
+            mySkillDef2.skillNameToken = "MINER_PRIMARY_CRUSH_NAME";
+            mySkillDef2.keywordTokens = new string[] {
                 "KEYWORD_AGILE"
             };
 
-            ContentAddition.AddSkillDef(mySkillDef);
-
-            Array.Resize(ref skillFamily.variants, skillFamily.variants.Length + 1);
-            skillFamily.variants[skillFamily.variants.Length - 1] = new SkillFamily.Variant {
-                skillDef = mySkillDef,
-                unlockableDef = Unlockables.crushUnlockableDef,
-                viewableNode = new ViewablesCatalog.Node(mySkillDef.skillNameToken, false, null)
-            };
+            Modules.Skills.AddPrimarySkills(characterBodyPrefab, mySkillDef, mySkillDef2);
+            Modules.Skills.AddUnlockablesToFamily(skillLocator.primary.skillFamily, null, Unlockables.crushUnlockableDef);
         }
 
         private void SecondarySetup()
         {
-            ContentAddition.AddEntityState<DrillChargeStart>(out bool wasAdded1);
-            ContentAddition.AddEntityState<DrillCharge>(out bool wasAdded2);
+            ContentAddition.AddEntityState<DrillChargeStart>(out bool _);
+            ContentAddition.AddEntityState<DrillCharge>(out bool _);
 
             string desc = "Charge up for 1 second, then dash into enemies for up to <style=cIsDamage>6x" + 100f * drillChargeDamage.Value + "% damage</style>. <style=cIsUtility>You cannot be hit during and following the dash.</style>";
 
@@ -1085,65 +1060,43 @@ namespace DiggerPlugin
             mySkillDef.skillName = "MINER_SECONDARY_CHARGE_NAME";
             mySkillDef.skillNameToken = "MINER_SECONDARY_CHARGE_NAME";
 
-            ContentAddition.AddSkillDef(mySkillDef);
-
-            skillLocator.secondary = characterPrefab.AddComponent<GenericSkill>();
-            SkillFamily newFamily = ScriptableObject.CreateInstance<SkillFamily>();
-            newFamily.variants = new SkillFamily.Variant[1];
-            ContentAddition.AddSkillFamily(newFamily);
-            skillLocator.secondary.SetFieldValue("_skillFamily", newFamily);
-            SkillFamily skillFamily = skillLocator.secondary.skillFamily;
-
-            skillFamily.variants[0] = new SkillFamily.Variant
-            {
-                skillDef = mySkillDef,
-                viewableNode = new ViewablesCatalog.Node(mySkillDef.skillNameToken, false, null)
-            };
-
-
-            ContentAddition.AddEntityState<DrillBreakStart>(out bool wasAdded3);
-            ContentAddition.AddEntityState<DrillBreak>(out bool wasAdded4);
+            //alt
+            ContentAddition.AddEntityState<DrillBreakStart>(out bool _);
+            ContentAddition.AddEntityState<DrillBreak>(out bool _);
 
             desc = "Dash forward, exploding for <style=cIsDamage>2x" + 100f * drillBreakDamage.Value + "% damage</style> on contact with an enemy. <style=cIsUtility>You cannot be hit during and following the dash.</style>";
 
             LanguageAPI.Add("MINER_SECONDARY_BREAK_NAME", "Crack Hammer");
             LanguageAPI.Add("MINER_SECONDARY_BREAK_DESCRIPTION", desc);
 
-            mySkillDef = ScriptableObject.CreateInstance<SkillDef>();
-            mySkillDef.activationState = new SerializableEntityStateType(typeof(DrillBreakStart));
-            mySkillDef.activationStateMachineName = "Weapon";
-            mySkillDef.baseMaxStock = 1;
-            mySkillDef.baseRechargeInterval = drillBreakCooldown.Value;
-            mySkillDef.beginSkillCooldownOnSkillEnd = true;
-            mySkillDef.canceledFromSprinting = false;
-            mySkillDef.fullRestockOnAssign = true;
-            mySkillDef.interruptPriority = InterruptPriority.Skill;
-            mySkillDef.resetCooldownTimerOnUse = false;
-            mySkillDef.isCombatSkill = true;
-            mySkillDef.mustKeyPress = true;
-            mySkillDef.cancelSprintingOnActivation = false;
-            mySkillDef.forceSprintDuringState = true;
-            mySkillDef.rechargeStock = 1;
-            mySkillDef.requiredStock = 1;
-            mySkillDef.stockToConsume = 1;
-            mySkillDef.icon = Assets.icon2B;
-            mySkillDef.skillDescriptionToken = "MINER_SECONDARY_BREAK_DESCRIPTION";
-            mySkillDef.skillName = "MINER_SECONDARY_BREAK_NAME";
-            mySkillDef.skillNameToken = "MINER_SECONDARY_BREAK_NAME";
+            SkillDef mySkillDef2 = ScriptableObject.CreateInstance<SkillDef>();
+            mySkillDef2.activationState = new SerializableEntityStateType(typeof(DrillBreakStart));
+            mySkillDef2.activationStateMachineName = "Weapon";
+            mySkillDef2.baseMaxStock = 1;
+            mySkillDef2.baseRechargeInterval = drillBreakCooldown.Value;
+            mySkillDef2.beginSkillCooldownOnSkillEnd = true;
+            mySkillDef2.canceledFromSprinting = false;
+            mySkillDef2.fullRestockOnAssign = true;
+            mySkillDef2.interruptPriority = InterruptPriority.Skill;
+            mySkillDef2.resetCooldownTimerOnUse = false;
+            mySkillDef2.isCombatSkill = true;
+            mySkillDef2.mustKeyPress = true;
+            mySkillDef2.cancelSprintingOnActivation = false;
+            mySkillDef2.forceSprintDuringState = true;
+            mySkillDef2.rechargeStock = 1;
+            mySkillDef2.requiredStock = 1;
+            mySkillDef2.stockToConsume = 1;
+            mySkillDef2.icon = Assets.icon2B;
+            mySkillDef2.skillDescriptionToken = "MINER_SECONDARY_BREAK_DESCRIPTION";
+            mySkillDef2.skillName = "MINER_SECONDARY_BREAK_NAME";
+            mySkillDef2.skillNameToken = "MINER_SECONDARY_BREAK_NAME";
 
-            ContentAddition.AddSkillDef(mySkillDef);
-
-            Array.Resize(ref skillFamily.variants, skillFamily.variants.Length + 1);
-            skillFamily.variants[skillFamily.variants.Length - 1] = new SkillFamily.Variant
-            {
-                skillDef = mySkillDef,
-                unlockableDef = Unlockables.crackHammerUnlockableDef,
-                viewableNode = new ViewablesCatalog.Node(mySkillDef.skillNameToken, false, null)
-            };
+            Modules.Skills.AddSecondarySkills(characterBodyPrefab, mySkillDef, mySkillDef2);
+            Modules.Skills.AddUnlockablesToFamily(skillLocator.secondary.skillFamily, null, Unlockables.crackHammerUnlockableDef);
         }
         private void UtilitySetup()
         {
-            ContentAddition.AddEntityState<BackBlast>(out bool wasAdded1);
+            ContentAddition.AddEntityState<BackBlast>(out bool _);
 
             LanguageAPI.Add("MINER_UTILITY_BACKBLAST_NAME", "Backblast");
             LanguageAPI.Add("MINER_UTILITY_BACKBLAST_DESCRIPTION", "<style=cIsUtility>Stunning.</style> Blast backwards a variable distance, hitting all enemies in a large radius for <style=cIsDamage>" + 100f * BackBlast.damageCoefficient + "% damage</style>. <style=cIsUtility>You cannot be hit while dashing.</style>");
@@ -1172,64 +1125,42 @@ namespace DiggerPlugin
                 "KEYWORD_STUNNING"
             };
 
-            ContentAddition.AddSkillDef(mySkillDef);
-
-            skillLocator.utility = characterPrefab.AddComponent<GenericSkill>();
-            SkillFamily newFamily = ScriptableObject.CreateInstance<SkillFamily>();
-            newFamily.variants = new SkillFamily.Variant[1];
-            ContentAddition.AddSkillFamily(newFamily);
-            skillLocator.utility.SetFieldValue("_skillFamily", newFamily);
-            SkillFamily skillFamily = skillLocator.utility.skillFamily;
-
-            skillFamily.variants[0] = new SkillFamily.Variant
-            {
-                skillDef = mySkillDef,
-                viewableNode = new ViewablesCatalog.Node(mySkillDef.skillNameToken, false, null)
-            };
-
-            ContentAddition.AddEntityState<CaveIn>(out bool wasAdded);
+            ContentAddition.AddEntityState<CaveIn>(out bool _);
 
             LanguageAPI.Add("MINER_UTILITY_CAVEIN_NAME", "Cave In");
             LanguageAPI.Add("MINER_UTILITY_CAVEIN_DESCRIPTION", "<style=cIsUtility>Stunning.</style> Blast backwards a short distance, <style=cIsUtility>pulling</style> together all enemies in a large radius. You cannot be hit while dashing.");
 
-            mySkillDef = ScriptableObject.CreateInstance<SkillDef>();
-            mySkillDef.activationState = new SerializableEntityStateType(typeof(CaveIn));
-            mySkillDef.activationStateMachineName = "Weapon";
-            mySkillDef.baseMaxStock = 1;
-            mySkillDef.baseRechargeInterval = 5;
-            mySkillDef.beginSkillCooldownOnSkillEnd = true;
-            mySkillDef.canceledFromSprinting = false;
-            mySkillDef.fullRestockOnAssign = true;
-            mySkillDef.interruptPriority = InterruptPriority.Skill;
-            mySkillDef.resetCooldownTimerOnUse = false;
-            mySkillDef.isCombatSkill = true;
-            mySkillDef.mustKeyPress = true;
-            mySkillDef.cancelSprintingOnActivation = false;
-            mySkillDef.rechargeStock = 1;
-            mySkillDef.requiredStock = 1;
-            mySkillDef.stockToConsume = 1;
-            mySkillDef.icon = Assets.icon3B;
-            mySkillDef.skillDescriptionToken = "MINER_UTILITY_CAVEIN_DESCRIPTION";
-            mySkillDef.skillName = "MINER_UTILITY_CAVEIN_NAME";
-            mySkillDef.skillNameToken = "MINER_UTILITY_CAVEIN_NAME";
-            mySkillDef.keywordTokens = new string[] {
+            SkillDef mySkillDef2 = ScriptableObject.CreateInstance<SkillDef>();
+            mySkillDef2.activationState = new SerializableEntityStateType(typeof(CaveIn));
+            mySkillDef2.activationStateMachineName = "Weapon";
+            mySkillDef2.baseMaxStock = 1;
+            mySkillDef2.baseRechargeInterval = 5;
+            mySkillDef2.beginSkillCooldownOnSkillEnd = true;
+            mySkillDef2.canceledFromSprinting = false;
+            mySkillDef2.fullRestockOnAssign = true;
+            mySkillDef2.interruptPriority = InterruptPriority.Skill;
+            mySkillDef2.resetCooldownTimerOnUse = false;
+            mySkillDef2.isCombatSkill = true;
+            mySkillDef2.mustKeyPress = true;
+            mySkillDef2.cancelSprintingOnActivation = false;
+            mySkillDef2.rechargeStock = 1;
+            mySkillDef2.requiredStock = 1;
+            mySkillDef2.stockToConsume = 1;
+            mySkillDef2.icon = Assets.icon3B;
+            mySkillDef2.skillDescriptionToken = "MINER_UTILITY_CAVEIN_DESCRIPTION";
+            mySkillDef2.skillName = "MINER_UTILITY_CAVEIN_NAME";
+            mySkillDef2.skillNameToken = "MINER_UTILITY_CAVEIN_NAME";
+            mySkillDef2.keywordTokens = new string[] {
                 "KEYWORD_STUNNING"
             };
 
-            ContentAddition.AddSkillDef(mySkillDef);
-
-            Array.Resize(ref skillFamily.variants, skillFamily.variants.Length + 1);
-            skillFamily.variants[skillFamily.variants.Length - 1] = new SkillFamily.Variant
-            {
-                skillDef = mySkillDef,
-                unlockableDef = Unlockables.caveInUnlockableDef,
-                viewableNode = new ViewablesCatalog.Node(mySkillDef.skillNameToken, false, null)
-            };
+            Modules.Skills.AddUtilitySkills(characterBodyPrefab, mySkillDef, mySkillDef2);
+            Modules.Skills.AddUnlockablesToFamily(skillLocator.utility.skillFamily, null, Unlockables.caveInUnlockableDef);
         }
 
         private void SpecialSetup()
         {
-            ContentAddition.AddEntityState<ToTheStars>(out bool wasAdded);
+            ContentAddition.AddEntityState<ToTheStars>(out bool _);
 
             LanguageAPI.Add("MINER_SPECIAL_TOTHESTARS_NAME", "To the Stars!");
             LanguageAPI.Add("MINER_SPECIAL_TOTHESTARS_DESCRIPTION", "Jump into the air, shooting a wide spray of projectiles downwards for <style=cIsDamage>30x" + 100f * ToTheStars.damageCoefficient + "% damage</style> total.");
@@ -1255,25 +1186,12 @@ namespace DiggerPlugin
             mySkillDef.skillName = "MINER_SPECIAL_TOTHESTARS_NAME";
             mySkillDef.skillNameToken = "MINER_SPECIAL_TOTHESTARS_NAME";
 
-            ContentAddition.AddSkillDef(mySkillDef);
-
-            skillLocator.special = characterPrefab.AddComponent<GenericSkill>();
-            SkillFamily newFamily = ScriptableObject.CreateInstance<SkillFamily>();
-            newFamily.variants = new SkillFamily.Variant[1];
-            ContentAddition.AddSkillFamily(newFamily);
-            skillLocator.special.SetFieldValue("_skillFamily", newFamily);
-            SkillFamily skillFamily = skillLocator.special.skillFamily;
-
-            skillFamily.variants[0] = new SkillFamily.Variant
-            {
-                skillDef = mySkillDef,
-                viewableNode = new ViewablesCatalog.Node(mySkillDef.skillNameToken, false, null)
-            };
+            Modules.Skills.AddSpecialSkills(characterBodyPrefab, mySkillDef);
         }
 
         private void ScepterSkillSetup()
         {
-            ContentAddition.AddEntityState<FallingComet>(out bool wasAdded);
+            ContentAddition.AddEntityState<FallingComet>(out bool _);
 
             LanguageAPI.Add("MINER_SPECIAL_SCEPTERTOTHESTARS_NAME", "Falling Comet");
             LanguageAPI.Add("MINER_SPECIAL_SCEPTERTOTHESTARS_DESCRIPTION", "Jump into the air, shooting a wide spray of explosive projectiles downwards for <style=cIsDamage>30x" + 100f * FallingComet.damageCoefficient + "% damage</style> total, then fall downwards creating a huge blast on impact that deals <style=cIsDamage>" + 100f * FallingComet.blastDamageCoefficient + "% damage</style> and <style=cIsDamage>ignites</style> enemies hit.");
@@ -1304,62 +1222,5 @@ namespace DiggerPlugin
 
             scepterSpecialSkillDef = mySkillDef;
         }
-    }
-
-    public class MenuSound : MonoBehaviour
-    {
-        private uint playID;
-
-        private void OnEnable()
-        {
-            this.playID = Util.PlaySound(Sounds.Select, base.gameObject);
-        }
-
-        private void OnDestroy()
-        {
-            AkSoundEngine.StopPlayingID(this.playID);
-        }
-    }
-
-    public class BlacksmithHammerComponent : MonoBehaviour
-    {
-        public static event Action<bool> HammerGetEvent = delegate { };
-
-        private void Awake()
-        {
-            InvokeRepeating("Sex", 0.5f, 0.5f);
-        }
-
-        private void Sex()
-        {
-            Collider[] array = Physics.OverlapSphere(transform.position, 2.5f, LayerIndex.defaultLayer.mask);
-            for (int i = 0; i < array.Length; i++)
-            {
-                CharacterBody component = array[i].GetComponent<CharacterBody>();
-                if (component)
-                {
-                    if (component.baseNameToken == "MINER_NAME")
-                    {
-                        HammerGetEvent?.Invoke(true);
-                        Destroy(this.gameObject);
-                    }
-                }
-            }
-        }
-    }
-
-    public static class Sounds
-    {
-        public static readonly string Crush = "Crush";
-        public static readonly string DrillChargeStart = "DrillCharging";
-        public static readonly string DrillCharge = "DrillCharge";
-        public static readonly string CrackHammer = "CrackHammer";
-        public static readonly string Backblast = "Backblast";
-        public static readonly string ToTheStars = "ToTheStars";
-        public static readonly string ToTheStarsExplosion = "Explosive";
-
-        public static readonly string Swing = "MinerSwing";
-        public static readonly string Hit = "MinerHit";
-        public static readonly string Select = "MinerSelect";
     }
 }

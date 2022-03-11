@@ -45,7 +45,7 @@ namespace DiggerPlugin
 
         public static NetworkSoundEventDef pickHitEventDef;
 
-        public static List<NetworkSoundEventDef> networkSoundEventDefs = new List<NetworkSoundEventDef>();
+        //public static List<NetworkSoundEventDef> networkSoundEventDefs = new List<NetworkSoundEventDef>();
 
         public static void PopulateAssets()
         {
@@ -57,16 +57,7 @@ namespace DiggerPlugin
                 }
             }
 
-            //TODO: GENERATE SOUNDBANK WITH NEW WWISE VERSION
             using (Stream manifestResourceStream2 = Assembly.GetExecutingAssembly().GetManifestResourceStream("DiggerUnearthed.DiggerBank.bnk"))
-            {
-                byte[] array = new byte[manifestResourceStream2.Length];
-                manifestResourceStream2.Read(array, 0, array.Length);
-                SoundAPI.SoundBanks.Add(array);
-            }
-
-            //TODO: GENERATE SOUNDBANK WITH NEW WWISE VERSION
-            using (Stream manifestResourceStream2 = Assembly.GetExecutingAssembly().GetManifestResourceStream("DiggerUnearthed.DiggerV2.bnk"))
             {
                 byte[] array = new byte[manifestResourceStream2.Length];
                 manifestResourceStream2.Read(array, 0, array.Length);
@@ -118,7 +109,7 @@ namespace DiggerPlugin
             networkSoundEventDef.akId = AkSoundEngine.GetIDFromString(eventName);
             networkSoundEventDef.eventName = eventName;
 
-            networkSoundEventDefs.Add(networkSoundEventDef);
+            R2API.ContentAddition.AddNetworkSoundEventDef(networkSoundEventDef);
 
             return networkSoundEventDef;
         }
@@ -141,5 +132,20 @@ namespace DiggerPlugin
 
             return newEffect;
         }
+    }
+
+    public static class Sounds {
+        public static readonly string Crush = "Play_Crush";
+        public static readonly string DrillChargeStart = "Play_DrillCharging";
+        public static readonly string DrillCharge = "Play_DrillCharge";
+        public static readonly string CrackHammer = "Play_CrackHammer";
+        public static readonly string Backblast = "Play_Backblast";
+        public static readonly string ToTheStars = "Play_ToTheStars";
+        public static readonly string ToTheStarsExplosion = "Play_Explosive";
+        public static readonly string Beep = "Play_Beep";
+
+        public static readonly string Swing = "Play_MinerSwing";
+        public static readonly string Hit = "Play_MinerHit";
+        public static readonly string Select = "Play_MinerSelect";
     }
 }

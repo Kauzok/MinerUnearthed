@@ -11,7 +11,7 @@ namespace DiggerPlugin
         internal static BuffDef goldRushBuff;
         internal static BuffDef cleaveBuff;
 
-        internal static List<BuffDef> buffDefs = new List<BuffDef>();
+        //internal static List<BuffDef> buffDefs = new List<BuffDef>();
 
         internal static void RegisterBuffs()
         {
@@ -30,7 +30,7 @@ namespace DiggerPlugin
             buffDef.eliteDef = null;
             buffDef.iconSprite = buffIcon;
 
-            buffDefs.Add(buffDef);
+            R2API.ContentAddition.AddBuffDef(buffDef);
 
             return buffDef;
         }

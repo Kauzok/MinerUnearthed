@@ -1,7 +1,7 @@
 ManifestFileVersion: 0
-CRC: 2186928218
+CRC: 4122368292
 AssetBundleManifest:
   AssetBundleInfos:
     Info_0:
-      Name: miner
+      Name: digger
       Dependencies: {}

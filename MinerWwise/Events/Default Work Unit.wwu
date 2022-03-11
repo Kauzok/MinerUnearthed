@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WwiseDocument Type="WorkUnit" ID="{9CD5A75F-9380-4A5C-92E9-E3B838E2199B}" SchemaVersion="97">
+	<Events>
+		<WorkUnit Name="Default Work Unit" ID="{9CD5A75F-9380-4A5C-92E9-E3B838E2199B}" PersistMode="Standalone">
+			<ChildrenList>
+				<Event Name="Play_Explosive" ID="{E2D0F48A-C1D9-4A18-9940-1B52ABD2E928}">
+					<ChildrenList>
+						<Action Name="" ID="{32A8D512-2E84-43AD-84C6-32C8515D8E89}" ShortID="689203997">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="ToTheStars" ID="{18AF354D-7C4A-4521-ACBC-3167A647B7ED}" WorkUnitID="{A609B82B-58F7-4374-88BA-87741E6EA674}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="Play_MinerHit" ID="{B03924CB-E54C-422B-AAF5-C6D9EC1FC340}">
+					<ChildrenList>
+						<Action Name="" ID="{B1472D4F-13DF-45CC-BE28-462D4343EED5}" ShortID="748307503">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="MinerHit" ID="{C611D973-8584-4541-806A-ABBBF52787B0}" WorkUnitID="{A609B82B-58F7-4374-88BA-87741E6EA674}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="Play_MinerSwing" ID="{E0CC9DB9-CB5B-48FF-8241-E8DDC93C805C}">
+					<ChildrenList>
+						<Action Name="" ID="{4E89D016-DE6E-4537-8ABB-7EDE4594CE91}" ShortID="98416376">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="MinerSwing" ID="{74AF12DC-F7BE-402C-9565-71024D1D8850}" WorkUnitID="{A609B82B-58F7-4374-88BA-87741E6EA674}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="Play_ToTheStars" ID="{7E557CAD-7720-43FE-8727-7C0197D24166}">
+					<ChildrenList>
+						<Action Name="" ID="{C8818D98-94D8-42D1-8CF4-C615430006F3}" ShortID="148469658">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="ToTheStars" ID="{18AF354D-7C4A-4521-ACBC-3167A647B7ED}" WorkUnitID="{A609B82B-58F7-4374-88BA-87741E6EA674}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="Play_Backblast" ID="{A90A236B-75B1-4269-AAD2-33C322981009}">
+					<ChildrenList>
+						<Action Name="" ID="{F8F850FF-79D1-4E5F-87EC-DB33216E230A}" ShortID="463303778">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="Backblast" ID="{378F5ECC-813A-46D2-86B8-F6EC08917602}" WorkUnitID="{A609B82B-58F7-4374-88BA-87741E6EA674}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="Play_Crush" ID="{08504F3E-815F-49D5-A33D-A52A2164B1A7}">
+					<ChildrenList>
+						<Action Name="" ID="{A21494DE-ED9D-4E5F-80CF-F7580FC98DBF}" ShortID="436634393">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="Crush" ID="{986E5C92-0AEA-4BD0-910F-264F94C96DC8}" WorkUnitID="{A609B82B-58F7-4374-88BA-87741E6EA674}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="Play_DrillCharge" ID="{8B01EB12-DE4D-4F96-817B-F3338318CBF1}">
+					<ChildrenList>
+						<Action Name="" ID="{7AC3D2EA-C99F-4106-87CA-F0FA4F9A692A}" ShortID="740497094">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="DrillCharge" ID="{65BAB81A-E810-40EC-A443-AC1999E0E7F1}" WorkUnitID="{A609B82B-58F7-4374-88BA-87741E6EA674}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="Play_DrillCharging" ID="{BEB9CCB0-5A38-44DC-878C-E726C71A3BB9}">
+					<ChildrenList>
+						<Action Name="" ID="{F442CCFB-1B77-45C7-BE04-24F7C1A657B6}" ShortID="875457869">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="DrillCharging" ID="{60778628-696B-41AB-8433-297C943AAC89}" WorkUnitID="{A609B82B-58F7-4374-88BA-87741E6EA674}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="Play_MinerSelect" ID="{A55577F1-DD55-4F8A-B3A8-415F516FFB55}">
+					<ChildrenList>
+						<Action Name="" ID="{AA948245-712B-4615-B3FE-EB78619EE9E5}" ShortID="856731207">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="MinerSelect" ID="{74F8D09D-5AA6-45ED-9FC6-A1354D3D7A39}" WorkUnitID="{A609B82B-58F7-4374-88BA-87741E6EA674}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="Play_CrackHammer" ID="{960AD541-512E-41C4-8E8A-512FA1A826D2}">
+					<ChildrenList>
+						<Action Name="" ID="{884B1465-A88D-4DFC-9DE5-61ECE5693359}" ShortID="333431146">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="DrillCharge" ID="{65BAB81A-E810-40EC-A443-AC1999E0E7F1}" WorkUnitID="{A609B82B-58F7-4374-88BA-87741E6EA674}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="Play_Beep" ID="{5A74D15D-F0FA-43FA-8539-1B1786A24D5E}">
+					<ChildrenList>
+						<Action Name="" ID="{7749053C-86F8-4D10-B31C-2CA0929FD260}" ShortID="1032654277">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="Beep" ID="{EEF8B81A-0224-41C2-A20E-C4A752A1E8EA}" WorkUnitID="{A609B82B-58F7-4374-88BA-87741E6EA674}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+			</ChildrenList>
+		</WorkUnit>
+	</Events>
+</WwiseDocument>

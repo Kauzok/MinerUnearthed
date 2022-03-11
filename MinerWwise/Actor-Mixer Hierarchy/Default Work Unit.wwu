@@ -1,0 +1,564 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WwiseDocument Type="WorkUnit" ID="{A609B82B-58F7-4374-88BA-87741E6EA674}" SchemaVersion="97">
+	<AudioObjects>
+		<WorkUnit Name="Default Work Unit" ID="{A609B82B-58F7-4374-88BA-87741E6EA674}" PersistMode="Standalone">
+			<ChildrenList>
+				<ActorMixer Name="Sfx Mixxer" ID="{89D2722D-38CF-4E71-A5B0-767A947B6FF7}" ShortID="198364325">
+					<PropertyList>
+						<Property Name="3DSpatialization" Type="int16" Value="1"/>
+						<Property Name="Volume" Type="Real64">
+							<RTPCList>
+								<RTPC Name="" ID="{57E8D94D-C7DC-4904-B77F-74E7188D797A}" ShortID="53078408">
+									<ReferenceList>
+										<Reference Name="ControlInput">
+											<ObjectRef Name="Volume_SFX" ID="{B2C50042-6982-49DE-A1B9-4FE58A04374E}" WorkUnitID="{29FA5060-A408-449F-8E57-AB23AAB85833}"/>
+										</Reference>
+									</ReferenceList>
+									<Curve Name="" ID="{11E42266-94A1-4A11-B71E-DC44AE4CE4C5}">
+										<PropertyList>
+											<Property Name="Flags" Type="int32" Value="3"/>
+										</PropertyList>
+										<PointList>
+											<Point>
+												<XPos>0</XPos>
+												<YPos>-200</YPos>
+												<Flags>5</Flags>
+											</Point>
+											<Point>
+												<XPos>100</XPos>
+												<YPos>0</YPos>
+												<Flags>37</Flags>
+											</Point>
+										</PointList>
+									</Curve>
+								</RTPC>
+							</RTPCList>
+						</Property>
+					</PropertyList>
+					<ReferenceList>
+						<Reference Name="Attenuation">
+							<ObjectRef Name="Miner Hits" ID="{12475D02-0A19-422D-9781-F2D9A413C1B0}" WorkUnitID="{3A90EFD3-151C-40AE-8FEC-2F33483293E2}"/>
+						</Reference>
+						<Reference Name="Conversion">
+							<Custom CreatedFrom="{6D1B890C-9826-4384-BF07-C15223E9FB56}">
+								<Conversion Name="Default Conversion Settings (Custom)" ID="{42D2863A-06D9-412C-B3B6-7EACCDC77D4C}">
+									<PropertyList>
+										<Property Name="Channels" Type="int32">
+											<ValueList>
+												<Value Platform="Windows">4</Value>
+											</ValueList>
+										</Property>
+										<Property Name="LRMix" Type="Real64">
+											<ValueList>
+												<Value Platform="Windows">0</Value>
+											</ValueList>
+										</Property>
+										<Property Name="MaxSampleRate" Type="int32">
+											<ValueList>
+												<Value Platform="Windows">0</Value>
+											</ValueList>
+										</Property>
+										<Property Name="MinSampleRate" Type="int32">
+											<ValueList>
+												<Value Platform="Windows">0</Value>
+											</ValueList>
+										</Property>
+										<Property Name="SampleRate" Type="int32">
+											<ValueList>
+												<Value Platform="Windows">0</Value>
+											</ValueList>
+										</Property>
+									</PropertyList>
+									<ConversionPluginInfoList>
+										<ConversionPluginInfo Platform="Windows">
+											<ConversionPlugin Name="" ID="{75F8C846-FC9D-4EA9-BED8-83427023E562}" PluginName="Vorbis" CompanyID="0" PluginID="4">
+												<PropertyList>
+													<Property Name="QualityFactor" Type="Real32" Value="5"/>
+												</PropertyList>
+											</ConversionPlugin>
+										</ConversionPluginInfo>
+									</ConversionPluginInfoList>
+								</Conversion>
+							</Custom>
+						</Reference>
+						<Reference Name="OutputBus">
+							<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{D9EE820B-274D-4134-ADA8-E945A57FB9E5}"/>
+						</Reference>
+					</ReferenceList>
+					<ChildrenList>
+						<Sound Name="Beep" ID="{EEF8B81A-0224-41C2-A20E-C4A752A1E8EA}" ShortID="43410773">
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{F482C359-66A9-475A-AD76-FF8527596777}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{D9EE820B-274D-4134-ADA8-E945A57FB9E5}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<AudioFileSource Name="57145588" ID="{80D7356A-EEA1-4959-B8CC-EAA73EDECF9C}">
+									<Language>SFX</Language>
+									<AudioFile>57145588.wav</AudioFile>
+									<MediaIDList>
+										<MediaID ID="1069166790"/>
+									</MediaIDList>
+								</AudioFileSource>
+							</ChildrenList>
+							<ActiveSourceList>
+								<ActiveSource Name="57145588" ID="{80D7356A-EEA1-4959-B8CC-EAA73EDECF9C}" Platform="Linked"/>
+							</ActiveSourceList>
+						</Sound>
+						<Sound Name="Backblast" ID="{378F5ECC-813A-46D2-86B8-F6EC08917602}" ShortID="359190729">
+							<PropertyList>
+								<Property Name="3DSpatialization" Type="int16" Value="1"/>
+								<Property Name="OverridePositioning" Type="bool" Value="True"/>
+								<Property Name="Volume" Type="Real64">
+									<ValueList>
+										<Value>-3</Value>
+									</ValueList>
+								</Property>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Attenuation">
+									<ObjectRef Name="Miner Hits" ID="{12475D02-0A19-422D-9781-F2D9A413C1B0}" WorkUnitID="{3A90EFD3-151C-40AE-8FEC-2F33483293E2}"/>
+								</Reference>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{F482C359-66A9-475A-AD76-FF8527596777}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{D9EE820B-274D-4134-ADA8-E945A57FB9E5}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<AudioFileSource Name="521613536" ID="{9B536E60-04B0-4009-8408-D1A625A0B8EF}">
+									<Language>SFX</Language>
+									<AudioFile>521613536.wav</AudioFile>
+									<MediaIDList>
+										<MediaID ID="958932328"/>
+									</MediaIDList>
+								</AudioFileSource>
+							</ChildrenList>
+							<ActiveSourceList>
+								<ActiveSource Name="521613536" ID="{9B536E60-04B0-4009-8408-D1A625A0B8EF}" Platform="Linked"/>
+							</ActiveSourceList>
+						</Sound>
+						<Sound Name="Crush" ID="{986E5C92-0AEA-4BD0-910F-264F94C96DC8}" ShortID="951338908">
+							<PropertyList>
+								<Property Name="Volume" Type="Real64">
+									<ValueList>
+										<Value>-3</Value>
+									</ValueList>
+								</Property>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{F482C359-66A9-475A-AD76-FF8527596777}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{D9EE820B-274D-4134-ADA8-E945A57FB9E5}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<AudioFileSource Name="560220192" ID="{02565753-C1B6-4D20-AEF2-318B5247589C}">
+									<Language>SFX</Language>
+									<AudioFile>560220192.wav</AudioFile>
+									<MediaIDList>
+										<MediaID ID="428859829"/>
+									</MediaIDList>
+								</AudioFileSource>
+							</ChildrenList>
+							<ActiveSourceList>
+								<ActiveSource Name="560220192" ID="{02565753-C1B6-4D20-AEF2-318B5247589C}" Platform="Linked"/>
+							</ActiveSourceList>
+						</Sound>
+						<Sound Name="MinerSelect" ID="{74F8D09D-5AA6-45ED-9FC6-A1354D3D7A39}" ShortID="355936260">
+							<PropertyList>
+								<Property Name="Volume" Type="Real64">
+									<ValueList>
+										<Value>-6</Value>
+									</ValueList>
+								</Property>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{F482C359-66A9-475A-AD76-FF8527596777}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{D9EE820B-274D-4134-ADA8-E945A57FB9E5}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<AudioFileSource Name="MinerSelect" ID="{668C7DE8-AF10-493D-858D-E82287E5F34F}">
+									<Language>SFX</Language>
+									<AudioFile>MinerSelect.wav</AudioFile>
+									<MediaIDList>
+										<MediaID ID="56209296"/>
+									</MediaIDList>
+								</AudioFileSource>
+							</ChildrenList>
+							<ActiveSourceList>
+								<ActiveSource Name="MinerSelect" ID="{668C7DE8-AF10-493D-858D-E82287E5F34F}" Platform="Linked"/>
+							</ActiveSourceList>
+						</Sound>
+						<RandomSequenceContainer Name="MinerSwing" ID="{74AF12DC-F7BE-402C-9565-71024D1D8850}" ShortID="218301531">
+							<PropertyList>
+								<Property Name="3DSpatialization" Type="int16" Value="1"/>
+								<Property Name="OverridePositioning" Type="bool" Value="True"/>
+								<Property Name="Volume" Type="Real64">
+									<ValueList>
+										<Value>-6</Value>
+									</ValueList>
+								</Property>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Attenuation">
+									<ObjectRef Name="Miner Hits" ID="{12475D02-0A19-422D-9781-F2D9A413C1B0}" WorkUnitID="{3A90EFD3-151C-40AE-8FEC-2F33483293E2}"/>
+								</Reference>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{F482C359-66A9-475A-AD76-FF8527596777}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{D9EE820B-274D-4134-ADA8-E945A57FB9E5}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<Sound Name="Swing1" ID="{DBFBFA5A-A0C6-4948-B4F3-9DA11D5E1FED}" ShortID="27083942">
+									<ReferenceList>
+										<Reference Name="Conversion">
+											<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{F482C359-66A9-475A-AD76-FF8527596777}"/>
+										</Reference>
+										<Reference Name="OutputBus">
+											<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{D9EE820B-274D-4134-ADA8-E945A57FB9E5}"/>
+										</Reference>
+									</ReferenceList>
+									<ChildrenList>
+										<AudioFileSource Name="33834541" ID="{2FFF1B90-B8B6-4468-A4CC-17FF646A5FA9}">
+											<Language>SFX</Language>
+											<AudioFile>33834541.wav</AudioFile>
+											<MediaIDList>
+												<MediaID ID="446607293"/>
+											</MediaIDList>
+										</AudioFileSource>
+									</ChildrenList>
+									<ActiveSourceList>
+										<ActiveSource Name="33834541" ID="{2FFF1B90-B8B6-4468-A4CC-17FF646A5FA9}" Platform="Linked"/>
+									</ActiveSourceList>
+								</Sound>
+								<Sound Name="Swing2" ID="{F7FE3065-AC8F-42BF-8170-0DAEA0BFD9D4}" ShortID="113137660">
+									<ReferenceList>
+										<Reference Name="Conversion">
+											<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{F482C359-66A9-475A-AD76-FF8527596777}"/>
+										</Reference>
+										<Reference Name="OutputBus">
+											<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{D9EE820B-274D-4134-ADA8-E945A57FB9E5}"/>
+										</Reference>
+									</ReferenceList>
+									<ChildrenList>
+										<AudioFileSource Name="174201832" ID="{4FF7927A-B945-4B11-8D05-15F3E5D69AAB}">
+											<Language>SFX</Language>
+											<AudioFile>174201832.wav</AudioFile>
+											<MediaIDList>
+												<MediaID ID="273473450"/>
+											</MediaIDList>
+										</AudioFileSource>
+									</ChildrenList>
+									<ActiveSourceList>
+										<ActiveSource Name="174201832" ID="{4FF7927A-B945-4B11-8D05-15F3E5D69AAB}" Platform="Linked"/>
+									</ActiveSourceList>
+								</Sound>
+								<Sound Name="Swing3" ID="{91127775-A66A-4347-B59B-94D7062DD8A3}" ShortID="245384782">
+									<ReferenceList>
+										<Reference Name="Conversion">
+											<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{F482C359-66A9-475A-AD76-FF8527596777}"/>
+										</Reference>
+										<Reference Name="OutputBus">
+											<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{D9EE820B-274D-4134-ADA8-E945A57FB9E5}"/>
+										</Reference>
+									</ReferenceList>
+									<ChildrenList>
+										<AudioFileSource Name="338996033" ID="{B0C146D2-BFB1-4FAC-9C33-4A2EBD13D38F}">
+											<Language>SFX</Language>
+											<AudioFile>338996033.wav</AudioFile>
+											<MediaIDList>
+												<MediaID ID="5013187"/>
+											</MediaIDList>
+										</AudioFileSource>
+									</ChildrenList>
+									<ActiveSourceList>
+										<ActiveSource Name="338996033" ID="{B0C146D2-BFB1-4FAC-9C33-4A2EBD13D38F}" Platform="Linked"/>
+									</ActiveSourceList>
+								</Sound>
+							</ChildrenList>
+						</RandomSequenceContainer>
+						<RandomSequenceContainer Name="MinerHit" ID="{C611D973-8584-4541-806A-ABBBF52787B0}" ShortID="243856262">
+							<PropertyList>
+								<Property Name="3DSpatialization" Type="int16" Value="1"/>
+								<Property Name="OverridePositioning" Type="bool" Value="True"/>
+								<Property Name="Volume" Type="Real64">
+									<ValueList>
+										<Value>-12</Value>
+									</ValueList>
+								</Property>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Attenuation">
+									<ObjectRef Name="Miner Hits" ID="{12475D02-0A19-422D-9781-F2D9A413C1B0}" WorkUnitID="{3A90EFD3-151C-40AE-8FEC-2F33483293E2}"/>
+								</Reference>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{F482C359-66A9-475A-AD76-FF8527596777}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{D9EE820B-274D-4134-ADA8-E945A57FB9E5}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<Sound Name="MinerHit2" ID="{1678FAD9-5DF0-4F85-B94C-40CBA9968F66}" ShortID="613513391">
+									<ReferenceList>
+										<Reference Name="Conversion">
+											<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{F482C359-66A9-475A-AD76-FF8527596777}"/>
+										</Reference>
+										<Reference Name="OutputBus">
+											<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{D9EE820B-274D-4134-ADA8-E945A57FB9E5}"/>
+										</Reference>
+									</ReferenceList>
+									<ChildrenList>
+										<AudioFileSource Name="MinerHit2" ID="{DB9FE27F-7A68-4474-AD6C-921DFF3950B8}">
+											<Language>SFX</Language>
+											<AudioFile>MinerHit2.wav</AudioFile>
+											<MediaIDList>
+												<MediaID ID="650431704"/>
+											</MediaIDList>
+										</AudioFileSource>
+									</ChildrenList>
+									<ActiveSourceList>
+										<ActiveSource Name="MinerHit2" ID="{DB9FE27F-7A68-4474-AD6C-921DFF3950B8}" Platform="Linked"/>
+									</ActiveSourceList>
+								</Sound>
+								<Sound Name="MinerHit3" ID="{2F8171D4-9B8D-4CF1-9954-0A8B907A1A0D}" ShortID="90100795">
+									<ReferenceList>
+										<Reference Name="Conversion">
+											<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{F482C359-66A9-475A-AD76-FF8527596777}"/>
+										</Reference>
+										<Reference Name="OutputBus">
+											<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{D9EE820B-274D-4134-ADA8-E945A57FB9E5}"/>
+										</Reference>
+									</ReferenceList>
+									<ChildrenList>
+										<AudioFileSource Name="MinerHit3" ID="{8DE08732-0C59-48F2-9538-F2411B5769ED}">
+											<Language>SFX</Language>
+											<AudioFile>MinerHit3.wav</AudioFile>
+											<MediaIDList>
+												<MediaID ID="626094313"/>
+											</MediaIDList>
+										</AudioFileSource>
+									</ChildrenList>
+									<ActiveSourceList>
+										<ActiveSource Name="MinerHit3" ID="{8DE08732-0C59-48F2-9538-F2411B5769ED}" Platform="Linked"/>
+									</ActiveSourceList>
+								</Sound>
+								<Sound Name="MinerHit" ID="{41F51047-EB0A-4660-8343-6660299AA8ED}" ShortID="888817393">
+									<ReferenceList>
+										<Reference Name="Conversion">
+											<Custom CreatedFrom="{6D1B890C-9826-4384-BF07-C15223E9FB56}">
+												<Conversion Name="Default Conversion Settings (Custom)" ID="{48D82102-7610-4069-A3FD-191FA65782ED}">
+													<PropertyList>
+														<Property Name="Channels" Type="int32">
+															<ValueList>
+																<Value Platform="Windows">4</Value>
+															</ValueList>
+														</Property>
+														<Property Name="LRMix" Type="Real64">
+															<ValueList>
+																<Value Platform="Windows">0</Value>
+															</ValueList>
+														</Property>
+														<Property Name="MaxSampleRate" Type="int32">
+															<ValueList>
+																<Value Platform="Windows">0</Value>
+															</ValueList>
+														</Property>
+														<Property Name="MinSampleRate" Type="int32">
+															<ValueList>
+																<Value Platform="Windows">0</Value>
+															</ValueList>
+														</Property>
+														<Property Name="SampleRate" Type="int32">
+															<ValueList>
+																<Value Platform="Windows">0</Value>
+															</ValueList>
+														</Property>
+													</PropertyList>
+													<ConversionPluginInfoList>
+														<ConversionPluginInfo Platform="Windows">
+															<ConversionPlugin Name="" ID="{F31262B6-2FC9-491F-A4DD-5A33A6EB16D5}" PluginName="Vorbis" CompanyID="0" PluginID="4">
+																<PropertyList>
+																	<Property Name="QualityFactor" Type="Real32" Value="5"/>
+																</PropertyList>
+															</ConversionPlugin>
+														</ConversionPluginInfo>
+													</ConversionPluginInfoList>
+												</Conversion>
+											</Custom>
+										</Reference>
+										<Reference Name="OutputBus">
+											<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{D9EE820B-274D-4134-ADA8-E945A57FB9E5}"/>
+										</Reference>
+									</ReferenceList>
+									<ChildrenList>
+										<AudioFileSource Name="MinerHit" ID="{DE26AFDC-1F36-412A-8511-03001BEF6CDB}">
+											<Language>SFX</Language>
+											<AudioFile>MinerHit.wav</AudioFile>
+											<MediaIDList>
+												<MediaID ID="753666289"/>
+											</MediaIDList>
+										</AudioFileSource>
+									</ChildrenList>
+									<ActiveSourceList>
+										<ActiveSource Name="MinerHit" ID="{DE26AFDC-1F36-412A-8511-03001BEF6CDB}" Platform="Linked"/>
+									</ActiveSourceList>
+								</Sound>
+							</ChildrenList>
+						</RandomSequenceContainer>
+						<Sound Name="DrillCharging" ID="{60778628-696B-41AB-8433-297C943AAC89}" ShortID="854813063">
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{F482C359-66A9-475A-AD76-FF8527596777}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{D9EE820B-274D-4134-ADA8-E945A57FB9E5}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<AudioFileSource Name="941876801" ID="{E7F783EB-F299-4429-8052-1E9B58973907}">
+									<Language>SFX</Language>
+									<AudioFile>941876801.wav</AudioFile>
+									<MediaIDList>
+										<MediaID ID="288571524"/>
+									</MediaIDList>
+								</AudioFileSource>
+							</ChildrenList>
+							<ActiveSourceList>
+								<ActiveSource Name="941876801" ID="{E7F783EB-F299-4429-8052-1E9B58973907}" Platform="Linked"/>
+							</ActiveSourceList>
+						</Sound>
+						<RandomSequenceContainer Name="ToTheStarsButGunshotsOrSomething" ID="{F86D1A09-BDB6-496E-9485-27C224C5700C}" ShortID="1048187322">
+							<PropertyList>
+								<Property Name="3DSpatialization" Type="int16" Value="1"/>
+								<Property Name="OverridePositioning" Type="bool" Value="True"/>
+								<Property Name="RandomAvoidRepeating" Type="bool" Value="False"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Attenuation">
+									<ObjectRef Name="Miner Hits" ID="{12475D02-0A19-422D-9781-F2D9A413C1B0}" WorkUnitID="{3A90EFD3-151C-40AE-8FEC-2F33483293E2}"/>
+								</Reference>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{F482C359-66A9-475A-AD76-FF8527596777}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{D9EE820B-274D-4134-ADA8-E945A57FB9E5}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<Sound Name="646778860" ID="{CACEB58A-604C-44F4-8D87-DE9DB3D0936F}" ShortID="468700536">
+									<ReferenceList>
+										<Reference Name="Conversion">
+											<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{F482C359-66A9-475A-AD76-FF8527596777}"/>
+										</Reference>
+										<Reference Name="OutputBus">
+											<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{D9EE820B-274D-4134-ADA8-E945A57FB9E5}"/>
+										</Reference>
+									</ReferenceList>
+									<ChildrenList>
+										<AudioFileSource Name="ToTheStarsGun2" ID="{A664B57C-2C0E-4A08-BB86-F15A157627BE}">
+											<Language>SFX</Language>
+											<AudioFile>ToTheStarsGun2.wav</AudioFile>
+											<MediaIDList>
+												<MediaID ID="892933936"/>
+											</MediaIDList>
+										</AudioFileSource>
+									</ChildrenList>
+									<ActiveSourceList>
+										<ActiveSource Name="ToTheStarsGun2" ID="{A664B57C-2C0E-4A08-BB86-F15A157627BE}" Platform="Linked"/>
+									</ActiveSourceList>
+								</Sound>
+								<Sound Name="614666773" ID="{876686FB-C3D1-44E7-AC95-D34F614F707D}" ShortID="902904407">
+									<ReferenceList>
+										<Reference Name="Conversion">
+											<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{F482C359-66A9-475A-AD76-FF8527596777}"/>
+										</Reference>
+										<Reference Name="OutputBus">
+											<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{D9EE820B-274D-4134-ADA8-E945A57FB9E5}"/>
+										</Reference>
+									</ReferenceList>
+									<ChildrenList>
+										<AudioFileSource Name="ToTheStarsGun1" ID="{E6BD37B9-53CA-4E15-B887-891B5E260A5C}">
+											<Language>SFX</Language>
+											<AudioFile>ToTheStarsGun1.wav</AudioFile>
+											<MediaIDList>
+												<MediaID ID="708573323"/>
+											</MediaIDList>
+										</AudioFileSource>
+									</ChildrenList>
+									<ActiveSourceList>
+										<ActiveSource Name="ToTheStarsGun1" ID="{E6BD37B9-53CA-4E15-B887-891B5E260A5C}" Platform="Linked"/>
+									</ActiveSourceList>
+								</Sound>
+							</ChildrenList>
+						</RandomSequenceContainer>
+						<Sound Name="DrillCharge" ID="{65BAB81A-E810-40EC-A443-AC1999E0E7F1}" ShortID="381822117">
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{F482C359-66A9-475A-AD76-FF8527596777}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{D9EE820B-274D-4134-ADA8-E945A57FB9E5}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<AudioFileSource Name="745081522" ID="{27D46F26-7B58-4E75-8D5C-B375AFF1A526}">
+									<Language>SFX</Language>
+									<AudioFile>745081522.wav</AudioFile>
+									<MediaIDList>
+										<MediaID ID="734909237"/>
+									</MediaIDList>
+								</AudioFileSource>
+							</ChildrenList>
+							<ActiveSourceList>
+								<ActiveSource Name="745081522" ID="{27D46F26-7B58-4E75-8D5C-B375AFF1A526}" Platform="Linked"/>
+							</ActiveSourceList>
+						</Sound>
+						<Sound Name="ToTheStars" ID="{18AF354D-7C4A-4521-ACBC-3167A647B7ED}" ShortID="519226071">
+							<PropertyList>
+								<Property Name="Volume" Type="Real64">
+									<ValueList>
+										<Value>-4</Value>
+									</ValueList>
+								</Property>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{F482C359-66A9-475A-AD76-FF8527596777}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{D9EE820B-274D-4134-ADA8-E945A57FB9E5}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<AudioFileSource Name="734590529" ID="{9A9606DA-440B-4377-BF39-D21881CB927B}">
+									<Language>SFX</Language>
+									<AudioFile>734590529.wav</AudioFile>
+									<MediaIDList>
+										<MediaID ID="384590695"/>
+									</MediaIDList>
+								</AudioFileSource>
+							</ChildrenList>
+							<ActiveSourceList>
+								<ActiveSource Name="734590529" ID="{9A9606DA-440B-4377-BF39-D21881CB927B}" Platform="Linked"/>
+							</ActiveSourceList>
+						</Sound>
+					</ChildrenList>
+				</ActorMixer>
+			</ChildrenList>
+		</WorkUnit>
+	</AudioObjects>
+</WwiseDocument>
