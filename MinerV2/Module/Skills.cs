@@ -46,7 +46,7 @@ namespace Modules {
 
             skill._skillFamily = newFamily;
 
-            R2API.ContentAddition.AddSkillFamily(newFamily);
+            Modules.Content.AddSkillFamily(newFamily);
             return skill;
         }
         #endregion
@@ -57,11 +57,8 @@ namespace Modules {
         public static void AddSkillToFamily(SkillFamily skillFamily, SkillDef skillDef, UnlockableDef unlockableDef = null) {
 
             Array.Resize(ref skillFamily.variants, skillFamily.variants.Length + 1);
-
-            if(string.IsNullOrEmpty((skillDef as ScriptableObject).name)) {
-                (skillDef as ScriptableObject).name = skillDef.skillName;
-            }
-
+            
+            (skillDef as ScriptableObject).name = skillDef.skillName;
 
             skillFamily.variants[skillFamily.variants.Length - 1] = new SkillFamily.Variant {
                 skillDef = skillDef,
@@ -69,10 +66,10 @@ namespace Modules {
                 viewableNode = new ViewablesCatalog.Node(skillDef.skillNameToken, false, null)
             };
 
-            R2API.ContentAddition.AddSkillDef(skillDef);
+            Modules.Content.AddSkillDef(skillDef);
         }
 
-        public static void AddSkillsToFamily (SkillFamily skillFamily, params SkillDef[] skillDefs) {
+        public static void AddSkillsToFamily(SkillFamily skillFamily, params SkillDef[] skillDefs) {
 
             foreach (SkillDef skillDef in skillDefs) {
                 AddSkillToFamily(skillFamily, skillDef);
@@ -102,6 +99,7 @@ namespace Modules {
             for (int i = 0; i < unlockableDefs.Length; i++) {
                 SkillFamily.Variant variant = skillFamily.variants[i];
                 variant.unlockableDef = unlockableDefs[i];
+                skillFamily.variants[i] = variant;
             }
         }
         #endregion

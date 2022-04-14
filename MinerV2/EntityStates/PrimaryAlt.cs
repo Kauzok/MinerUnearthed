@@ -111,7 +111,7 @@ namespace EntityStates.Digger
                     {
                         if (base.characterMotor && !base.characterMotor.isGrounded)
                         {
-                            base.SmallHop(base.characterMotor, Gouge.hitHopVelocity);
+                            base.SmallHop(base.characterMotor, (Gouge.hitHopVelocity / Mathf.Sqrt(this.attackSpeedStat)));
                         }
 
                         this.hasHopped = true;

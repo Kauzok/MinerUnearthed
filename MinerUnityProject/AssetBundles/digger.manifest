@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 4155747081
+CRC: 1165544900
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: b6fc4449708a43e1028238b2576e629d
+    Hash: 83358922894e4d1d1b49169a4875bfe6
   TypeTreeHash:
     serializedVersion: 2
     Hash: 8615316d04f527ccc888cdd43c6e8e6d
@@ -77,8 +77,8 @@ Assets:
 - Assets/Miner/Animations/CaveIn.anim
 - Assets/Miner/Materials/matDiamondPick.mat
 - Assets/Miner/Animations/Crush.anim
-- Assets/Miner/TundraMesh.mesh
-- Assets/Miner/SteveMesh.mesh
+- Assets/Miner/Mesh/TundraMesh.mesh
+- Assets/Miner/Mesh/SteveMesh.mesh
 - Assets/Miner/Animations/animMiner.controller
 - Assets/Miner/MinerSwingAlt.prefab
 - Assets/Miner/Materials/matMinerGold.mat
@@ -89,16 +89,17 @@ Assets:
 - Assets/Miner/Animations/DrillChargeStart.anim
 - Assets/Miner/Textures/texMinerTundraEmission.png
 - Assets/Miner/Direseeker/DireHorn.prefab
-- Assets/Miner/meshMinerGM.mesh
+- Assets/Miner/Mesh/meshMinerGM.mesh
 - Assets/Miner/Animations/Crush 1.anim
 - Assets/Miner/Textures/texMinerMolten.png
 - Assets/Miner/VFX/matMinerImpact2.mat
 - Assets/Miner/Direseeker/texDireseeker.png
 - Assets/Miner/Materials/matAnvil.mat
+- Assets/Miner/Icons/texIconGoldRush.png
 - Assets/Miner/Animations/animMinerMenu.controller
 - Assets/Miner/CaveInIcon.png
 - Assets/Miner/ImpactMinerSwing.prefab
-- Assets/Miner/MinerMesh.mesh
+- Assets/Miner/Mesh/MinerMesh.mesh
 - Assets/Miner/Animations/IdleIn.anim
 - Assets/Miner/VFX/matMinerSwing.mat
 - Assets/Miner/Icons/texMinerAchievement.png
@@ -134,7 +135,7 @@ Assets:
 - Assets/Miner/VFX/texMinerImpact.png
 - Assets/Miner/Animations/MenuIdle.anim
 - Assets/Miner/Animations/Swing4.anim
-- Assets/Miner/FireParticle.mesh
+- Assets/Miner/Mesh/FireParticle.mesh
 - Assets/Miner/Materials/matMinerDiamond.mat
 - Assets/Miner/Animations/Backblast.anim
 - Assets/Miner/Animations/MenuIdleIn.anim
@@ -159,6 +160,7 @@ Assets:
 - Assets/Miner/Textures/texMinerGold.png
 - Assets/Miner/texMinerIcon.png
 - Assets/Miner/BlacksmithHammer.prefab
+- Assets/Miner/Icons/psdIconGoldRush.psd
 - Assets/Miner/VFX/matMinerHitSpark.mat
 - Assets/Miner/Textures/texMinerSteve.png
 - Assets/Miner/VFX/matMinerShockwave.mat
@@ -170,8 +172,8 @@ Assets:
 - Assets/Miner/Animations/AimMask.mask
 - Assets/Miner/VFX/matMinerSpark.mat
 - Assets/Miner/Animations/GestureMask.mask
-- Assets/Miner/BlacksmithMesh.mesh
-- Assets/Miner/DripMesh.mesh
+- Assets/Miner/Mesh/BlacksmithMesh.mesh
+- Assets/Miner/Mesh/DripMesh.mesh
 - Assets/Miner/Textures/texMinerPupleEmission.png
 - Assets/Miner/Animations/RestLoop.anim
 - Assets/Miner/Materials/matMinerIron.mat

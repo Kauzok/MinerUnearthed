@@ -164,7 +164,7 @@ namespace EntityStates.Digger
             float baseReward = (newMoney - this.moneyTracker) / Mathf.Pow(Run.instance.difficultyCoefficient, 1.25f);
             this.residue = (baseReward + this.residue) % 5;
             float numStacks = (baseReward + this.residue) / 5;
-
+            
             for (int i = 1; i <= numStacks; i++)
             {
                 if (base.characterBody.GetBuffCount(DiggerPlugin.Buffs.goldRushBuff) <= this.adrenalineCap) base.characterBody.AddTimedBuff(DiggerPlugin.Buffs.goldRushBuff, 5);

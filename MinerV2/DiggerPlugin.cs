@@ -14,6 +14,7 @@ using BepInEx.Configuration;
 using System.Runtime.CompilerServices;
 using System.Security;
 using System.Security.Permissions;
+using Modules;
 
 [module: UnverifiableCode]
 [assembly: SecurityPermission(SecurityAction.RequestMinimum, SkipVerification = true)]
@@ -29,14 +30,15 @@ namespace DiggerPlugin {
     [BepInDependency("com.Skell.GoldenCoastPlus", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("com.TeamMoonstorm.Starstorm2", BepInDependency.DependencyFlags.SoftDependency)]
     [NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod, VersionStrictness.EveryoneNeedSameModVersion)]
-    [BepInPlugin(MODUID, "DiggerUnearthed", "1.6.3")]
+    [BepInPlugin(MODUID, "DiggerUnearthed", "1.6.9")]
     [R2APISubmoduleDependency(new string[]
     {
         "PrefabAPI",
-        "SurvivorAPI",
+        "LoadoutAPI",
         "LanguageAPI",
         "SoundAPI",
-        "UnlockableAPI"
+        "UnlockableAPI",
+        "DirectorAPI"
     })]
 
     public class DiggerPlugin : BaseUnityPlugin
@@ -82,7 +84,7 @@ namespace DiggerPlugin {
 
         public GameObject doppelganger;
 
-        public static readonly Color characterColor = new Color(0.956862745f, 0.874509803f, 0.603921568f);
+        public static readonly Color characterColor = new Color(1f, 0.9062671f, 0.5613208f);
 
         public SkillLocator skillLocator;
 
@@ -125,7 +127,9 @@ namespace DiggerPlugin {
         public static ConfigEntry<KeyCode> jokeKeybind;
 
         private void Start() {
+
             Logger.LogInfo("[Initializing Miner]");
+
             instance = this;
             logger = base.Logger;
 
@@ -137,7 +141,6 @@ namespace DiggerPlugin {
             Unlockables.RegisterUnlockables();
             CreateDisplayPrefab();
             CreatePrefab();
-            ItemDisplays.InitializeItemDisplays();
             RegisterCharacter();
 
             Buffs.RegisterBuffs();
@@ -148,15 +151,21 @@ namespace DiggerPlugin {
 
             Direseeker.CreateDireseeker();
 
+            ItemDisplays.InitializeItemDisplays();
+
             //the il is broken and idk how to fix, sorry
             //ILHook();
             Hook();
 
-            //new ContentPacks().Initialize();
+            new Modules.ContentPacks().Initialize();
 
-            RoR2.ContentManagement.ContentManager.onContentPacksAssigned += LateSetup;
+            RoR2.RoR2Application.onLoad += LateSetup;
+
+            //RoR2.ContentManagement.ContentManager.onContentPacksAssigned += LateSetup;
 
             AddStyle();
+
+            Logger.LogInfo("[Initialized]");
         }
 
         private void SetupModCompat() {
@@ -193,30 +202,15 @@ namespace DiggerPlugin {
                 ScepterSetup();
             }
 
-            try {
-                FixItemDisplays();
-            } catch {
-                Logger.LogInfo("tried to fix big item displays. Waiting on r2api update");
-            }
+            FixItemDisplays();
         }
 
         [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
         private static void FixItemDisplays() {
-            string[] bods = new string[]
-            {
-                //"NemesisEnforcerBody",
-                "MinerBody",
-                //"CHEF",
-                //"ExecutionerBody",
-                //"NemmandoBody"
-            };
-
-            for (int i = 0; i < bods.Length; i++) {
-                ItemAPI.DoNotAutoIDRSFor(bods[i]);
-            }
+            ItemAPI.DoNotAutoIDRSFor("MinerBody");
         }
 
-        private void LateSetup(HG.ReadOnlyArray<RoR2.ContentManagement.ReadOnlyContentPack> obj) {
+        private void LateSetup() {//HG.ReadOnlyArray<RoR2.ContentManagement.ReadOnlyContentPack> obj) {
             ItemDisplays.SetItemDisplays();
         }
 
@@ -247,28 +241,93 @@ namespace DiggerPlugin {
         //shit is right
         private void ConfigShit()
         {
-            forceUnlock = base.Config.Bind<bool>(new ConfigDefinition("01 - General Settings", "Force Unlock"), false, new ConfigDescription("Unlocks the Miner by default", null, Array.Empty<object>()));
-            maxAdrenaline = base.Config.Bind<float>(new ConfigDefinition("01 - General Settings", "Adrenaline Cap"), 50, new ConfigDescription("Max Adrenaline stacks allowed", null, Array.Empty<object>()));
+            forceUnlock = 
+                base.Config.Bind<bool>("01 - General Settings",
+                                       "Force Unlock",
+                                       false, 
+                                       "Unlocks the Miner by default");
+            maxAdrenaline = 
+                base.Config.Bind<float>("01 - General Settings", 
+                                        "Adrenaline Cap", 
+                                        50, 
+                                        "Max Adrenaline stacks allowed");
             adrenalineCap = maxAdrenaline.Value - 1;
-            extraSkins = base.Config.Bind<bool>(new ConfigDefinition("01 - General Settings", "Extra Skins"), false, new ConfigDescription("Enables a bunch of extra skins", null, Array.Empty<object>()));
-            styleUI = base.Config.Bind<bool>(new ConfigDefinition("01 - General Settings", "Style Rank"), true, new ConfigDescription("Enables a style ranking system taken from Devil May Cry (only if Aatrox is installed as well)", null, Array.Empty<object>()));
-            enableDireseeker = base.Config.Bind<bool>(new ConfigDefinition("01 - General Settings", "Enable Direseeker"), true, new ConfigDescription("Enables the new boss", null, Array.Empty<object>()));
-            enableDireseekerSurvivor = base.Config.Bind<bool>(new ConfigDefinition("01 - General Settings", "Direseeker Survivor"), false, new ConfigDescription("Enables the new boss as a survivor?", null, Array.Empty<object>()));
-            fatAcrid = base.Config.Bind<bool>(new ConfigDefinition("01 - General Settings", "Perro Grande"), false, new ConfigDescription("Enables fat Acrid as a lategame scav-tier boss", null, Array.Empty<object>()));
 
-            restKeybind = base.Config.Bind<KeyCode>(new ConfigDefinition("02 - Keybinds", "Rest Emote"), KeyCode.Alpha1, new ConfigDescription("Keybind used for the Rest emote", null, Array.Empty<object>()));
-            tauntKeybind = base.Config.Bind<KeyCode>(new ConfigDefinition("02 - Keybinds", "Taunt Emote"), KeyCode.Alpha2, new ConfigDescription("Keybind used for the Taunt emote", null, Array.Empty<object>()));
-            jokeKeybind = base.Config.Bind<KeyCode>(new ConfigDefinition("02 - Keybinds", "Joke Emote"), KeyCode.Alpha3, new ConfigDescription("Keybind used for the Joke emote", null, Array.Empty<object>()));
+            extraSkins =
+                base.Config.Bind<bool>("01 - General Settings", 
+                                       "Extra Skins", 
+                                       false, 
+                                       "Enables a bunch of extra skins");
+            styleUI = 
+                base.Config.Bind<bool>("01 - General Settings", 
+                                       "Style Rank", 
+                                       true, 
+                                       "Enables a style ranking system taken from Devil May Cry (only if Aatrox is installed as well)");
+            enableDireseeker =
+                base.Config.Bind<bool>("01 - General Settings", 
+                                       "Enable Direseeker", 
+                                       true, 
+                                       "Enables the new boss");
+            enableDireseekerSurvivor = 
+                base.Config.Bind<bool>("01 - General Settings",
+                                       "Direseeker Survivor", 
+                                       false,
+                                       "Enables the new boss as a survivor?");
+            fatAcrid = 
+                base.Config.Bind<bool>("01 - General Settings",
+                                       "Perro Grande", 
+                                       false, 
+                                       "Enables fat Acrid as a lategame scav-tier boss");
 
-            gougeDamage = base.Config.Bind<float>(new ConfigDefinition("03 - Gouge", "Damage"), 2.75f, new ConfigDescription("Damage coefficient", null, Array.Empty<object>()));
+            restKeybind = 
+                base.Config.Bind<KeyCode>("02 - Keybinds", 
+                                          "Rest Emote", 
+                                          KeyCode.Alpha1, 
+                                          "Keybind used for the Rest emote");
+            tauntKeybind =
+                base.Config.Bind<KeyCode>("02 - Keybinds", 
+                                          "Taunt Emote",
+                                          KeyCode.Alpha2, 
+                                          "Keybind used for the Taunt emote");
+            jokeKeybind = 
+                base.Config.Bind<KeyCode>("02 - Keybinds", 
+                                          "Joke Emote", 
+                                          KeyCode.Alpha3,
+                                          "Keybind used for the Joke emote");
 
-            crushDamage = base.Config.Bind<float>(new ConfigDefinition("04 - Crush", "Demage"), 3.2f, new ConfigDescription("Damage coefficient", null, Array.Empty<object>()));
+            gougeDamage = 
+                base.Config.Bind<float>("03 - Gouge", 
+                                        "Damage", 
+                                        2.75f, 
+                                        "Damage coefficient");
 
-            drillChargeDamage = base.Config.Bind<float>(new ConfigDefinition("05 - Drill Charge", "Damage"), 1.8f, new ConfigDescription("Damage coefficient per hit", null, Array.Empty<object>()));
-            drillChargeCooldown = base.Config.Bind<float>(new ConfigDefinition("05 - Drill Charge", "Cooldown"), 7f, new ConfigDescription("Base cooldown", null, Array.Empty<object>()));
+            crushDamage = 
+                base.Config.Bind<float>("04 - Crush 1.6.7",
+                                        "Demage",
+                                        3.6f, 
+                                        "Damage coefficient");
 
-            drillBreakDamage = base.Config.Bind<float>(new ConfigDefinition("06 - Drill Crack Hammer", "Damage"), 2f, new ConfigDescription("Damage coefficient", null, Array.Empty<object>()));
-            drillBreakCooldown = base.Config.Bind<float>(new ConfigDefinition("06 - Crack Hammer", "Cooldown"), 3f, new ConfigDescription("Base cooldown", null, Array.Empty<object>()));
+            drillChargeDamage = 
+                base.Config.Bind<float>("05 - Drill Charge",
+                                        "Damage",
+                                        1.8f, 
+                                        "Damage coefficient per hit");
+            drillChargeCooldown = 
+                base.Config.Bind<float>("05 - Drill Charge",
+                                        "Cooldown", 
+                                        7f, 
+                                        "Base cooldown");
+
+            drillBreakDamage = 
+                base.Config.Bind<float>("06 - Drill Crack Hammer",
+                                        "Damage", 
+                                        2f, 
+                                        "Damage coefficient");
+            drillBreakCooldown = 
+                base.Config.Bind<float>("06 - Crack Hammer", 
+                                        "Cooldown",
+                                        3f, 
+                                        "Base cooldown");
         }
 
         private void RegisterEffects()
@@ -282,7 +341,7 @@ namespace DiggerPlugin {
             backblastEffect.GetComponent<VFXAttributes>().vfxPriority = VFXAttributes.VFXPriority.Always;
 
             
-            R2API.ContentAddition.AddEffect(backblastEffect);
+            Modules.Content.AddEffect(backblastEffect);
 
             crushExplosionEffect = PrefabAPI.InstantiateClone(LegacyResourcesAPI.Load<GameObject>("prefabs/effects/omnieffect/OmniExplosionVFX"), "DiggerCrushExplosionEffect", true);
 
@@ -294,7 +353,7 @@ namespace DiggerPlugin {
             crushExplosionEffect.GetComponent<EffectComponent>().applyScale = true;
             crushExplosionEffect.GetComponent<EffectComponent>().parentToReferencedTransform = true;
 
-            R2API.ContentAddition.AddEffect(crushExplosionEffect);
+            Modules.Content.AddEffect(crushExplosionEffect);
         }
 
         private void Hook()
@@ -508,28 +567,28 @@ namespace DiggerPlugin {
             {
                 new CharacterModel.RendererInfo
                 {
-                    defaultMaterial = model.GetComponentInChildren<SkinnedMeshRenderer>().material,
+                    defaultMaterial = model.GetComponentInChildren<SkinnedMeshRenderer>().material.SetHotpooMaterial(),
                     renderer = model.GetComponentInChildren<SkinnedMeshRenderer>(),
                     defaultShadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On,
                     ignoreOverlays = false
                 },
                 new CharacterModel.RendererInfo
                 {
-                    defaultMaterial = childLocator.FindChild("DiamondPickL").GetComponent<MeshRenderer>().material,
+                    defaultMaterial = childLocator.FindChild("DiamondPickL").GetComponent<MeshRenderer>().material.SetHotpooMaterial(),
                     renderer = childLocator.FindChild("DiamondPickL").GetComponent<MeshRenderer>(),
                     defaultShadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On,
                     ignoreOverlays = false
                 },
                 new CharacterModel.RendererInfo
                 {
-                    defaultMaterial = childLocator.FindChild("DiamondPickR").GetComponent<MeshRenderer>().material,
+                    defaultMaterial = childLocator.FindChild("DiamondPickR").GetComponent<MeshRenderer>().material.SetHotpooMaterial(),
                     renderer = childLocator.FindChild("DiamondPickR").GetComponent<MeshRenderer>(),
                     defaultShadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On,
                     ignoreOverlays = false
                 },
                 new CharacterModel.RendererInfo
                 {
-                    defaultMaterial = childLocator.FindChild("JokeC4").GetComponentInChildren<MeshRenderer>().material,
+                    defaultMaterial = childLocator.FindChild("JokeC4").GetComponentInChildren<MeshRenderer>().material.SetHotpooMaterial(),
                     renderer = childLocator.FindChild("JokeC4").GetComponentInChildren<MeshRenderer>(),
                     defaultShadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On,
                     ignoreOverlays = false
@@ -538,12 +597,6 @@ namespace DiggerPlugin {
             characterModel.autoPopulateLightInfos = true;
             characterModel.invisibilityCount = 0;
             characterModel.temporaryOverlays = new List<TemporaryOverlay>();
-
-            Shader hotpoo = LegacyResourcesAPI.Load<Shader>("Shaders/Deferred/hgstandard");
-            characterModel.baseRendererInfos[0].defaultMaterial.shader = hotpoo;
-            characterModel.baseRendererInfos[1].defaultMaterial.shader = hotpoo;
-            characterModel.baseRendererInfos[2].defaultMaterial.shader = hotpoo;
-            characterModel.baseRendererInfos[3].defaultMaterial.shader = hotpoo;
 
             characterModel.SetFieldValue("mainSkinnedMeshRenderer", characterModel.baseRendererInfos[0].renderer.gameObject.GetComponent<SkinnedMeshRenderer>());
 
@@ -642,11 +695,11 @@ namespace DiggerPlugin {
             bodyComponent.skinIndex = 0U;
             bodyComponent.bodyColor = characterColor;
 
-            ContentAddition.AddEntityState<DiggerMain>(out bool _);
-            ContentAddition.AddEntityState<BaseEmote>(out bool _);
-            ContentAddition.AddEntityState<Rest>(out bool _);
-            ContentAddition.AddEntityState<Taunt>(out bool _);
-            ContentAddition.AddEntityState<FallingComet>(out bool _);
+            Modules.Content.AddEntityState<DiggerMain>(out bool _);
+            Modules.Content.AddEntityState<BaseEmote>(out bool _);
+            Modules.Content.AddEntityState<Rest>(out bool _);
+            Modules.Content.AddEntityState<Taunt>(out bool _);
+            Modules.Content.AddEntityState<FallingComet>(out bool _);
 
             EntityStateMachine stateMachine = bodyComponent.GetComponent<EntityStateMachine>();
             stateMachine.mainStateType = new SerializableEntityStateType(typeof(DiggerMain));
@@ -681,28 +734,28 @@ namespace DiggerPlugin {
             {
                 new CharacterModel.RendererInfo
                 {
-                    defaultMaterial = model.GetComponentInChildren<SkinnedMeshRenderer>().material,
+                    defaultMaterial = model.GetComponentInChildren<SkinnedMeshRenderer>().material.SetHotpooMaterial(),
                     renderer = model.GetComponentInChildren<SkinnedMeshRenderer>(),
                     defaultShadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On,
                     ignoreOverlays = false
                 },
                 new CharacterModel.RendererInfo
                 {
-                    defaultMaterial = childLocator.FindChild("DiamondPickL").GetComponent<MeshRenderer>().material,
+                    defaultMaterial = childLocator.FindChild("DiamondPickL").GetComponent<MeshRenderer>().material.SetHotpooMaterial(),
                     renderer = childLocator.FindChild("DiamondPickL").GetComponent<MeshRenderer>(),
                     defaultShadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On,
                     ignoreOverlays = false
                 },
                 new CharacterModel.RendererInfo
                 {
-                    defaultMaterial = childLocator.FindChild("DiamondPickR").GetComponent<MeshRenderer>().material,
+                    defaultMaterial = childLocator.FindChild("DiamondPickR").GetComponent<MeshRenderer>().material.SetHotpooMaterial(),
                     renderer = childLocator.FindChild("DiamondPickR").GetComponent<MeshRenderer>(),
                     defaultShadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On,
                     ignoreOverlays = false
                 },
                 new CharacterModel.RendererInfo
                 {
-                    defaultMaterial = childLocator.FindChild("JokeC4").GetComponentInChildren<MeshRenderer>().material,
+                    defaultMaterial = childLocator.FindChild("JokeC4").GetComponentInChildren<MeshRenderer>().material.SetHotpooMaterial(),
                     renderer = childLocator.FindChild("JokeC4").GetComponentInChildren<MeshRenderer>(),
                     defaultShadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On,
                     ignoreOverlays = false
@@ -711,12 +764,6 @@ namespace DiggerPlugin {
             characterModel.autoPopulateLightInfos = true;
             characterModel.invisibilityCount = 0;
             characterModel.temporaryOverlays = new List<TemporaryOverlay>();
-
-            Shader hotpoo = LegacyResourcesAPI.Load<Shader>("Shaders/Deferred/hgstandard");
-            characterModel.baseRendererInfos[0].defaultMaterial.shader = hotpoo;
-            characterModel.baseRendererInfos[1].defaultMaterial.shader = hotpoo;
-            characterModel.baseRendererInfos[2].defaultMaterial.shader = hotpoo;
-            characterModel.baseRendererInfos[3].defaultMaterial.shader = hotpoo;
 
             characterModel.SetFieldValue("mainSkinnedMeshRenderer", characterModel.baseRendererInfos[0].renderer.gameObject.GetComponent<SkinnedMeshRenderer>());
 
@@ -796,6 +843,7 @@ namespace DiggerPlugin {
             mainHurtbox.gameObject.layer = LayerIndex.entityPrecise.intVal;
             mainHurtbox.healthComponent = healthComponent;
             mainHurtbox.isBullseye = true;
+            mainHurtbox.isSniperTarget = true;
             mainHurtbox.damageModifier = HurtBox.DamageModifier.Normal;
             mainHurtbox.hurtBoxGroup = hurtBoxGroup;
             mainHurtbox.indexInGroup = 0;
@@ -907,6 +955,7 @@ namespace DiggerPlugin {
             characterDisplay.AddComponent<NetworkIdentity>();
 
             SurvivorDef survivorDef = ScriptableObject.CreateInstance<SurvivorDef>();
+            (survivorDef as ScriptableObject).name = "Miner";
             survivorDef.displayNameToken = "MINER_NAME";
             survivorDef.unlockableDef = Unlockables.diggerUnlockableDef;
             survivorDef.descriptionToken = "MINER_DESCRIPTION";
@@ -919,8 +968,8 @@ namespace DiggerPlugin {
 
             SkillSetup();
 
-            R2API.ContentAddition.AddBody(characterBodyPrefab);
-            R2API.ContentAddition.AddSurvivorDef(survivorDef);
+            Modules.Content.AddBody(characterBodyPrefab);
+            Modules.Content.AddSurvivorDef(survivorDef);
         }
 
         private void CreateDoppelganger()
@@ -928,7 +977,7 @@ namespace DiggerPlugin {
             doppelganger = PrefabAPI.InstantiateClone(LegacyResourcesAPI.Load<GameObject>("Prefabs/CharacterMasters/MercMonsterMaster"), "MinerMonsterMaster");
             doppelganger.GetComponent<CharacterMaster>().bodyPrefab = characterBodyPrefab;
 
-            R2API.ContentAddition.AddMaster(doppelganger);
+            Modules.Content.AddMaster(doppelganger);
         }
 
         private void SkillSetup()
@@ -958,7 +1007,7 @@ namespace DiggerPlugin {
 
         private void PrimarySetup()
         {
-            ContentAddition.AddEntityState<Gouge>(out bool _);
+            Modules.Content.AddEntityState<Gouge>(out bool _);
 
             LanguageAPI.Add("KEYWORD_CLEAVING", "<style=cKeywordName>Cleaving</style><style=cSub>Applies a stacking debuff that lowers <style=cIsDamage>armor</style> by <style=cIsHealth>3 per stack</style>.</style>");
 
@@ -993,7 +1042,7 @@ namespace DiggerPlugin {
             };
 
             //alt
-            ContentAddition.AddEntityState<Crush>(out bool _);
+            Modules.Content.AddEntityState<Crush>(out bool _);
 
             desc = "<style=cIsUtility>Agile.</style> Crush nearby enemies for <style=cIsDamage>" + 100f * crushDamage.Value + "% damage</style>. <style=cIsUtility>Range increases with attack speed</style>.";
 
@@ -1030,8 +1079,8 @@ namespace DiggerPlugin {
 
         private void SecondarySetup()
         {
-            ContentAddition.AddEntityState<DrillChargeStart>(out bool _);
-            ContentAddition.AddEntityState<DrillCharge>(out bool _);
+            Modules.Content.AddEntityState<DrillChargeStart>(out bool _);
+            Modules.Content.AddEntityState<DrillCharge>(out bool _);
 
             string desc = "Charge up for 1 second, then dash into enemies for up to <style=cIsDamage>6x" + 100f * drillChargeDamage.Value + "% damage</style>. <style=cIsUtility>You cannot be hit during and following the dash.</style>";
 
@@ -1061,8 +1110,8 @@ namespace DiggerPlugin {
             mySkillDef.skillNameToken = "MINER_SECONDARY_CHARGE_NAME";
 
             //alt
-            ContentAddition.AddEntityState<DrillBreakStart>(out bool _);
-            ContentAddition.AddEntityState<DrillBreak>(out bool _);
+            Modules.Content.AddEntityState<DrillBreakStart>(out bool _);
+            Modules.Content.AddEntityState<DrillBreak>(out bool _);
 
             desc = "Dash forward, exploding for <style=cIsDamage>2x" + 100f * drillBreakDamage.Value + "% damage</style> on contact with an enemy. <style=cIsUtility>You cannot be hit during and following the dash.</style>";
 
@@ -1096,7 +1145,7 @@ namespace DiggerPlugin {
         }
         private void UtilitySetup()
         {
-            ContentAddition.AddEntityState<BackBlast>(out bool _);
+            Modules.Content.AddEntityState<BackBlast>(out bool _);
 
             LanguageAPI.Add("MINER_UTILITY_BACKBLAST_NAME", "Backblast");
             LanguageAPI.Add("MINER_UTILITY_BACKBLAST_DESCRIPTION", "<style=cIsUtility>Stunning.</style> Blast backwards a variable distance, hitting all enemies in a large radius for <style=cIsDamage>" + 100f * BackBlast.damageCoefficient + "% damage</style>. <style=cIsUtility>You cannot be hit while dashing.</style>");
@@ -1125,7 +1174,7 @@ namespace DiggerPlugin {
                 "KEYWORD_STUNNING"
             };
 
-            ContentAddition.AddEntityState<CaveIn>(out bool _);
+            Modules.Content.AddEntityState<CaveIn>(out bool _);
 
             LanguageAPI.Add("MINER_UTILITY_CAVEIN_NAME", "Cave In");
             LanguageAPI.Add("MINER_UTILITY_CAVEIN_DESCRIPTION", "<style=cIsUtility>Stunning.</style> Blast backwards a short distance, <style=cIsUtility>pulling</style> together all enemies in a large radius. You cannot be hit while dashing.");
@@ -1160,7 +1209,7 @@ namespace DiggerPlugin {
 
         private void SpecialSetup()
         {
-            ContentAddition.AddEntityState<ToTheStars>(out bool _);
+            Modules.Content.AddEntityState<ToTheStars>(out bool _);
 
             LanguageAPI.Add("MINER_SPECIAL_TOTHESTARS_NAME", "To the Stars!");
             LanguageAPI.Add("MINER_SPECIAL_TOTHESTARS_DESCRIPTION", "Jump into the air, shooting a wide spray of projectiles downwards for <style=cIsDamage>30x" + 100f * ToTheStars.damageCoefficient + "% damage</style> total.");
@@ -1176,7 +1225,7 @@ namespace DiggerPlugin {
             mySkillDef.interruptPriority = InterruptPriority.PrioritySkill;
             mySkillDef.resetCooldownTimerOnUse = false;
             mySkillDef.isCombatSkill = true;
-            mySkillDef.mustKeyPress = false;
+            mySkillDef.mustKeyPress = true;
             mySkillDef.cancelSprintingOnActivation = true;
             mySkillDef.rechargeStock = 1;
             mySkillDef.requiredStock = 1;
@@ -1191,7 +1240,7 @@ namespace DiggerPlugin {
 
         private void ScepterSkillSetup()
         {
-            ContentAddition.AddEntityState<FallingComet>(out bool _);
+            Modules.Content.AddEntityState<FallingComet>(out bool _);
 
             LanguageAPI.Add("MINER_SPECIAL_SCEPTERTOTHESTARS_NAME", "Falling Comet");
             LanguageAPI.Add("MINER_SPECIAL_SCEPTERTOTHESTARS_DESCRIPTION", "Jump into the air, shooting a wide spray of explosive projectiles downwards for <style=cIsDamage>30x" + 100f * FallingComet.damageCoefficient + "% damage</style> total, then fall downwards creating a huge blast on impact that deals <style=cIsDamage>" + 100f * FallingComet.blastDamageCoefficient + "% damage</style> and <style=cIsDamage>ignites</style> enemies hit.");
@@ -1215,10 +1264,7 @@ namespace DiggerPlugin {
             mySkillDef.icon = Assets.icon4S;
             mySkillDef.skillDescriptionToken = "MINER_SPECIAL_SCEPTERTOTHESTARS_DESCRIPTION";
             mySkillDef.skillName = "MINER_SPECIAL_SCEPTERTOTHESTARS_NAME";
-            mySkillDef.skillNameToken = "MINER_SPECIAL_SCEPTERTOTHESTARS_NAME";
-
-            ContentAddition.AddSkillDef(mySkillDef);
-            
+            mySkillDef.skillNameToken = "MINER_SPECIAL_SCEPTERTOTHESTARS_NAME";            
 
             scepterSpecialSkillDef = mySkillDef;
         }

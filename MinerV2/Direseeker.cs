@@ -13,8 +13,7 @@ using System.Text;
 using UnityEngine;
 using UnityEngine.Networking;
 
-namespace DiggerPlugin
-{
+namespace DiggerPlugin {
     public static class Direseeker
     {
         public static GameObject bodyPrefab;
@@ -73,8 +72,8 @@ namespace DiggerPlugin
             master.bodyPrefab = fatAcridPrefab;
             master.isBoss = true;
 
-            R2API.ContentAddition.AddBody(fatAcridPrefab);
-            R2API.ContentAddition.AddMaster(acridMasterPrefab);
+            Modules.Content.AddBody(fatAcridPrefab);
+            Modules.Content.AddMaster(acridMasterPrefab);
 
             CharacterSpawnCard characterSpawnCard = ScriptableObject.CreateInstance<CharacterSpawnCard>();
             characterSpawnCard.name = "cscFatAcrid";
@@ -103,19 +102,16 @@ namespace DiggerPlugin
             {
                 Card = card,
                 MonsterCategory = DirectorAPI.MonsterCategory.Champions,
-                InteractableCategory = DirectorAPI.InteractableCategory.None
             };
 
-            DirectorAPI.MonsterActions += delegate (List<DirectorAPI.DirectorCardHolder> list, DirectorAPI.StageInfo stage)
-            {
-                if (stage.stage == DirectorAPI.Stage.AbandonedAqueduct || stage.stage == DirectorAPI.Stage.DistantRoost || stage.stage == DirectorAPI.Stage.RallypointDelta || stage.stage == DirectorAPI.Stage.SkyMeadow || stage.stage == DirectorAPI.Stage.VoidCell || stage.stage == DirectorAPI.Stage.WetlandAspect)
-                {
-                    if (!list.Contains(fatAcridCard))
-                    {
-                        list.Add(fatAcridCard);
-                    }
-                }
-            };
+            DirectorAPI.Helpers.AddNewMonsterToStage(fatAcridCard, false, DirectorAPI.Stage.AbandonedAqueduct);
+            DirectorAPI.Helpers.AddNewMonsterToStage(fatAcridCard, false, DirectorAPI.Stage.AbandonedAqueductSimulacrum);
+            DirectorAPI.Helpers.AddNewMonsterToStage(fatAcridCard, false, DirectorAPI.Stage.DistantRoost);
+            DirectorAPI.Helpers.AddNewMonsterToStage(fatAcridCard, false, DirectorAPI.Stage.RallypointDelta);
+            DirectorAPI.Helpers.AddNewMonsterToStage(fatAcridCard, false, DirectorAPI.Stage.RallypointDeltaSimulacrum);
+            DirectorAPI.Helpers.AddNewMonsterToStage(fatAcridCard, false, DirectorAPI.Stage.SkyMeadow);
+            DirectorAPI.Helpers.AddNewMonsterToStage(fatAcridCard, false, DirectorAPI.Stage.SkyMeadowSimulacrum);
+            DirectorAPI.Helpers.AddNewMonsterToStage(fatAcridCard, false, DirectorAPI.Stage.VoidCell);
         }
 
         public static void CreateProjectiles()
@@ -149,19 +145,15 @@ namespace DiggerPlugin
             fireTrailPrefab.GetComponent<DamageTrail>().segmentPrefab = fireSegmentPrefab;
             fireballGroundPrefab.GetComponent<ProjectileDamageTrail>().trailPrefab = fireTrailPrefab;
 
-            R2API.ContentAddition.AddProjectile(fireballPrefab);
-            R2API.ContentAddition.AddProjectile(fireballGroundPrefab);
+            Modules.Content.AddProjectile(fireballPrefab);
+            Modules.Content.AddProjectile(fireballGroundPrefab);
         }
 
-        public static void SkillSetup(GameObject sx)
+        public static void SkillSetup(GameObject gob)
         {
+            Modules.Skills.CreateSkillFamilies(gob, 1 | 2);
 
-            Modules.Skills.CreateSkillFamilies(sx, 1 | 2);
-
-            foreach (GenericSkill obj in sx.GetComponentsInChildren<GenericSkill>())
-            {
-                DiggerPlugin.DestroyImmediate(obj);
-            }
+            ContentAddition.AddEntityState<EntityStates.Direseeker.ChargeUltraFireball>(out bool _);
 
             SkillDef mySkillDef = ScriptableObject.CreateInstance<SkillDef>();
             mySkillDef.activationState = new SerializableEntityStateType(typeof(EntityStates.Direseeker.ChargeUltraFireball));
@@ -180,7 +172,9 @@ namespace DiggerPlugin
             mySkillDef.requiredStock = 1;
             mySkillDef.stockToConsume = 1;
 
-            Modules.Skills.AddPrimarySkills(sx, mySkillDef);
+            Modules.Skills.AddPrimarySkills(gob, mySkillDef);
+
+            ContentAddition.AddEntityState<EntityStates.LemurianBruiserMonster.Flamebreath>(out bool _);
 
             SkillDef mySkillDef2 = ScriptableObject.CreateInstance<SkillDef>();
             mySkillDef2.activationState = new SerializableEntityStateType(typeof(EntityStates.LemurianBruiserMonster.Flamebreath));
@@ -199,14 +193,16 @@ namespace DiggerPlugin
             mySkillDef2.requiredStock = 1;
             mySkillDef2.stockToConsume = 0;
 
-            Modules.Skills.AddSecondarySkills(sx, mySkillDef2);
+            Modules.Skills.AddSecondarySkills(gob, mySkillDef2);
         }
 
         public static void CreateDireseeker()
         {
-            if (DiggerPlugin.direseekerInstalled) AddUnlockComponent();
+            if (DiggerPlugin.direseekerInstalled) 
+                AddUnlockComponent();
 
-            if (DiggerPlugin.fatAcrid.Value) PerroGrande();
+            if (DiggerPlugin.fatAcrid.Value) 
+                PerroGrande();
 
             CreateProjectiles();
 
@@ -217,9 +213,9 @@ namespace DiggerPlugin
             LanguageAPI.Add("DIRESEEKER_BODY_OUTRO_FLAVOR", "..and so it left, in search of new prey.");
 
             //skills and states
-            ContentAddition.AddEntityState<EntityStates.Direseeker.SpawnState>(out bool _);
-            ContentAddition.AddEntityState<EntityStates.Direseeker.ChargeUltraFireball>(out bool _);
-            ContentAddition.AddEntityState<EntityStates.Direseeker.FireUltraFireball>(out bool _);
+            Modules.Content.AddEntityState<EntityStates.Direseeker.SpawnState>(out bool _);
+            Modules.Content.AddEntityState<EntityStates.Direseeker.ChargeUltraFireball>(out bool _);
+            Modules.Content.AddEntityState<EntityStates.Direseeker.FireUltraFireball>(out bool _);
 
             if (!DiggerPlugin.direseekerInstalled)
             {
@@ -329,8 +325,8 @@ namespace DiggerPlugin
                 master.bodyPrefab = bodyPrefab;
                 master.isBoss = false;
 
-                R2API.ContentAddition.AddBody(bodyPrefab);
-                R2API.ContentAddition.AddMaster(masterPrefab);
+                Modules.Content.AddBody(bodyPrefab);
+                Modules.Content.AddMaster(masterPrefab);
 
                 if (DiggerPlugin.enableDireseeker.Value && !DiggerPlugin.direseekerInstalled)
                 {
@@ -361,19 +357,21 @@ namespace DiggerPlugin
                     {
                         Card = card,
                         MonsterCategory = DirectorAPI.MonsterCategory.Champions,
-                        InteractableCategory = DirectorAPI.InteractableCategory.None
                     };
 
-                    DirectorAPI.MonsterActions += delegate (List<DirectorAPI.DirectorCardHolder> list, DirectorAPI.StageInfo stage)
-                    {
-                        if (stage.stage == DirectorAPI.Stage.AbyssalDepths)
-                        {
-                            if (!list.Contains(direseekerCard))
-                            {
-                                list.Add(direseekerCard);
-                            }
-                        }
-                    };
+                    DirectorAPI.Helpers.AddNewMonsterToStage(direseekerCard, false, DirectorAPI.Stage.AbyssalDepths);
+                    DirectorAPI.Helpers.AddNewMonsterToStage(direseekerCard, false, DirectorAPI.Stage.AbyssalDepthsSimulacrum);
+
+                    //DirectorAPI.MonsterActions += delegate (List<DirectorAPI.DirectorCardHolder> list, DirectorAPI.StageInfo stage)
+                    //{
+                    //    if (stage.stage == DirectorAPI.Stage.AbyssalDepths)
+                    //    {
+                    //        if (!list.Contains(direseekerCard))
+                    //        {
+                    //            list.Add(direseekerCard);
+                    //        }
+                    //    }
+                    //};
                 }
             }
 
@@ -500,24 +498,24 @@ namespace DiggerPlugin
 
                 SkinSetup();
 
-                R2API.ContentAddition.AddBody(survivorPrefab);
+                Modules.Content.AddBody(survivorPrefab);
 
                 GameObject displayPrefab = PrefabAPI.InstantiateClone(survivorPrefab.GetComponent<ModelLocator>().modelTransform.gameObject, "DireseekerDisplay", true);
                 displayPrefab.AddComponent<NetworkIdentity>();
                 displayPrefab.transform.localScale *= 0.5f;
+                
+                SurvivorDef survivorDef = ScriptableObject.CreateInstance<SurvivorDef>();
+                (survivorDef as ScriptableObject).name = "Direseeker";
+                survivorDef.displayNameToken = "DIRESEEKER_BODY_NAME";
+                survivorDef.descriptionToken = "MINER_DESCRIPTION";
+                survivorDef.primaryColor = Color.red;
+                survivorDef.bodyPrefab = survivorPrefab;
+                survivorDef.displayPrefab = displayPrefab;
+                survivorDef.outroFlavorToken = "DIRESEEKER_BODY_OUTRO_FLAVOR";
+                survivorDef.hidden = false;
+                survivorDef.desiredSortPosition = 12f;
 
-                SurvivorDef survivorDef = new SurvivorDef
-                {
-                    displayNameToken = "DIRESEEKER_BODY_NAME",
-                    descriptionToken = "MINER_DESCRIPTION",
-                    primaryColor = Color.red,
-                    bodyPrefab = survivorPrefab,
-                    displayPrefab = displayPrefab,
-                    outroFlavorToken = "DIRESEEKER_BODY_OUTRO_FLAVOR",
-                    hidden = false,
-                    desiredSortPosition = 12f
-                };
-                R2API.ContentAddition.AddSurvivorDef(survivorDef);
+                Modules.Content.AddSurvivorDef(survivorDef);
             }
         }
 
@@ -605,22 +603,6 @@ namespace DiggerPlugin
         private static void AddUnlockComponent()
         {
             DireseekerMod.Modules.Prefabs.bodyPrefab.AddComponent<DiggerUnlockComponent>();
-        }
-    }
-
-    public class DireseekerController : MonoBehaviour
-    {
-        public ParticleSystem burstFlame;
-        public ParticleSystem rageFlame;
-
-        public void StartRageMode()
-        {
-            if (rageFlame) rageFlame.Play();
-        }
-
-        public void FlameBurst()
-        {
-            if (burstFlame) burstFlame.Play();
         }
     }
 }

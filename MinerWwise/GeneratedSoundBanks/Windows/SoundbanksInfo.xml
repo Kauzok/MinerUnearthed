@@ -11,7 +11,7 @@
 	<StreamedFiles/>
 	<MediaFilesNotInAnyBank/>
 	<SoundBanks>
-		<SoundBank Id="638671505" Language="SFX" Hash="1471562934">
+		<SoundBank Id="638671505" Language="SFX" Hash="1924587721">
 			<ObjectPath>\SoundBanks\Default Work Unit\DiggerBank</ObjectPath>
 			<ShortName>DiggerBank</ShortName>
 			<Path>DiggerBank.bnk</Path>
