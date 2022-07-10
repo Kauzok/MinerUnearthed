@@ -5,10 +5,10 @@ using KinematicCharacterController;
 
 namespace EntityStates.Digger
 {
-    public class ToTheStars : BaseSkillState
+    public class ToTheStarsClassic : BaseSkillState
     {
         public float baseDuration = 0.45f;
-        public static float damageCoefficient = 0.9f;
+        public static float damageCoefficient = 3.6f;
 
         private float duration;
         public GameObject hitEffectPrefab = LegacyResourcesAPI.Load<GameObject>("prefabs/effects/impacteffects/MissileExplosionVFX");
@@ -50,6 +50,7 @@ namespace EntityStates.Digger
 
                 Vector3 aimer = Vector3.down;
 
+                bool isCrit = base.RollCrit();
                 BulletAttack bulletAttack = new BulletAttack
                 {
                     owner = base.gameObject,
@@ -58,37 +59,31 @@ namespace EntityStates.Digger
                     origin = aimRay.origin,
                     aimVector = aimer,
                     minSpread = 0f,
-                    maxSpread = base.characterBody.spreadBloomAngle,
-                    radius = 0.35f,
+                    maxSpread = 0f,
+                    radius = 0.7f,
                     bulletCount = 1U,
-                    procCoefficient = .5f,
-                    damage = base.characterBody.damage * ToTheStars.damageCoefficient,
-                    force = 3,
+                    procCoefficient = 1f,
+                    damage = base.characterBody.damage * ToTheStarsClassic.damageCoefficient,
+                    force = 0f,
                     falloffModel = BulletAttack.FalloffModel.None,
                     tracerEffectPrefab = this.tracerEffectPrefab,
                     hitEffectPrefab = this.hitEffectPrefab,
-                    isCrit = base.RollCrit(),
+                    isCrit = isCrit,
                     HitEffectNormal = false,
-                    stopperMask = LayerIndex.world.mask,
                     smartCollision = true,
                     maxDistance = 300f
                 };
+                bulletAttack.aimVector = Vector3.down;
+                bulletAttack.Fire();
 
-                for (int j = 0; j < 3; j++)
+                Vector3 forwardDirection = aimRay.direction;
+                forwardDirection.y = 0f;
+                forwardDirection.Normalize();
+
+                //Fire the edges of the star
+                for (int i = 0; i < 5; i++)
                 {
-                    for (int i = 0; i <= 9; i++)
-                    {
-                        float theta = Random.Range(0.0f, 6.28f);
-                        float x = Mathf.Cos(theta);
-                        float z = Mathf.Sin(theta);
-                        float c = i * 0.3777f;
-                        c *= (1f / 12f);
-                        aimer.x += c * x;
-                        aimer.z += c * z;
-                        bulletAttack.aimVector = aimer;
-                        bulletAttack.Fire();
-                        aimer = Vector3.down;
-                    }
+
                 }
 
                 EffectData effectData = new EffectData();
