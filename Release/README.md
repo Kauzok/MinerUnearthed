@@ -57,6 +57,10 @@ Moffein - helped fix for CUM2
 
 ## Changelog
 
+`1.8.0`
+
+- Skill selections now save when closing the game.
+
 `1.7.0`
 
 - Stats

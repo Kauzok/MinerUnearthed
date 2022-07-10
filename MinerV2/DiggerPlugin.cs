@@ -31,7 +31,7 @@ namespace DiggerPlugin {
     [BepInDependency("com.TeamMoonstorm.Starstorm2", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("HIFU.Inferno", BepInDependency.DependencyFlags.SoftDependency)]
     [NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod, VersionStrictness.EveryoneNeedSameModVersion)]
-    [BepInPlugin(MODUID, "DiggerUnearthed", "1.7.0")]
+    [BepInPlugin(MODUID, "DiggerUnearthed", "1.8.0")]
     [R2APISubmoduleDependency(new string[]
     {
         "PrefabAPI",
@@ -39,7 +39,8 @@ namespace DiggerPlugin {
         "LanguageAPI",
         "SoundAPI",
         "UnlockableAPI",
-        "DirectorAPI"
+        "DirectorAPI",
+        nameof(RecalculateStatsAPI)
     })]
 
     public class DiggerPlugin : BaseUnityPlugin
@@ -376,7 +377,7 @@ namespace DiggerPlugin {
 
         private void Hook()
         {
-            On.RoR2.CharacterBody.RecalculateStats += CharacterBody_RecalculateStats;
+            RecalculateStatsAPI.GetStatCoefficients += RecalculateStatsAPI_GetStatCoefficients;
             On.RoR2.HealthComponent.TakeDamage += HealthComponent_TakeDamage;
             On.RoR2.SceneDirector.Start += SceneDirector_Start;
 
@@ -435,24 +436,18 @@ namespace DiggerPlugin {
             }
         }
 
-        private void CharacterBody_RecalculateStats(On.RoR2.CharacterBody.orig_RecalculateStats orig, CharacterBody self)
-        {
-            orig(self);
-            if (self)
-            {
-                if (self.HasBuff(Buffs.goldRushBuff))
-                {
-                    int count = self.GetBuffCount(Buffs.goldRushBuff);
-                    self.attackSpeed += (count * 0.1f);
-                    self.moveSpeed += (count * 0.15f);
-                    self.regen += (count * 0.25f);
-                }
 
-                if (self.HasBuff(Buffs.cleaveBuff))
-                {
-                    int count = self.GetBuffCount(Buffs.cleaveBuff);
-                    self.armor -= (count * 3f);
-                }
+        private void RecalculateStatsAPI_GetStatCoefficients(CharacterBody sender, RecalculateStatsAPI.StatHookEventArgs args)
+        {
+            int cleaveCount= sender.GetBuffCount(Buffs.cleaveBuff);
+            args.armorAdd -= 3f * cleaveCount;
+
+            int goldRushCount = sender.GetBuffCount(Buffs.goldRushBuff);
+            if (goldRushCount > 0)
+            {
+                args.attackSpeedMultAdd += 0.1f * goldRushCount;
+                args.moveSpeedMultAdd += 0.15f * goldRushCount;
+                args.baseRegenAdd += 0.25f * goldRushCount;
             }
         }
 
@@ -1058,6 +1053,7 @@ namespace DiggerPlugin {
                 "KEYWORD_AGILE",
                 "KEYWORD_CLEAVING"
             };
+            FixSkillName(mySkillDef);
 
             //alt
             Modules.Content.AddEntityState<Crush>(out bool _);
@@ -1090,6 +1086,7 @@ namespace DiggerPlugin {
             mySkillDef2.keywordTokens = new string[] {
                 "KEYWORD_AGILE"
             };
+            FixSkillName(mySkillDef2);
 
             Modules.Skills.AddPrimarySkills(characterBodyPrefab, mySkillDef, mySkillDef2);
             Modules.Skills.AddUnlockablesToFamily(skillLocator.primary.skillFamily, null, Unlockables.crushUnlockableDef);
@@ -1126,6 +1123,7 @@ namespace DiggerPlugin {
             mySkillDef.skillDescriptionToken = "MINER_SECONDARY_CHARGE_DESCRIPTION";
             mySkillDef.skillName = "MINER_SECONDARY_CHARGE_NAME";
             mySkillDef.skillNameToken = "MINER_SECONDARY_CHARGE_NAME";
+            FixSkillName(mySkillDef);
 
             //alt
             Modules.Content.AddEntityState<DrillBreakStart>(out bool _);
@@ -1157,6 +1155,7 @@ namespace DiggerPlugin {
             mySkillDef2.skillDescriptionToken = "MINER_SECONDARY_BREAK_DESCRIPTION";
             mySkillDef2.skillName = "MINER_SECONDARY_BREAK_NAME";
             mySkillDef2.skillNameToken = "MINER_SECONDARY_BREAK_NAME";
+            FixSkillName(mySkillDef2);
 
             Modules.Skills.AddSecondarySkills(characterBodyPrefab, mySkillDef, mySkillDef2);
             Modules.Skills.AddUnlockablesToFamily(skillLocator.secondary.skillFamily, null, Unlockables.crackHammerUnlockableDef);
@@ -1191,6 +1190,7 @@ namespace DiggerPlugin {
             mySkillDef.keywordTokens = new string[] {
                 "KEYWORD_STUNNING"
             };
+            FixSkillName(mySkillDef);
 
             Modules.Content.AddEntityState<CaveIn>(out bool _);
 
@@ -1220,6 +1220,7 @@ namespace DiggerPlugin {
             mySkillDef2.keywordTokens = new string[] {
                 "KEYWORD_STUNNING"
             };
+            FixSkillName(mySkillDef2);
 
             Modules.Skills.AddUtilitySkills(characterBodyPrefab, mySkillDef, mySkillDef2);
             Modules.Skills.AddUnlockablesToFamily(skillLocator.utility.skillFamily, null, Unlockables.caveInUnlockableDef);
@@ -1254,6 +1255,7 @@ namespace DiggerPlugin {
             mySkillDef.skillNameToken = "MINER_SPECIAL_TOTHESTARS_NAME";
             DiggerPlugin.specialSkillDef = mySkillDef;
             Modules.Skills.AddSpecialSkills(characterBodyPrefab, mySkillDef);
+            FixSkillName(mySkillDef);
         }
 
         private void ScepterSkillSetup()
@@ -1282,9 +1284,15 @@ namespace DiggerPlugin {
             mySkillDef.icon = Assets.icon4S;
             mySkillDef.skillDescriptionToken = "MINER_SPECIAL_SCEPTERTOTHESTARS_DESCRIPTION";
             mySkillDef.skillName = "MINER_SPECIAL_SCEPTERTOTHESTARS_NAME";
-            mySkillDef.skillNameToken = "MINER_SPECIAL_SCEPTERTOTHESTARS_NAME";            
+            mySkillDef.skillNameToken = "MINER_SPECIAL_SCEPTERTOTHESTARS_NAME";
+            FixSkillName(mySkillDef);
 
             scepterSpecialSkillDef = mySkillDef;
+        }
+
+        public static void FixSkillName(SkillDef skillDef)
+        {
+            (skillDef as UnityEngine.Object).name = "RiskyMod_" + skillDef.skillName;
         }
     }
 }
