@@ -57,6 +57,12 @@ Moffein - helped fix for CUM2
 
 ## Changelog
 
+`1.6.10`
+
+- Direseeker compat fix.
+- Grandmastery can now unlock on Inferno.
+- ClassicItems Scepter support.
+
 `1.6.9`
 - nice
 - fixed bug with r2api update (thanks to Moffein for the help)

@@ -29,8 +29,9 @@ namespace DiggerPlugin {
     [BepInDependency("com.K1454.SupplyDrop", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("com.Skell.GoldenCoastPlus", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("com.TeamMoonstorm.Starstorm2", BepInDependency.DependencyFlags.SoftDependency)]
+    [BepInDependency("HIFU.Inferno", BepInDependency.DependencyFlags.SoftDependency)]
     [NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod, VersionStrictness.EveryoneNeedSameModVersion)]
-    [BepInPlugin(MODUID, "DiggerUnearthed", "1.6.9")]
+    [BepInPlugin(MODUID, "DiggerUnearthed", "1.6.10")]
     [R2APISubmoduleDependency(new string[]
     {
         "PrefabAPI",
@@ -71,6 +72,8 @@ namespace DiggerPlugin {
         public static DiggerPlugin instance;
         public static BepInEx.Logging.ManualLogSource logger;
 
+        public static bool infernoPluginLoaded = false;
+
         public static GameObject characterBodyPrefab;
         // I do not know why I needed this hack
         // paladin was able to grab the CharacterModel from characterPrefab.GetComponentInChildren just fine
@@ -93,11 +96,13 @@ namespace DiggerPlugin {
         public static GameObject backblastEffect;
         public static GameObject crushExplosionEffect;
 
+        public static SkillDef specialSkillDef;
         public static SkillDef scepterSpecialSkillDef;
 
         public static bool hasAatrox = false;
         public static bool direseekerInstalled = false;
         public static bool ancientScepterInstalled = false;
+        public static bool classicItemsInstalled = false;
         public static bool aetheriumInstalled = false;
         public static bool sivsItemsInstalled = false;
         public static bool supplyDropInstalled = false;
@@ -128,6 +133,7 @@ namespace DiggerPlugin {
 
         private void Start() {
 
+            infernoPluginLoaded = BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("HIFU.Inferno");    //Normally I'd put this in Awake
             Logger.LogInfo("[Initializing Miner]");
 
             instance = this;
@@ -202,6 +208,12 @@ namespace DiggerPlugin {
                 ScepterSetup();
             }
 
+            if (BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("com.ThinkInvisible.ClassicItems"))
+            {
+                classicItemsInstalled = true;
+                ScepterClassicSetup();
+            }
+
             FixItemDisplays();
         }
 
@@ -230,6 +242,12 @@ namespace DiggerPlugin {
         private void ScepterSetup()
         {
             AncientScepter.AncientScepterItem.instance.RegisterScepterSkill(scepterSpecialSkillDef, "MinerBody", SkillSlot.Special, 0);
+        }
+
+        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+        private void ScepterClassicSetup()
+        {
+            ThinkInvisible.ClassicItems.Scepter.instance.RegisterScepterSkill(scepterSpecialSkillDef, "MinerBody", SkillSlot.Special, specialSkillDef);
         }
 
         [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
@@ -1234,7 +1252,7 @@ namespace DiggerPlugin {
             mySkillDef.skillDescriptionToken = "MINER_SPECIAL_TOTHESTARS_DESCRIPTION";
             mySkillDef.skillName = "MINER_SPECIAL_TOTHESTARS_NAME";
             mySkillDef.skillNameToken = "MINER_SPECIAL_TOTHESTARS_NAME";
-
+            DiggerPlugin.specialSkillDef = mySkillDef;
             Modules.Skills.AddSpecialSkills(characterBodyPrefab, mySkillDef);
         }
 

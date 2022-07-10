@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using R2API;
 using RoR2;
 using UnityEngine;
@@ -26,10 +27,26 @@ namespace DiggerPlugin.Achievements
 
                 DifficultyIndex difficultyIndex = runReport.ruleBook.FindDifficulty();
                 DifficultyDef runDifficulty = DifficultyCatalog.GetDifficultyDef(difficultyIndex);
-                if ((runDifficulty.countsAsHardMode && runDifficulty.scalingValue >= RequiredDifficultyCoefficient || (difficultyIndex >= DifficultyIndex.Eclipse1 && difficultyIndex <= DifficultyIndex.Eclipse8))) {
+
+                DifficultyDef infernoDef = null;
+                if (DiggerPlugin.infernoPluginLoaded)
+                {
+                    infernoDef = GetInfernoDef();
+                }
+
+                if ((infernoDef != null && runDifficulty == infernoDef)
+                    || (runDifficulty.countsAsHardMode && runDifficulty.scalingValue >= RequiredDifficultyCoefficient)
+                    || (difficultyIndex >= DifficultyIndex.Eclipse1 && difficultyIndex <= DifficultyIndex.Eclipse8))
+                {
                     Grant();
                 }
             }
+        }
+
+        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+        private DifficultyDef GetInfernoDef()
+        {
+            return Inferno.Main.InfernoDiffDef;
         }
 
         public override BodyIndex LookUpRequiredBodyIndex()
