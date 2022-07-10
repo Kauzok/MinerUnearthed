@@ -2,13 +2,14 @@
 using RoR2;
 using UnityEngine;
 using KinematicCharacterController;
+using R2API;
 
 namespace EntityStates.Digger
 {
     public class ToTheStarsClassic : BaseSkillState
     {
         public float baseDuration = 0.45f;
-        public static float damageCoefficient = 3.6f;
+        public static float damageCoefficient = 3.2f;
 
         private float duration;
         public GameObject hitEffectPrefab = LegacyResourcesAPI.Load<GameObject>("prefabs/effects/impacteffects/MissileExplosionVFX");
@@ -48,8 +49,6 @@ namespace EntityStates.Digger
             {
                 Ray aimRay = base.GetAimRay();
 
-                Vector3 aimer = Vector3.down;
-
                 bool isCrit = base.RollCrit();
                 BulletAttack bulletAttack = new BulletAttack
                 {
@@ -57,7 +56,7 @@ namespace EntityStates.Digger
                     weapon = base.gameObject,
                     muzzleName = "Chest",
                     origin = aimRay.origin,
-                    aimVector = aimer,
+                    aimVector = Vector3.down,
                     minSpread = 0f,
                     maxSpread = 0f,
                     radius = 0.7f,
@@ -71,20 +70,12 @@ namespace EntityStates.Digger
                     isCrit = isCrit,
                     HitEffectNormal = false,
                     smartCollision = true,
-                    maxDistance = 300f
+                    maxDistance = 300f,
+                    stopperMask = LayerIndex.world.collisionMask,
                 };
-                bulletAttack.aimVector = Vector3.down;
-                bulletAttack.Fire();
+                bulletAttack.AddModdedDamageType(DiggerPlugin.DiggerPlugin.ToTheStarsClassicDamage);
 
-                Vector3 forwardDirection = aimRay.direction;
-                forwardDirection.y = 0f;
-                forwardDirection.Normalize();
-
-                //Fire the edges of the star
-                for (int i = 0; i < 5; i++)
-                {
-
-                }
+                FireStar(bulletAttack, aimRay.direction);
 
                 EffectData effectData = new EffectData();
                 effectData.origin = aimRay.origin + (1 * Vector3.down);
@@ -104,6 +95,69 @@ namespace EntityStates.Digger
             base.PlayAnimation("FullBody, Override", "ToTheStarsEnd");
 
             base.OnExit();
+        }
+
+        public virtual void FireStar(BulletAttack bulletAttack, Vector3 forwardDirection)
+        {
+            //Fire initial center shot
+            bulletAttack.aimVector = Vector3.down;
+            bulletAttack.Fire();
+
+            //Fire the edges of the star
+            forwardDirection.y = 0f;
+            forwardDirection.Normalize();
+
+            Vector3 origin = bulletAttack.origin;
+
+            int edges = 5;
+            float radiansPerRotation = 2f * Mathf.PI / edges;
+            float distanceFromCenter = 8f;
+
+            for (int i = 0; i < edges; i++)
+            {
+                Vector3 currentForward = forwardDirection;
+                Vector3 newForward = currentForward;
+                if (i != 0) //Rotate Vector laterally
+                {
+                    float cos = Mathf.Cos(i * radiansPerRotation);
+                    float sin = Mathf.Sin(i * radiansPerRotation);
+
+                    float x2 = currentForward.x * cos - currentForward.z * sin;
+                    float z2 = currentForward.x * sin + currentForward.z * cos;
+                    newForward.x = x2;
+                    newForward.z = z2;
+                }
+
+                Vector3 shotOrigin = origin + distanceFromCenter * newForward;
+                bulletAttack.origin = shotOrigin;
+                bulletAttack.procChainMask = default;
+                bulletAttack.Fire();
+            }
+
+            //This causes distribution to vary based on what heigh the skill was used. Bad for consistency.
+            /*
+            for (int i = 0; i < edges; i++)
+            {
+                Vector3 currentForward = forwardDirection;
+                if (i != 0) //Rotate Vector laterally
+                {
+                    float cos = Mathf.Cos(i * radiansPerRotation);
+                    float sin = Mathf.Sin(i * radiansPerRotation);
+
+                    float x2 = currentForward.x * cos - currentForward.z * sin;
+                    float z2 = currentForward.x * sin + currentForward.z * cos;
+                    currentForward.x = x2;
+                    currentForward.z = z2;
+                }
+                currentForward.Normalize();
+
+                //Apply negative vertical modifier.
+                currentForward.y = -1.8f;
+
+                bulletAttack.aimVector = currentForward;
+                bulletAttack.procChainMask = default;
+                bulletAttack.Fire();
+            }*/
         }
 
         public override void FixedUpdate()

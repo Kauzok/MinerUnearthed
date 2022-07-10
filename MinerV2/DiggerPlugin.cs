@@ -40,7 +40,8 @@ namespace DiggerPlugin {
         "SoundAPI",
         "UnlockableAPI",
         "DirectorAPI",
-        nameof(RecalculateStatsAPI)
+        nameof(RecalculateStatsAPI),
+        nameof(DamageAPI)
     })]
 
     public class DiggerPlugin : BaseUnityPlugin
@@ -88,6 +89,9 @@ namespace DiggerPlugin {
 
         public GameObject doppelganger;
 
+        public static DamageAPI.ModdedDamageType ToTheStarsClassicDamage;
+        public static GameObject ToTheStarsClassicEffectPrefab = LegacyResourcesAPI.Load<GameObject>("Prefabs/Effects/OmniEffect/OmniExplosionVFXQuick");
+
         public static readonly Color characterColor = new Color(1f, 0.9062671f, 0.5613208f);
 
         public SkillLocator skillLocator;
@@ -99,6 +103,9 @@ namespace DiggerPlugin {
 
         public static SkillDef specialSkillDef;
         public static SkillDef scepterSpecialSkillDef;
+
+        public static SkillDef specialClassicSkillDef;
+        public static SkillDef scepterSpecialClassicSkillDef;
 
         public static bool hasAatrox = false;
         public static bool direseekerInstalled = false;
@@ -132,9 +139,13 @@ namespace DiggerPlugin {
         public static ConfigEntry<KeyCode> tauntKeybind;
         public static ConfigEntry<KeyCode> jokeKeybind;
 
-        private void Start() {
+        private void Awake()
+        {
+            infernoPluginLoaded = BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("HIFU.Inferno");
+            SetupToTheStarsClassic();
+        }
 
-            infernoPluginLoaded = BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("HIFU.Inferno");    //Normally I'd put this in Awake
+        private void Start() {
             Logger.LogInfo("[Initializing Miner]");
 
             instance = this;
@@ -1229,9 +1240,8 @@ namespace DiggerPlugin {
         private void SpecialSetup()
         {
             Modules.Content.AddEntityState<ToTheStars>(out bool _);
-
             LanguageAPI.Add("MINER_SPECIAL_TOTHESTARS_NAME", "To the Stars!");
-            LanguageAPI.Add("MINER_SPECIAL_TOTHESTARS_DESCRIPTION", "Jump into the air, shooting a wide spray of projectiles downwards for <style=cIsDamage>30x" + 100f * ToTheStars.damageCoefficient + "% damage</style> total.");
+            LanguageAPI.Add("MINER_SPECIAL_TOTHESTARS_DESCRIPTION", "Jump into the air, shooting a wide spray of shrapnel downwards for <style=cIsDamage>30x" + 100f * ToTheStars.damageCoefficient + "% damage</style> total.");
 
             SkillDef mySkillDef = ScriptableObject.CreateInstance<SkillDef>();
             mySkillDef.activationState = new SerializableEntityStateType(typeof(ToTheStars));
@@ -1256,6 +1266,34 @@ namespace DiggerPlugin {
             DiggerPlugin.specialSkillDef = mySkillDef;
             Modules.Skills.AddSpecialSkills(characterBodyPrefab, mySkillDef);
             FixSkillName(mySkillDef);
+
+            Modules.Content.AddEntityState<ToTheStarsClassic>(out bool _);
+            LanguageAPI.Add("MINER_SPECIAL_TOTHESTARSCLASSIC_NAME", "To the Stars");
+            LanguageAPI.Add("MINER_SPECIAL_TOTHESTARSCLASSIC_DESCRIPTION", "Jump into the air, hitting all enemies below for <style=cIsDamage>6x" + 100f * ToTheStarsClassic.damageCoefficient + "% damage</style> total.");
+
+            SkillDef mySkillDef2 = ScriptableObject.CreateInstance<SkillDef>();
+            mySkillDef2.activationState = new SerializableEntityStateType(typeof(ToTheStarsClassic));
+            mySkillDef2.activationStateMachineName = "Weapon";
+            mySkillDef2.baseMaxStock = 1;
+            mySkillDef2.baseRechargeInterval = 6f;
+            mySkillDef2.beginSkillCooldownOnSkillEnd = false;
+            mySkillDef2.canceledFromSprinting = false;
+            mySkillDef2.fullRestockOnAssign = true;
+            mySkillDef2.interruptPriority = InterruptPriority.PrioritySkill;
+            mySkillDef2.resetCooldownTimerOnUse = false;
+            mySkillDef2.isCombatSkill = true;
+            mySkillDef2.mustKeyPress = true;
+            mySkillDef2.cancelSprintingOnActivation = true;
+            mySkillDef2.rechargeStock = 1;
+            mySkillDef2.requiredStock = 1;
+            mySkillDef2.stockToConsume = 1;
+            mySkillDef2.icon = Assets.icon4;
+            mySkillDef2.skillDescriptionToken = "MINER_SPECIAL_TOTHESTARSCLASSIC_DESCRIPTION";
+            mySkillDef2.skillName = "MINER_SPECIAL_TOTHESTARSCLASSIC_NAME";
+            mySkillDef2.skillNameToken = "MINER_SPECIAL_TOTHESTARSCLASSIC_NAME";
+            DiggerPlugin.specialClassicSkillDef = mySkillDef2;
+            Modules.Skills.AddSpecialSkills(characterBodyPrefab, mySkillDef2);
+            FixSkillName(mySkillDef2);
         }
 
         private void ScepterSkillSetup()
@@ -1263,7 +1301,7 @@ namespace DiggerPlugin {
             Modules.Content.AddEntityState<FallingComet>(out bool _);
 
             LanguageAPI.Add("MINER_SPECIAL_SCEPTERTOTHESTARS_NAME", "Falling Comet");
-            LanguageAPI.Add("MINER_SPECIAL_SCEPTERTOTHESTARS_DESCRIPTION", "Jump into the air, shooting a wide spray of explosive projectiles downwards for <style=cIsDamage>30x" + 100f * FallingComet.damageCoefficient + "% damage</style> total, then fall downwards creating a huge blast on impact that deals <style=cIsDamage>" + 100f * FallingComet.blastDamageCoefficient + "% damage</style> and <style=cIsDamage>ignites</style> enemies hit.");
+            LanguageAPI.Add("MINER_SPECIAL_SCEPTERTOTHESTARS_DESCRIPTION", "Jump into the air, shooting a wide spray of shrapnel downwards for <style=cIsDamage>30x" + 100f * FallingComet.damageCoefficient + "% damage</style> total, then fall downwards creating a huge blast on impact that deals <style=cIsDamage>" + 100f * FallingComet.blastDamageCoefficient + "% damage</style> and <style=cIsDamage>ignites</style> enemies hit.");
 
             SkillDef mySkillDef = ScriptableObject.CreateInstance<SkillDef>();
             mySkillDef.activationState = new SerializableEntityStateType(typeof(FallingComet));
@@ -1288,6 +1326,64 @@ namespace DiggerPlugin {
             FixSkillName(mySkillDef);
 
             scepterSpecialSkillDef = mySkillDef;
+        }
+
+
+        private void SetupToTheStarsClassic()
+        {
+            ToTheStarsClassicDamage = DamageAPI.ReserveDamageType();
+            On.RoR2.HealthComponent.TakeDamage += (orig, self, damageInfo) =>
+            {
+                if (NetworkServer.active)
+                {
+                    if (damageInfo.HasModdedDamageType(ToTheStarsClassicDamage))
+                    {
+                        damageInfo.rejected = true;
+                    }
+                }
+                orig(self, damageInfo);
+            };
+
+            On.RoR2.GlobalEventManager.OnHitAll += (orig, self, damageInfo, hitObject) =>
+            {
+                if (NetworkServer.active)
+                {
+                    if (damageInfo.HasModdedDamageType(ToTheStarsClassicDamage))
+                    {
+                        damageInfo.rejected = true;
+                        damageInfo.RemoveModdedDamageType(ToTheStarsClassicDamage); //Don't let this chain.
+
+                        //Create Explosion
+                        if (damageInfo.attacker)
+                        {
+                            float blastRadius = 6f;
+                            EffectManager.SpawnEffect(ToTheStarsClassicEffectPrefab, new EffectData
+                            {
+                                origin = damageInfo.position,
+                                scale = blastRadius
+                            }, true);
+                            BlastAttack blastAttack = new BlastAttack
+                            {
+                                position = damageInfo.position,
+                                baseDamage = damageInfo.damage,
+                                baseForce = 0f,
+                                radius = blastRadius,
+                                attacker = damageInfo.attacker,
+                                inflictor = damageInfo.attacker,
+                                teamIndex = TeamComponent.GetObjectTeam(damageInfo.attacker),
+                                crit = damageInfo.crit,
+                                procChainMask = damageInfo.procChainMask,
+                                procCoefficient = damageInfo.procCoefficient,
+                                damageColorIndex = damageInfo.damageColorIndex,
+                                falloffModel = BlastAttack.FalloffModel.None,
+                                damageType = damageInfo.damageType
+                            };
+                            blastAttack.Fire();
+                        }
+                    }
+                }
+                orig(self, damageInfo, hitObject);
+            };
         }
 
         public static void FixSkillName(SkillDef skillDef)
