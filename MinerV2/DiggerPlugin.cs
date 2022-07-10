@@ -31,7 +31,7 @@ namespace DiggerPlugin {
     [BepInDependency("com.TeamMoonstorm.Starstorm2", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("HIFU.Inferno", BepInDependency.DependencyFlags.SoftDependency)]
     [NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod, VersionStrictness.EveryoneNeedSameModVersion)]
-    [BepInPlugin(MODUID, "DiggerUnearthed", "1.6.10")]
+    [BepInPlugin(MODUID, "DiggerUnearthed", "1.7.0")]
     [R2APISubmoduleDependency(new string[]
     {
         "PrefabAPI",
@@ -681,10 +681,10 @@ namespace DiggerPlugin {
             bodyComponent.bodyFlags = CharacterBody.BodyFlags.ImmuneToExecutes;
             bodyComponent.rootMotionInMainState = false;
             bodyComponent.mainRootSpeed = 0;
-            bodyComponent.baseMaxHealth = 120;
-            bodyComponent.levelMaxHealth = 48;
-            bodyComponent.baseRegen = 0.5f;
-            bodyComponent.levelRegen = 0.25f;
+            bodyComponent.baseMaxHealth = 140;
+            bodyComponent.levelMaxHealth = bodyComponent.baseMaxHealth * 0.3f;
+            bodyComponent.baseRegen = 2.5f;
+            bodyComponent.levelRegen = bodyComponent.baseRegen * 0.2f;
             bodyComponent.baseMaxShield = 0;
             bodyComponent.levelMaxShield = 0;
             bodyComponent.baseMoveSpeed = 7;
@@ -693,7 +693,7 @@ namespace DiggerPlugin {
             bodyComponent.baseJumpPower = 15;
             bodyComponent.levelJumpPower = 0;
             bodyComponent.baseDamage = 12;
-            bodyComponent.levelDamage = 2.4f;
+            bodyComponent.levelDamage = bodyComponent.baseDamage * 0.2f;
             bodyComponent.baseAttackSpeed = 1;
             bodyComponent.levelAttackSpeed = 0;
             bodyComponent.baseCrit = 1;

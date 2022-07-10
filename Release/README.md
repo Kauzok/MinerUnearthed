@@ -57,6 +57,14 @@ Moffein - helped fix for CUM2
 
 ## Changelog
 
+`1.7.0`
+
+- Stats
+	- Changed HP from 120 (+48) -> 140 (+42)
+	- Increased HP Regen from 0.5 (+0.25) -> 2.5 (+0.5)
+
+*Giving Miner consistent scaling with the rest of the survivor roster.*
+
 `1.6.10`
 
 - Direseeker compat fix.
