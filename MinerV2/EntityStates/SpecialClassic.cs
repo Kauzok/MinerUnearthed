@@ -70,7 +70,7 @@ namespace EntityStates.Digger
                     HitEffectNormal = false,
                     smartCollision = true,
                     maxDistance = 300f,
-                    stopperMask = LayerIndex.world.collisionMask,
+                    //stopperMask = LayerIndex.world.collisionMask,
                 };
                 bulletAttack.AddModdedDamageType(DiggerPlugin.DiggerPlugin.ToTheStarsClassicDamage);
 

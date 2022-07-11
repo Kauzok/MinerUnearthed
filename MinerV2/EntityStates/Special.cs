@@ -8,7 +8,7 @@ namespace EntityStates.Digger
     public class ToTheStars : BaseSkillState
     {
         public float baseDuration = 0.45f;
-        public static float damageCoefficient = 0.9f;
+        public static float damageCoefficient = 1.8f;   //was 0.9
 
         private float duration;
         public GameObject hitEffectPrefab = LegacyResourcesAPI.Load<GameObject>("prefabs/effects/impacteffects/MissileExplosionVFX");
@@ -59,7 +59,7 @@ namespace EntityStates.Digger
                     aimVector = aimer,
                     minSpread = 0f,
                     maxSpread = base.characterBody.spreadBloomAngle,
-                    radius = 0.35f,
+                    radius = 0.5f,  //was 0.35
                     bulletCount = 1U,
                     procCoefficient = .5f,
                     damage = base.characterBody.damage * ToTheStars.damageCoefficient,
@@ -76,7 +76,7 @@ namespace EntityStates.Digger
 
                 for (int j = 0; j < 3; j++)
                 {
-                    for (int i = 0; i <= 9; i++)
+                    for (int i = 0; i <= 4; i++)    //was 9
                     {
                         float theta = Random.Range(0.0f, 6.28f);
                         float x = Mathf.Cos(theta);

@@ -67,6 +67,11 @@ Moffein - helped fix for CUM2
 	
 	*Accounting for passive which gives a regen bonus with stacks.*
 	
+- Gouge
+	- Reduced damage from 270% -> 275%
+	
+	*This won't really affect anything at all.*
+	
 - To The Stars (Rework)
 	- Now creates 6 explosions below you that deal 300% damage each.
 	- Spacing is always consistent regardless of the height you use it from.

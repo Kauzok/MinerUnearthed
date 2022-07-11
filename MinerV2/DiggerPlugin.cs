@@ -330,16 +330,18 @@ namespace DiggerPlugin {
                                           "Keybind used for the Joke emote");
 
             gougeDamage = 
-                base.Config.Bind<float>("03 - Gouge", 
+                base.Config.Bind<float>("03 - Gouge 1.8.0", 
                                         "Damage", 
-                                        2.75f, 
+                                        2.7f, 
                                         "Damage coefficient");
+            Gouge.damageCoefficient = gougeDamage.Value;
 
             crushDamage = 
                 base.Config.Bind<float>("04 - Crush 1.6.7",
                                         "Demage",
                                         3.6f, 
                                         "Damage coefficient");
+            Crush.damageCoefficient = crushDamage.Value;
 
             drillChargeDamage = 
                 base.Config.Bind<float>("05 - Drill Charge",
@@ -351,12 +353,15 @@ namespace DiggerPlugin {
                                         "Cooldown", 
                                         7f, 
                                         "Base cooldown");
+            DrillCharge.damageCoefficient = drillChargeDamage.Value;
 
             drillBreakDamage = 
                 base.Config.Bind<float>("06 - Drill Crack Hammer",
                                         "Damage", 
                                         2f, 
                                         "Damage coefficient");
+            DrillBreak.damageCoefficient = drillBreakDamage.Value;
+
             drillBreakCooldown = 
                 base.Config.Bind<float>("06 - Crack Hammer", 
                                         "Cooldown",
@@ -1248,7 +1253,7 @@ namespace DiggerPlugin {
 
             Modules.Content.AddEntityState<ToTheStars>(out bool _);
             LanguageAPI.Add("MINER_SPECIAL_TOTHESTARS_NAME", "Meteor Shower");
-            LanguageAPI.Add("MINER_SPECIAL_TOTHESTARS_DESCRIPTION", "Jump into the air, shooting a wide spray of shrapnel downwards for <style=cIsDamage>30x" + 100f * ToTheStars.damageCoefficient + "% damage</style>.");
+            LanguageAPI.Add("MINER_SPECIAL_TOTHESTARS_DESCRIPTION", "Jump into the air, shooting a wide spray of shrapnel downwards for <style=cIsDamage>15x" + 100f * ToTheStars.damageCoefficient + "% damage</style>.");
 
             SkillDef mySkillDef = ScriptableObject.CreateInstance<SkillDef>();
             mySkillDef.activationState = new SerializableEntityStateType(typeof(ToTheStars));
@@ -1302,7 +1307,7 @@ namespace DiggerPlugin {
             mySkillDef.skillDescriptionToken = "MINER_SPECIAL_SCEPTERTOTHESTARS_DESCRIPTION";
             mySkillDef.skillName = "MINER_SPECIAL_SCEPTERTOTHESTARS_NAME";
             mySkillDef.skillNameToken = "MINER_SPECIAL_SCEPTERTOTHESTARS_NAME";
-            mySkillDef.keywordTokens = new string[] { "KEYWORD_IGNITE" }
+            mySkillDef.keywordTokens = new string[] { "KEYWORD_IGNITE" };
             FixSkillName(mySkillDef);
 
             scepterSpecialSkillDef = mySkillDef;
@@ -1374,7 +1379,7 @@ namespace DiggerPlugin {
             {
                 if (NetworkServer.active)
                 {
-                    if (damageInfo.rejected && damageInfo.HasModdedDamageType(ToTheStarsClassicDamage))
+                    if (damageInfo.HasModdedDamageType(ToTheStarsClassicDamage))
                     {
                         damageInfo.rejected = true;
                         damageInfo.RemoveModdedDamageType(ToTheStarsClassicDamage); //Don't let this chain.
