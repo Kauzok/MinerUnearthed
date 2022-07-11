@@ -5,7 +5,7 @@
 - Has a bunch of unlockable skins and skills, as well as a challenge to unlock him
 - Now includes Direseeker, a custom boss based on the original from RoR1
 
-[![](https://cdn.discordapp.com/attachments/469291841859092488/780784218816380938/unknown.png)]()
+[![](https://i.imgur.com/PWNFE6C.png)]()
 
 [![](https://cdn.discordapp.com/attachments/469291841859092488/780787095731437588/unknown.png)]()
 
@@ -22,7 +22,7 @@ Sounds somewhat like Mercenary, but where Mercenary slips in and out, Miner rush
 - `Drill Charge` and `Backblast` are high mobility options with invincibility during and slightly after their dashes. 
 - `Drill Charge` will always go the full distance, and increases damage by being held to charge longer.
 - `Backblast` can be held to go backwards farther. Use as a long mobility option, or to stay in combos.
-- `To the Stars`, when used correctly, can land huge damage on larger enemies. Use lower to the ground to maximize its damage.
+- `To the Stars`, when used correctly, can land huge damage on larger enemies.
 
 Read Gnome's original mod page for more detailed descriptions. Gameplay is still the same for the most part
 
@@ -68,7 +68,7 @@ Moffein - helped fix for CUM2
 	*Accounting for passive which gives a regen bonus with stacks.*
 	
 - Gouge
-	- Reduced damage from 270% -> 275%
+	- Reduced damage from 275% -> 270%
 	
 	*This won't really affect anything.*
 	

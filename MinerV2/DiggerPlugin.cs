@@ -948,9 +948,9 @@ namespace DiggerPlugin {
         {
             string desc = "The Miner is a fast paced and highly mobile melee survivor who prioritizes getting long kill combos to build stacks of his passive.<color=#CCD3E0>" + Environment.NewLine + Environment.NewLine;
             desc = desc + "< ! > Once you get a good number of stacks of Adrenaline, Gouge and Crush will be your best source of damage." + Environment.NewLine + Environment.NewLine;
-            desc = desc + "< ! > Note that charging Drill Charge only affects damage dealt. Aim at the ground or into enemies to deal concentrated damage." + Environment.NewLine + Environment.NewLine;
+            desc = desc + "< ! > Charging Drill Charge only affects damage dealt. Aim at the ground or into enemies to deal concentrated damage." + Environment.NewLine + Environment.NewLine;
             desc = desc + "< ! > You can tap Backblast to travel a short distance. Hold it to go further." + Environment.NewLine + Environment.NewLine;
-            desc = desc + "< ! > To the Stars when used low to the ground is great at dealing high amounts of damage to enemies with large hitboxes." + Environment.NewLine + Environment.NewLine;
+            desc = desc + "< ! > To The Stars can deal high damage to large enemies." + Environment.NewLine + Environment.NewLine;
 
             string outro = characterOutro;
 
@@ -1190,7 +1190,7 @@ namespace DiggerPlugin {
             Modules.Content.AddEntityState<CaveIn>(out bool _);
 
             LanguageAPI.Add("MINER_UTILITY_CAVEIN_NAME", "Cave In");
-            LanguageAPI.Add("MINER_UTILITY_CAVEIN_DESCRIPTION", "<style=cIsUtility>Stunning.</style> Blast backwards a short distance, <style=cIsUtility>pulling</style> together all enemies in a large radius. <style=cIsUtility>You cannot be hit for the duration.</style>");
+            LanguageAPI.Add("MINER_UTILITY_CAVEIN_DESCRIPTION", "<style=cIsUtility>Stunning.</style> Blast backwards, <style=cIsUtility>pulling</style> in all enemies in a large radius. <style=cIsUtility>You cannot be hit for the duration.</style>");
 
             SkillDef mySkillDef2 = ScriptableObject.CreateInstance<SkillDef>();
             mySkillDef2.activationState = new SerializableEntityStateType(typeof(CaveIn));
