@@ -10,6 +10,9 @@ namespace EntityStates.Digger
     {
         public override void FireStar(BulletAttack bulletAttack, Vector3 forwardDirection)
         {
+            //add stun
+            bulletAttack.damageType |= DamageType.Stun1s;
+
             //Fire initial center shot
             bulletAttack.aimVector = Vector3.down;
             bulletAttack.Fire();

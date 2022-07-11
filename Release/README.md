@@ -61,7 +61,7 @@ Moffein - helped fix for CUM2
 
 - Skill selections now save when closing the game.
 - Tweaked wording on skills.
-- Now uses RecalculateStatsAPI, which should improve compatibility with other mods.
+- Now uses DamageAPI and RecalculateStatsAPI, which should improve compatibility with other mods.
 - Stats
 	- Reduced HP Regen from 2.5 (+0.5) -> 1.0 (+0.2)
 	
@@ -70,19 +70,22 @@ Moffein - helped fix for CUM2
 - Gouge
 	- Reduced damage from 270% -> 275%
 	
-	*This won't really affect anything at all.*
+	*This won't really affect anything.*
 	
 - To The Stars (Rework)
 	- Now creates 6 explosions below you that deal 300% damage each.
 	- Spacing is always consistent regardless of the height you use it from.
 	- Old version of the skill has been moved to an alt skill.
 	
-	*Making this work more like RoR1. More consistent, lower damage potential.*
+	*Making this work more like RoR1. More consistent, lower damage potential than the alt.*
 	
-- X (Alt Special)
-	- Jump into the air, shooting a wide spray of shrapnel downwards for 15x180% damage.
-		- Shotcount was reduced from 30 -> 15 and per-shot damage doubled so that it doesn't lag as much (and also because 30 hits is way higher than even Artificer's Flamethrower).
-		- 
+- Meteor Shower (Alt Special)
+	- TODO: Icon
+	- Jump into the air, shooting a spray of shrapnel downwards for 15x160% damage.
+		- Damage increased from 90% -> 160% (overall damage has decreased slightly)
+		- Shotcount reduced from 30 -> 15 to reduce lag
+		- Increased shot radius from 0.35 -> 0.5
+		- Increased proc coefficient from 0.5 -> 0.7
 
 	*Moved this to the alt slot due to being more finnicky to use compared to the reworked To The Stars.*
 
