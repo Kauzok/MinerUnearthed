@@ -1225,7 +1225,7 @@ namespace DiggerPlugin {
         {
             Modules.Content.AddEntityState<ToTheStarsClassic>(out bool _);
             LanguageAPI.Add("MINER_SPECIAL_TOTHESTARSCLASSIC_NAME", "To The Stars");
-            LanguageAPI.Add("MINER_SPECIAL_TOTHESTARSCLASSIC_DESCRIPTION", "Jump into the air, hitting all enemies below for <style=cIsDamage>6x" + 100f * ToTheStarsClassic.damageCoefficient + "% damage</style>.");
+            LanguageAPI.Add("MINER_SPECIAL_TOTHESTARSCLASSIC_DESCRIPTION", "Jump into the air, hitting enemies directly below for <style=cIsDamage>6x" + 100f * ToTheStarsClassic.damageCoefficient + "% damage</style>.");
 
             SkillDef mySkillDef2 = ScriptableObject.CreateInstance<SkillDef>();
             mySkillDef2.activationState = new SerializableEntityStateType(typeof(ToTheStarsClassic));
@@ -1314,7 +1314,7 @@ namespace DiggerPlugin {
 
             Modules.Content.AddEntityState<ToTheStarsClassicScepter>(out bool _);
             LanguageAPI.Add("MINER_SPECIAL_SCEPTERTOTHESTARSCLASSIC_NAME", "Starbound");
-            LanguageAPI.Add("MINER_SPECIAL_SCEPTERTOTHESTARSCLASSIC_DESCRIPTION", "<style=cIsDamage>Stunning</style>. Jump into the air, hitting all enemies below for <style=cIsDamage>10x" + 100f * ToTheStarsClassic.damageCoefficient + "% damage</style> total.");
+            LanguageAPI.Add("MINER_SPECIAL_SCEPTERTOTHESTARSCLASSIC_DESCRIPTION", "<style=cIsDamage>Stunning</style>. Jump into the air, hitting enemies directly below for <style=cIsDamage>10x" + 100f * ToTheStarsClassic.damageCoefficient + "% damage</style> total.");
 
             SkillDef mySkillDef2 = ScriptableObject.CreateInstance<SkillDef>();
             mySkillDef2.activationState = new SerializableEntityStateType(typeof(ToTheStarsClassicScepter));
