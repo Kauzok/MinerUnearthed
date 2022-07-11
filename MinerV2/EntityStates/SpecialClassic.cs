@@ -9,10 +9,9 @@ namespace EntityStates.Digger
     public class ToTheStarsClassic : BaseSkillState
     {
         public float baseDuration = 0.45f;
-        public static float damageCoefficient = 3.2f;
+        public static float damageCoefficient = 3f;
 
         private float duration;
-        public GameObject hitEffectPrefab = LegacyResourcesAPI.Load<GameObject>("prefabs/effects/impacteffects/MissileExplosionVFX");
         public GameObject tracerEffectPrefab = LegacyResourcesAPI.Load<GameObject>("prefabs/effects/tracers/tracerembers");
         public GameObject smokeEffectPrefab = LegacyResourcesAPI.Load<GameObject>("prefabs/effects/muzzleflashes/muzzleflashLoader");
         public GameObject flashEffectPrefab = LegacyResourcesAPI.Load<GameObject>("prefabs/effects/muzzleflashes/muzzleflashfire");
@@ -66,7 +65,7 @@ namespace EntityStates.Digger
                     force = 0f,
                     falloffModel = BulletAttack.FalloffModel.None,
                     tracerEffectPrefab = this.tracerEffectPrefab,
-                    hitEffectPrefab = this.hitEffectPrefab,
+                    hitEffectPrefab = null,
                     isCrit = isCrit,
                     HitEffectNormal = false,
                     smartCollision = true,

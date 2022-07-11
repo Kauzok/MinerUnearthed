@@ -2,6 +2,7 @@
 using UnityEngine;
 using System;
 using UnityEngine.Networking;
+using R2API;
 
 namespace EntityStates.Digger
 {
@@ -55,7 +56,8 @@ namespace EntityStates.Digger
             else base.PlayCrossfade("Pick, Override", "Swing2", "Swing.playbackRate", this.duration, 0.05f);
 
             this.attack = new OverlapAttack();
-            this.attack.damageType = DamageType.ApplyMercExpose;
+            this.attack.damageType = DamageType.Generic;
+            this.attack.AddModdedDamageType(DiggerPlugin.DiggerPlugin.CleaveDamage);
             this.attack.attacker = base.gameObject;
             this.attack.inflictor = base.gameObject;
             this.attack.teamIndex = base.GetTeam();

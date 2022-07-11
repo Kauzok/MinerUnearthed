@@ -60,6 +60,26 @@ Moffein - helped fix for CUM2
 `1.8.0`
 
 - Skill selections now save when closing the game.
+- Tweaked wording on skills.
+- Now uses RecalculateStatsAPI, which should improve compatibility with other mods.
+- Stats
+	- Reduced HP Regen from 2.5 (+0.5) -> 1.0 (+0.2)
+	
+	*Accounting for passive which gives a regen bonus with stacks.*
+	
+- To The Stars (Rework)
+	- Now creates 6 explosions below you that deal 300% damage each.
+	- Spacing is always consistent regardless of the height you use it from.
+	- Old version of the skill has been moved to an alt skill.
+	
+	*Making this work more like RoR1. More consistent, lower damage potential.*
+	
+- X (Alt Special)
+	- Jump into the air, shooting a wide spray of shrapnel downwards for 15x180% damage.
+		- Shotcount was reduced from 30 -> 15 and per-shot damage doubled so that it doesn't lag as much (and also because 30 hits is way higher than even Artificer's Flamethrower).
+		- 
+
+	*Moved this to the alt slot due to being more finnicky to use compared to the reworked To The Stars.*
 
 `1.7.0`
 
