@@ -69,8 +69,9 @@ Moffein - helped fix for CUM2
 	
 - Gouge
 	- Reduced damage from 275% -> 270%
+	- Now interacts with Shuriken
 	
-	*This won't really affect anything.*
+	*Skill is coded in a weird way, so a hacky fix was done for Shurikens. Damage reduction is insignificant, and mainly just there for the sake of having his damage be an even number.*
 	
 - To The Stars (Rework)
 	- Now creates 6 explosions below you that deal 300% damage each.

@@ -17,6 +17,7 @@ namespace EntityStates.Digger
         public static float baseEarlyExit = 0.4f;
         public int swingIndex;
 
+        private bool firstSwing = true; //hacky fix for shuriken
         private bool isSlash;
         private float earlyExitDuration;
         private float duration;
@@ -125,6 +126,17 @@ namespace EntityStates.Digger
                         this.hitPauseTimer = (0.6f * Merc.GroundLight.hitPauseDuration) / this.attackSpeedStat;
                         this.inHitPause = true;
                     }
+
+
+                    //Shuriken fix
+                    if (firstSwing)
+                    {
+                        firstSwing = false;
+                    }
+                    else if (base.characterBody)
+                    {
+                        base.characterBody.OnSkillActivated(base.activatorSkillSlot);
+                    }    
                 }
             }
         }
