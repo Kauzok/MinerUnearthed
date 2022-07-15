@@ -62,6 +62,7 @@ Moffein - helped fix for CUM2
 - Skill selections now save when closing the game.
 - Tweaked wording on skills.
 - Now uses DamageAPI and RecalculateStatsAPI, which should improve compatibility with other mods.
+- Fixed the skin with the "Rallypoing Delta in 8 minutes" unlock condition using real time instead of run time.
 - Stats
 	- Reduced HP Regen from 2.5 (+0.5) -> 1.0 (+0.2)
 	
@@ -71,7 +72,7 @@ Moffein - helped fix for CUM2
 	- Reduced damage from 275% -> 270%
 	- Now interacts with Shuriken
 	
-	*Skill is coded in a weird way, so a hacky fix was done for Shurikens. Damage reduction is insignificant, and mainly just there for the sake of having his damage be an even number.*
+	*Skill is coded in a weird way, so a hacky fix was done for Shurikens.*
 	
 - To The Stars (Rework)
 	- Now creates 6 explosions below you that deal 300% damage each.
@@ -81,7 +82,6 @@ Moffein - helped fix for CUM2
 	*Making this work more like RoR1. More consistent, lower damage potential than the alt.*
 	
 - Meteor Shower (Alt Special)
-	- TODO: Icon
 	- Jump into the air, shooting a spray of shrapnel downwards for 15x160% damage.
 		- Damage increased from 90% -> 160% (overall damage has decreased slightly)
 		- Shotcount reduced from 30 -> 15 to reduce lag
