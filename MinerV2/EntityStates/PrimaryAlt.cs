@@ -35,6 +35,13 @@ namespace EntityStates.Digger
         public override void OnEnter()
         {
             base.OnEnter();
+
+            //Shuriken fix
+            if (!firstSwing && base.skillLocator && base.skillLocator.primary)  //Hardcoded to be primary since activatorSkillSlot nullrefs
+            {
+                base.characterBody.OnSkillActivated(base.skillLocator.primary);
+            }
+
             this.duration = this.baseDuration / this.attackSpeedStat;
             this.earlyExitDuration = Gouge.baseEarlyExit / this.attackSpeedStat;
             this.hasFired = false;
@@ -125,18 +132,7 @@ namespace EntityStates.Digger
                         this.hitStopCachedState = base.CreateHitStopCachedState(base.characterMotor, this.animator, "Swing.playbackRate");
                         this.hitPauseTimer = (0.6f * Merc.GroundLight.hitPauseDuration) / this.attackSpeedStat;
                         this.inHitPause = true;
-                    }
-
-
-                    //Shuriken fix
-                    if (firstSwing)
-                    {
-                        firstSwing = false;
-                    }
-                    else if (base.characterBody)
-                    {
-                        base.characterBody.OnSkillActivated(base.activatorSkillSlot);
-                    }    
+                    } 
                 }
             }
         }
@@ -184,7 +180,8 @@ namespace EntityStates.Digger
 
                     this.outer.SetNextState(new Gouge
                     {
-                        swingIndex = index
+                        swingIndex = index,
+                        firstSwing = false
                     });
 
                     if (!this.hasFired) this.FireAttack();

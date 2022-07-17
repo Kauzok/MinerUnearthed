@@ -59,14 +59,15 @@ Moffein - helped fix for CUM2
 
 `1.8.0`
 
-- Skill selections now save when closing the game.
 - Tweaked wording on skills.
+- Skill selections now save when closing the game.
 - Now uses DamageAPI and RecalculateStatsAPI, which should improve compatibility with other mods.
-- Fixed the skin with the "Rallypoing Delta in 8 minutes" unlock condition using real time instead of run time.
+- Fixed the skin with the "Rallypoint Delta in 8 minutes" unlock condition using real time instead of the run stopwatch.
+
 - Stats
 	- Reduced HP Regen from 2.5 (+0.5) -> 1.0 (+0.2)
 	
-	*Accounting for passive which gives a regen bonus with stacks.*
+	*Previous change didn't consider the passive's regen bonus.*
 	
 - Gouge
 	- Reduced damage from 275% -> 270%
@@ -76,16 +77,18 @@ Moffein - helped fix for CUM2
 	
 - To The Stars (Rework)
 	- Now creates 6 explosions below you that deal 300% damage each.
-	- Spacing is always consistent regardless of the height you use it from.
+	- Spacing and shot pattern is always consistent regardless of the height you use it from.
+		- Can't shotgun with it, but always has good coverage against crowds.
 	- Old version of the skill has been moved to an alt skill.
 	
-	*Making this work more like RoR1. More consistent, lower damage potential than the alt.*
+	*Making this work more like RoR1. More consistent, lower damage potential than the alt. Feedback would be good.*
 	
 - Meteor Shower (Alt Special)
+	- TODO: Icon
 	- Jump into the air, shooting a spray of shrapnel downwards for 15x160% damage.
 		- Damage increased from 90% -> 160% (overall damage has decreased slightly)
-		- Shotcount reduced from 30 -> 15 to reduce lag
-		- Increased shot radius from 0.35 -> 0.5
+		- Shotcount reduced from 30 -> 15 to reduce lag with on-hits
+		- Increased shot radius from 0.35 -> 0.5 to compensate for lower shotcount
 		- Increased proc coefficient from 0.5 -> 0.7
 
 	*Moved this to the alt slot due to being more finnicky to use compared to the reworked To The Stars.*
