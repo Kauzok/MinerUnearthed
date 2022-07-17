@@ -173,8 +173,6 @@ namespace DiggerPlugin {
 
             ItemDisplays.InitializeItemDisplays();
 
-            //the il is broken and idk how to fix, sorry
-            //ILHook();
             Hook();
 
             new Modules.ContentPacks().Initialize();
@@ -444,79 +442,6 @@ namespace DiggerPlugin {
                 args.moveSpeedMultAdd += 0.15f * goldRushCount;
                 args.baseRegenAdd += 0.25f * goldRushCount;
             }
-        }
-
-        private void ILHook()
-        {
-            /*IL.RoR2.CharacterBody.RecalculateStats += (il) =>
-            {
-                ILCursor c = new ILCursor(il);
-                c.GotoNext(
-                    x => x.MatchLdloc(50),
-                    x => x.MatchLdloc(51)
-                    );
-                //x => x.MatchLdloc(52),
-                //x => x.MatchDiv(),
-                //x => x.MatchMul()
-                //);
-                c.Index += 2;
-                c.Emit(OpCodes.Ldarg_0);
-                c.EmitDelegate<Func<CharacterBody, float>>((charBody) =>
-                {
-                    float output = 0f;
-                    if (charBody.HasBuff(goldRush))
-                    {
-                        output = 0.4f;
-                    }
-                    return output;
-                });
-                c.Emit(OpCodes.Add);
-            };
-
-            IL.RoR2.CharacterBody.RecalculateStats += (il) =>
-            {
-                ILCursor c = new ILCursor(il);
-                c.GotoNext(
-                    x => x.MatchMul(),
-                    x => x.MatchAdd(),
-                    x => x.MatchStloc(58)
-                    );
-                c.Index += 2;
-                c.Emit(OpCodes.Ldarg_0);
-                c.EmitDelegate<Func<CharacterBody, float>>((charBody) =>
-                {
-                    float output = 0f;
-                    if (charBody.HasBuff(goldRush))
-                    {
-                        output = charBody.GetBuffCount(goldRush) * 0.12f;
-                    }
-                    return output;
-                });
-                c.Emit(OpCodes.Add);
-            };
-
-            IL.RoR2.CharacterBody.RecalculateStats += (il) =>
-            {
-                ILCursor c = new ILCursor(il);
-                c.GotoNext(
-                    x => x.MatchMul(),
-                    x => x.MatchLdloc(43),
-                    x => x.MatchMul(),
-                    x => x.MatchStloc(47)
-                    );
-                c.Index += 3;
-                c.Emit(OpCodes.Ldarg_0);
-                c.EmitDelegate<Func<CharacterBody, float>>((charBody) =>
-                {
-                    float output = 0f;
-                    if (charBody.HasBuff(goldRush))
-                    {
-                        output = charBody.GetBuffCount(goldRush) * 1;
-                    }
-                    return output;
-                });
-                c.Emit(OpCodes.Add);
-            };*/
         }
 
         //classic
