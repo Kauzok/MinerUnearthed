@@ -9,7 +9,7 @@ namespace EntityStates.Digger
     public class FallingComet : BaseSkillState
     {
         public float baseDuration = 0.45f;
-        public static float damageCoefficient = 0.9f;
+        public static float damageCoefficient = 1.6f;
         public static float blastDamageCoefficient = 15f;
 
         private bool hasFallen;
@@ -169,7 +169,7 @@ namespace EntityStates.Digger
                         aimVector = aimer,
                         minSpread = 0f,
                         maxSpread = base.characterBody.spreadBloomAngle,
-                        radius = 0.35f,
+                        radius = 0.5f,
                         bulletCount = 1U,
                         procCoefficient = .5f,
                         damage = base.characterBody.damage * ToTheStars.damageCoefficient,
@@ -186,12 +186,12 @@ namespace EntityStates.Digger
 
                     for (int j = 0; j < 3; j++)
                     {
-                        for (int i = 0; i <= 9; i++)
+                        for (int i = 0; i <= 4; i++)
                         {
                             float theta = Random.Range(0.0f, 6.28f);
                             float x = Mathf.Cos(theta);
                             float z = Mathf.Sin(theta);
-                            float c = i * 0.3777f;
+                            float c = i * 0.7555f; //0.3777f * 10/5
                             c *= (1f / 12f);
                             aimer.x += c * x;
                             aimer.z += c * z;

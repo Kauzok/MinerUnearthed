@@ -15,6 +15,7 @@ using System.Runtime.CompilerServices;
 using System.Security;
 using System.Security.Permissions;
 using Modules;
+using DiggerUnearthed.Module;
 
 [module: UnverifiableCode]
 [assembly: SecurityPermission(SecurityAction.RequestMinimum, SkipVerification = true)]
@@ -31,12 +32,11 @@ namespace DiggerPlugin {
     [BepInDependency("com.TeamMoonstorm.Starstorm2", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("HIFU.Inferno", BepInDependency.DependencyFlags.SoftDependency)]
     [NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod, VersionStrictness.EveryoneNeedSameModVersion)]
-    [BepInPlugin(MODUID, "DiggerUnearthed", "1.8.0")]
+    [BepInPlugin(MODUID, "DiggerUnearthed", "1.8.1")]
     [R2APISubmoduleDependency(new string[]
     {
         "PrefabAPI",
         "LoadoutAPI",
-        "LanguageAPI",
         "SoundAPI",
         "UnlockableAPI",
         "DirectorAPI",
@@ -70,11 +70,14 @@ namespace DiggerPlugin {
                 "\n\n <color=#8990A7>/ / - - L  O  G     31 - - / /</color>" +
                 "\n''<color=#8990A7>-//////-</color>omething's happening to the ship. Cargo flying out. Lost the artifact. Lost everything. . . . Lost everythi<color=#8990A7>-//-</color>.''" +
                 "\n\nThe audio journal's screen sparks and pops, leaving you in complete darkness, complemented by the deafening silence brought about by the ominous last words of the miner.";
+        public const string characterDesc = "The Miner is a fast paced and highly mobile melee survivor who prioritizes getting long kill combos to build stacks of his passive.<color=#CCD3E0>\n\n< ! > Once you get a good number of stacks of Adrenaline, Gouge and Crush will be your best source of damage.\n\n< ! > Charging Drill Charge only affects damage dealt. Aim at the ground or into enemies to deal concentrated damage.\n\n< ! > You can tap Backblast to travel a short distance. Hold it to go further.\n\n< ! > To The Stars can deal high damage to large enemies.";
 
+        public static PluginInfo pluginInfo;
         public static DiggerPlugin instance;
         public static BepInEx.Logging.ManualLogSource logger;
 
         public static bool infernoPluginLoaded = false;
+        public static bool useLanguageAPI = false;
 
         public static GameObject characterBodyPrefab;
         // I do not know why I needed this hack
@@ -143,8 +146,11 @@ namespace DiggerPlugin {
 
         private void Awake()
         {
-            infernoPluginLoaded = BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("HIFU.Inferno");
+            SetupModCompat();
+            pluginInfo = Info;
+            ConfigShit();
             SetupDamageTypes();
+            LanguageTokens.RegisterLanguageTokens();
         }
 
         private void Start() {
@@ -153,10 +159,8 @@ namespace DiggerPlugin {
             instance = this;
             logger = base.Logger;
 
-            ConfigShit();
             Assets.PopulateAssets();
 
-            SetupModCompat();
 
             Unlockables.RegisterUnlockables();
             CreateDisplayPrefab();
@@ -190,6 +194,8 @@ namespace DiggerPlugin {
             if (BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("com.TeamMoonstorm.Starstorm2")) {
                 starstormInstalled = true;
             }
+
+            infernoPluginLoaded = BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("HIFU.Inferno");
 
             //direseeker compat
             if (BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("com.rob.Direseeker")) {
@@ -439,7 +445,7 @@ namespace DiggerPlugin {
             if (goldRushCount > 0)
             {
                 args.attackSpeedMultAdd += 0.1f * goldRushCount;
-                args.moveSpeedMultAdd += 0.15f * goldRushCount;
+                args.baseMoveSpeedAdd += 0.15f * goldRushCount;
                 args.baseRegenAdd += 0.25f * goldRushCount;
             }
         }
@@ -871,19 +877,8 @@ namespace DiggerPlugin {
 
         private void RegisterCharacter()
         {
-            string desc = "The Miner is a fast paced and highly mobile melee survivor who prioritizes getting long kill combos to build stacks of his passive.<color=#CCD3E0>" + Environment.NewLine + Environment.NewLine;
-            desc = desc + "< ! > Once you get a good number of stacks of Adrenaline, Gouge and Crush will be your best source of damage." + Environment.NewLine + Environment.NewLine;
-            desc = desc + "< ! > Charging Drill Charge only affects damage dealt. Aim at the ground or into enemies to deal concentrated damage." + Environment.NewLine + Environment.NewLine;
-            desc = desc + "< ! > You can tap Backblast to travel a short distance. Hold it to go further." + Environment.NewLine + Environment.NewLine;
-            desc = desc + "< ! > To The Stars can deal high damage to large enemies." + Environment.NewLine + Environment.NewLine;
-
+            string desc = characterDesc;
             string outro = characterOutro;
-
-            LanguageAPI.Add("MINER_NAME", characterName);
-            LanguageAPI.Add("MINER_DESCRIPTION", desc);
-            LanguageAPI.Add("MINER_SUBTITLE", characterSubtitle);
-            LanguageAPI.Add("MINER_LORE", characterLore);
-            LanguageAPI.Add("MINER_OUTRO_FLAVOR", outro);
 
             characterDisplay.AddComponent<NetworkIdentity>();
 
@@ -929,9 +924,6 @@ namespace DiggerPlugin {
 
         private void PassiveSetup()
         {
-            LanguageAPI.Add("MINER_PASSIVE_NAME", "Gold Rush");
-            LanguageAPI.Add("MINER_PASSIVE_DESCRIPTION", "Gain <style=cIsHealth>ADRENALINE</style> when receiving gold, increasing <style=cIsDamage>attack speed</style>, <style=cIsUtility>movement speed</style>, and <style=cIsHealing>health regen</style>.");  // <style=cIsUtility>Any increase in gold refreshes all stacks.</style>
-
             skillLocator.passiveSkill.enabled = true;
             skillLocator.passiveSkill.skillNameToken = "MINER_PASSIVE_NAME";
             skillLocator.passiveSkill.skillDescriptionToken = "MINER_PASSIVE_DESCRIPTION";
@@ -941,13 +933,6 @@ namespace DiggerPlugin {
         private void PrimarySetup()
         {
             Modules.Content.AddEntityState<Gouge>(out bool _);
-
-            LanguageAPI.Add("KEYWORD_CLEAVING", "<style=cKeywordName>Cleaving</style><style=cSub>Applies a stacking debuff that lowers <style=cIsDamage>armor</style> by <style=cIsHealth>3 per stack</style>.</style>");
-
-            string desc = "<style=cIsUtility>Agile.</style> Wildly swing at nearby enemies for <style=cIsDamage>" + 100f * gougeDamage.Value + "% damage</style>, <style=cIsHealth>cleaving</style> their armor.";
-
-            LanguageAPI.Add("MINER_PRIMARY_GOUGE_NAME", "Gouge");
-            LanguageAPI.Add("MINER_PRIMARY_GOUGE_DESCRIPTION", desc);
 
             SkillDef mySkillDef = ScriptableObject.CreateInstance<SkillDef>();
             mySkillDef.activationState = new SerializableEntityStateType(typeof(Gouge));
@@ -977,11 +962,6 @@ namespace DiggerPlugin {
 
             //alt
             Modules.Content.AddEntityState<Crush>(out bool _);
-
-            desc = "<style=cIsUtility>Agile.</style> Crush nearby enemies for <style=cIsDamage>" + 100f * crushDamage.Value + "% damage</style>. <style=cIsUtility>Range increases with attack speed</style>.";
-
-            LanguageAPI.Add("MINER_PRIMARY_CRUSH_NAME", "Crush");
-            LanguageAPI.Add("MINER_PRIMARY_CRUSH_DESCRIPTION", desc);
 
             SkillDef mySkillDef2 = ScriptableObject.CreateInstance<SkillDef>();
             mySkillDef2.activationState = new SerializableEntityStateType(typeof(Crush));
@@ -1017,11 +997,6 @@ namespace DiggerPlugin {
             Modules.Content.AddEntityState<DrillChargeStart>(out bool _);
             Modules.Content.AddEntityState<DrillCharge>(out bool _);
 
-            string desc = "Charge up and dash into enemies for up to <style=cIsDamage>6x" + 100f * drillChargeDamage.Value + "% damage</style>. <style=cIsUtility>You cannot be hit for the duration.</style>";
-
-            LanguageAPI.Add("MINER_SECONDARY_CHARGE_NAME", "Drill Charge");
-            LanguageAPI.Add("MINER_SECONDARY_CHARGE_DESCRIPTION", desc);
-
             SkillDef mySkillDef = ScriptableObject.CreateInstance<SkillDef>();
             mySkillDef.activationState = new SerializableEntityStateType(typeof(DrillChargeStart));
             mySkillDef.activationStateMachineName = "Weapon";
@@ -1048,11 +1023,6 @@ namespace DiggerPlugin {
             //alt
             Modules.Content.AddEntityState<DrillBreakStart>(out bool _);
             Modules.Content.AddEntityState<DrillBreak>(out bool _);
-
-            desc = "Dash forward, exploding for <style=cIsDamage>2x" + 100f * drillBreakDamage.Value + "% damage</style> on contact with an enemy. <style=cIsUtility>You cannot be hit for the duration.</style>";
-
-            LanguageAPI.Add("MINER_SECONDARY_BREAK_NAME", "Crack Hammer");
-            LanguageAPI.Add("MINER_SECONDARY_BREAK_DESCRIPTION", desc);
 
             SkillDef mySkillDef2 = ScriptableObject.CreateInstance<SkillDef>();
             mySkillDef2.activationState = new SerializableEntityStateType(typeof(DrillBreakStart));
@@ -1084,9 +1054,6 @@ namespace DiggerPlugin {
         {
             Modules.Content.AddEntityState<BackBlast>(out bool _);
 
-            LanguageAPI.Add("MINER_UTILITY_BACKBLAST_NAME", "Backblast");
-            LanguageAPI.Add("MINER_UTILITY_BACKBLAST_DESCRIPTION", "<style=cIsDamage>Stunning.</style> Blast backwards, hitting nearby enemies for <style=cIsDamage>" + 100f * BackBlast.damageCoefficient + "% damage</style>. Hold to travel further. <style=cIsUtility>You cannot be hit for the duration.</style>");
-
             SkillDef mySkillDef = ScriptableObject.CreateInstance<SkillDef>();
             mySkillDef.activationState = new SerializableEntityStateType(typeof(BackBlast));
             mySkillDef.activationStateMachineName = "Weapon";
@@ -1113,10 +1080,6 @@ namespace DiggerPlugin {
             FixSkillName(mySkillDef);
 
             Modules.Content.AddEntityState<CaveIn>(out bool _);
-
-            LanguageAPI.Add("MINER_UTILITY_CAVEIN_NAME", "Cave In");
-            LanguageAPI.Add("MINER_UTILITY_CAVEIN_DESCRIPTION", "<style=cIsUtility>Stunning.</style> Blast backwards, <style=cIsUtility>pulling</style> in all enemies in a large radius. <style=cIsUtility>You cannot be hit for the duration.</style>");
-
             SkillDef mySkillDef2 = ScriptableObject.CreateInstance<SkillDef>();
             mySkillDef2.activationState = new SerializableEntityStateType(typeof(CaveIn));
             mySkillDef2.activationStateMachineName = "Weapon";
@@ -1149,8 +1112,6 @@ namespace DiggerPlugin {
         private void SpecialSetup()
         {
             Modules.Content.AddEntityState<ToTheStarsClassic>(out bool _);
-            LanguageAPI.Add("MINER_SPECIAL_TOTHESTARSCLASSIC_NAME", "To The Stars");
-            LanguageAPI.Add("MINER_SPECIAL_TOTHESTARSCLASSIC_DESCRIPTION", "Jump into the air, hitting enemies directly below for <style=cIsDamage>6x" + 100f * ToTheStarsClassic.damageCoefficient + "% damage</style>.");
 
             SkillDef mySkillDef2 = ScriptableObject.CreateInstance<SkillDef>();
             mySkillDef2.activationState = new SerializableEntityStateType(typeof(ToTheStarsClassic));
@@ -1177,8 +1138,6 @@ namespace DiggerPlugin {
             FixSkillName(mySkillDef2);
 
             Modules.Content.AddEntityState<ToTheStars>(out bool _);
-            LanguageAPI.Add("MINER_SPECIAL_TOTHESTARS_NAME", "Meteor Shower");
-            LanguageAPI.Add("MINER_SPECIAL_TOTHESTARS_DESCRIPTION", "Jump into the air, shooting a spray of shrapnel downwards for <style=cIsDamage>15x" + 100f * ToTheStars.damageCoefficient + "% damage</style>.");
 
             SkillDef mySkillDef = ScriptableObject.CreateInstance<SkillDef>();
             mySkillDef.activationState = new SerializableEntityStateType(typeof(ToTheStars));
@@ -1208,10 +1167,6 @@ namespace DiggerPlugin {
         private void ScepterSkillSetup()
         {
             Modules.Content.AddEntityState<FallingComet>(out bool _);
-
-            LanguageAPI.Add("MINER_SPECIAL_SCEPTERTOTHESTARS_NAME", "Falling Comet");
-            LanguageAPI.Add("MINER_SPECIAL_SCEPTERTOTHESTARS_DESCRIPTION", "Jump into the air, shooting a spray of shrapnel downwards for <style=cIsDamage>30x" + 100f * FallingComet.damageCoefficient + "% damage</style>, then fall downwards and create a huge blast on impact that deals <style=cIsDamage>" + 100f * FallingComet.blastDamageCoefficient + "% damage</style> and <style=cIsDamage>ignites</style> enemies hit.");
-
             SkillDef mySkillDef = ScriptableObject.CreateInstance<SkillDef>();
             mySkillDef.activationState = new SerializableEntityStateType(typeof(FallingComet));
             mySkillDef.activationStateMachineName = "Weapon";
@@ -1238,9 +1193,6 @@ namespace DiggerPlugin {
             scepterSpecialSkillDef = mySkillDef;
 
             Modules.Content.AddEntityState<ToTheStarsClassicScepter>(out bool _);
-            LanguageAPI.Add("MINER_SPECIAL_SCEPTERTOTHESTARSCLASSIC_NAME", "Starbound");
-            LanguageAPI.Add("MINER_SPECIAL_SCEPTERTOTHESTARSCLASSIC_DESCRIPTION", "<style=cIsDamage>Stunning</style>. Jump into the air, hitting enemies directly below for <style=cIsDamage>10x" + 100f * ToTheStarsClassic.damageCoefficient + "% damage</style> total.");
-
             SkillDef mySkillDef2 = ScriptableObject.CreateInstance<SkillDef>();
             mySkillDef2.activationState = new SerializableEntityStateType(typeof(ToTheStarsClassicScepter));
             mySkillDef2.activationStateMachineName = "Weapon";
@@ -1345,7 +1297,7 @@ namespace DiggerPlugin {
 
         public static void FixSkillName(SkillDef skillDef)
         {
-            (skillDef as UnityEngine.Object).name = "RiskyMod_" + skillDef.skillName;
+            (skillDef as UnityEngine.Object).name = skillDef.skillName;
         }
     }
 }
