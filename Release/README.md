@@ -61,7 +61,7 @@ Moffein - helped fix for CUM2
 
 - Fixed Adrenaline adding to Move Speed Multiplier instead of Base Move Speed.
 - Now uses a language file for strings. Looking for translators!
-	- This will break skill damage numbers dynamically updating based on your config setting, but you can manually edit the language file to reflect your changes.
+	- This will break skill description numbers dynamically updating based on your config, but you can manually edit the language file to reflect your changes.
 
 `1.8.0`
 

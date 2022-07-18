@@ -77,7 +77,6 @@ namespace DiggerPlugin {
         public static BepInEx.Logging.ManualLogSource logger;
 
         public static bool infernoPluginLoaded = false;
-        public static bool useLanguageAPI = false;
 
         public static GameObject characterBodyPrefab;
         // I do not know why I needed this hack
