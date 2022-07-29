@@ -61,7 +61,7 @@ namespace EntityStates.Digger
 
             if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "frozenwall")
             {
-                rallypoint?.Invoke(Run.instance.time);
+                rallypoint?.Invoke(Run.instance.GetRunStopwatch());
             }
         }
 

@@ -68,10 +68,10 @@ namespace DiggerPlugin
 
             blacksmithHammer = mainAssetBundle.LoadAsset<GameObject>("BlacksmithHammer");
             blacksmithHammer.AddComponent<BlacksmithHammerComponent>();
-            blacksmithHammer.GetComponentInChildren<MeshRenderer>().material.shader = LegacyResourcesAPI.Load<Shader>("Shaders/Deferred/hgstandard");
+            blacksmithHammer.GetComponentInChildren<MeshRenderer>().material.shader = hotpoo;
 
             blacksmithAnvil = mainAssetBundle.LoadAsset<GameObject>("BlacksmithAnvil");
-            blacksmithAnvil.GetComponentInChildren<MeshRenderer>().material.shader = LegacyResourcesAPI.Load<Shader>("Shaders/Deferred/hgstandard");
+            blacksmithAnvil.GetComponentInChildren<MeshRenderer>().material.shader = hotpoo;
             blacksmithAnvil.gameObject.layer = LayerIndex.world.intVal;
 
             charPortrait = mainAssetBundle.LoadAsset<Texture>("texMinerIcon");

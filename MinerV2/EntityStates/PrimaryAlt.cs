@@ -2,6 +2,7 @@
 using UnityEngine;
 using System;
 using UnityEngine.Networking;
+using R2API;
 
 namespace EntityStates.Digger
 {
@@ -16,6 +17,7 @@ namespace EntityStates.Digger
         public static float baseEarlyExit = 0.4f;
         public int swingIndex;
 
+        private bool firstSwing = true; //hacky fix for shuriken
         private bool isSlash;
         private float earlyExitDuration;
         private float duration;
@@ -33,6 +35,13 @@ namespace EntityStates.Digger
         public override void OnEnter()
         {
             base.OnEnter();
+
+            //Shuriken fix
+            if (!firstSwing && base.skillLocator && base.skillLocator.primary)  //Hardcoded to be primary since activatorSkillSlot nullrefs
+            {
+                base.characterBody.OnSkillActivated(base.skillLocator.primary);
+            }
+
             this.duration = this.baseDuration / this.attackSpeedStat;
             this.earlyExitDuration = Gouge.baseEarlyExit / this.attackSpeedStat;
             this.hasFired = false;
@@ -55,7 +64,8 @@ namespace EntityStates.Digger
             else base.PlayCrossfade("Pick, Override", "Swing2", "Swing.playbackRate", this.duration, 0.05f);
 
             this.attack = new OverlapAttack();
-            this.attack.damageType = DamageType.ApplyMercExpose;
+            this.attack.damageType = DamageType.Generic;
+            this.attack.AddModdedDamageType(DiggerPlugin.DiggerPlugin.CleaveDamage);
             this.attack.attacker = base.gameObject;
             this.attack.inflictor = base.gameObject;
             this.attack.teamIndex = base.GetTeam();
@@ -122,7 +132,7 @@ namespace EntityStates.Digger
                         this.hitStopCachedState = base.CreateHitStopCachedState(base.characterMotor, this.animator, "Swing.playbackRate");
                         this.hitPauseTimer = (0.6f * Merc.GroundLight.hitPauseDuration) / this.attackSpeedStat;
                         this.inHitPause = true;
-                    }
+                    } 
                 }
             }
         }
@@ -170,7 +180,8 @@ namespace EntityStates.Digger
 
                     this.outer.SetNextState(new Gouge
                     {
-                        swingIndex = index
+                        swingIndex = index,
+                        firstSwing = false
                     });
 
                     if (!this.hasFired) this.FireAttack();

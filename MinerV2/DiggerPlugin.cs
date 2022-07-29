@@ -15,6 +15,7 @@ using System.Runtime.CompilerServices;
 using System.Security;
 using System.Security.Permissions;
 using Modules;
+using DiggerUnearthed.Module;
 
 [module: UnverifiableCode]
 [assembly: SecurityPermission(SecurityAction.RequestMinimum, SkipVerification = true)]
@@ -29,16 +30,18 @@ namespace DiggerPlugin {
     [BepInDependency("com.K1454.SupplyDrop", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("com.Skell.GoldenCoastPlus", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("com.TeamMoonstorm.Starstorm2", BepInDependency.DependencyFlags.SoftDependency)]
+    [BepInDependency("HIFU.Inferno", BepInDependency.DependencyFlags.SoftDependency)]
     [NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod, VersionStrictness.EveryoneNeedSameModVersion)]
-    [BepInPlugin(MODUID, "DiggerUnearthed", "1.6.9")]
+    [BepInPlugin(MODUID, "DiggerUnearthed", "1.8.1")]
     [R2APISubmoduleDependency(new string[]
     {
         "PrefabAPI",
         "LoadoutAPI",
-        "LanguageAPI",
         "SoundAPI",
         "UnlockableAPI",
-        "DirectorAPI"
+        "DirectorAPI",
+        nameof(RecalculateStatsAPI),
+        nameof(DamageAPI)
     })]
 
     public class DiggerPlugin : BaseUnityPlugin
@@ -67,9 +70,13 @@ namespace DiggerPlugin {
                 "\n\n <color=#8990A7>/ / - - L  O  G     31 - - / /</color>" +
                 "\n''<color=#8990A7>-//////-</color>omething's happening to the ship. Cargo flying out. Lost the artifact. Lost everything. . . . Lost everythi<color=#8990A7>-//-</color>.''" +
                 "\n\nThe audio journal's screen sparks and pops, leaving you in complete darkness, complemented by the deafening silence brought about by the ominous last words of the miner.";
+        public const string characterDesc = "The Miner is a fast paced and highly mobile melee survivor who prioritizes getting long kill combos to build stacks of his passive.<color=#CCD3E0>\n\n< ! > Once you get a good number of stacks of Adrenaline, Gouge and Crush will be your best source of damage.\n\n< ! > Charging Drill Charge only affects damage dealt. Aim at the ground or into enemies to deal concentrated damage.\n\n< ! > You can tap Backblast to travel a short distance. Hold it to go further.\n\n< ! > To The Stars can deal high damage to large enemies.";
 
+        public static PluginInfo pluginInfo;
         public static DiggerPlugin instance;
         public static BepInEx.Logging.ManualLogSource logger;
+
+        public static bool infernoPluginLoaded = false;
 
         public static GameObject characterBodyPrefab;
         // I do not know why I needed this hack
@@ -84,6 +91,11 @@ namespace DiggerPlugin {
 
         public GameObject doppelganger;
 
+        public static DamageAPI.ModdedDamageType ToTheStarsClassicDamage;
+        public static GameObject ToTheStarsClassicEffectPrefab = LegacyResourcesAPI.Load<GameObject>("Prefabs/Effects/OmniEffect/OmniExplosionVFXQuick");
+
+        public static DamageAPI.ModdedDamageType CleaveDamage;
+
         public static readonly Color characterColor = new Color(1f, 0.9062671f, 0.5613208f);
 
         public SkillLocator skillLocator;
@@ -93,11 +105,16 @@ namespace DiggerPlugin {
         public static GameObject backblastEffect;
         public static GameObject crushExplosionEffect;
 
+        public static SkillDef specialSkillDef;
         public static SkillDef scepterSpecialSkillDef;
+
+        public static SkillDef specialClassicSkillDef;
+        public static SkillDef scepterSpecialClassicSkillDef;
 
         public static bool hasAatrox = false;
         public static bool direseekerInstalled = false;
         public static bool ancientScepterInstalled = false;
+        public static bool classicItemsInstalled = false;
         public static bool aetheriumInstalled = false;
         public static bool sivsItemsInstalled = false;
         public static bool supplyDropInstalled = false;
@@ -126,17 +143,23 @@ namespace DiggerPlugin {
         public static ConfigEntry<KeyCode> tauntKeybind;
         public static ConfigEntry<KeyCode> jokeKeybind;
 
-        private void Start() {
+        private void Awake()
+        {
+            SetupModCompat();
+            pluginInfo = Info;
+            ConfigShit();
+            SetupDamageTypes();
+            LanguageTokens.RegisterLanguageTokens();
+        }
 
+        private void Start() {
             Logger.LogInfo("[Initializing Miner]");
 
             instance = this;
             logger = base.Logger;
 
-            ConfigShit();
             Assets.PopulateAssets();
 
-            SetupModCompat();
 
             Unlockables.RegisterUnlockables();
             CreateDisplayPrefab();
@@ -153,8 +176,6 @@ namespace DiggerPlugin {
 
             ItemDisplays.InitializeItemDisplays();
 
-            //the il is broken and idk how to fix, sorry
-            //ILHook();
             Hook();
 
             new Modules.ContentPacks().Initialize();
@@ -173,6 +194,8 @@ namespace DiggerPlugin {
             if (BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("com.TeamMoonstorm.Starstorm2")) {
                 starstormInstalled = true;
             }
+
+            infernoPluginLoaded = BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("HIFU.Inferno");
 
             //direseeker compat
             if (BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("com.rob.Direseeker")) {
@@ -203,6 +226,12 @@ namespace DiggerPlugin {
                 ScepterSetup();
             }
 
+            if (BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("com.ThinkInvisible.ClassicItems"))
+            {
+                classicItemsInstalled = true;
+                ScepterClassicSetup();
+            }
+
             FixItemDisplays();
         }
 
@@ -230,7 +259,15 @@ namespace DiggerPlugin {
         [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
         private void ScepterSetup()
         {
-            AncientScepter.AncientScepterItem.instance.RegisterScepterSkill(scepterSpecialSkillDef, "MinerBody", SkillSlot.Special, 0);
+            AncientScepter.AncientScepterItem.instance.RegisterScepterSkill(scepterSpecialClassicSkillDef, "MinerBody", SkillSlot.Special, 0);
+            AncientScepter.AncientScepterItem.instance.RegisterScepterSkill(scepterSpecialSkillDef, "MinerBody", SkillSlot.Special, 1);
+        }
+
+        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+        private void ScepterClassicSetup()
+        {
+            ThinkInvisible.ClassicItems.Scepter.instance.RegisterScepterSkill(scepterSpecialSkillDef, "MinerBody", SkillSlot.Special, specialSkillDef);
+            ThinkInvisible.ClassicItems.Scepter.instance.RegisterScepterSkill(scepterSpecialClassicSkillDef, "MinerBody", SkillSlot.Special, specialClassicSkillDef);
         }
 
         [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
@@ -297,16 +334,18 @@ namespace DiggerPlugin {
                                           "Keybind used for the Joke emote");
 
             gougeDamage = 
-                base.Config.Bind<float>("03 - Gouge", 
+                base.Config.Bind<float>("03 - Gouge 1.8.0", 
                                         "Damage", 
-                                        2.75f, 
+                                        2.7f, 
                                         "Damage coefficient");
+            //Gouge.damageCoefficient = gougeDamage.Value;
 
             crushDamage = 
                 base.Config.Bind<float>("04 - Crush 1.6.7",
                                         "Demage",
                                         3.6f, 
                                         "Damage coefficient");
+            //Crush.damageCoefficient = crushDamage.Value;
 
             drillChargeDamage = 
                 base.Config.Bind<float>("05 - Drill Charge",
@@ -318,12 +357,15 @@ namespace DiggerPlugin {
                                         "Cooldown", 
                                         7f, 
                                         "Base cooldown");
+            //DrillCharge.damageCoefficient = drillChargeDamage.Value;
 
             drillBreakDamage = 
                 base.Config.Bind<float>("06 - Drill Crack Hammer",
                                         "Damage", 
                                         2f, 
                                         "Damage coefficient");
+            //DrillBreak.damageCoefficient = drillBreakDamage.Value;
+
             drillBreakCooldown = 
                 base.Config.Bind<float>("06 - Crack Hammer", 
                                         "Cooldown",
@@ -359,8 +401,7 @@ namespace DiggerPlugin {
 
         private void Hook()
         {
-            On.RoR2.CharacterBody.RecalculateStats += CharacterBody_RecalculateStats;
-            On.RoR2.HealthComponent.TakeDamage += HealthComponent_TakeDamage;
+            RecalculateStatsAPI.GetStatCoefficients += RecalculateStatsAPI_GetStatCoefficients;
             On.RoR2.SceneDirector.Start += SceneDirector_Start;
 
             On.RoR2.PingerController.AttemptPing += PingerController_AttemptPing;
@@ -394,122 +435,19 @@ namespace DiggerPlugin {
             orig(self);
         }
 
-        private void HealthComponent_TakeDamage(On.RoR2.HealthComponent.orig_TakeDamage orig, HealthComponent self, DamageInfo info)
+
+        private void RecalculateStatsAPI_GetStatCoefficients(CharacterBody sender, RecalculateStatsAPI.StatHookEventArgs args)
         {
-            bool isCleaving = false;
-            if (info.attacker)
+            int cleaveCount= sender.GetBuffCount(Buffs.cleaveBuff);
+            args.armorAdd -= 3f * cleaveCount;
+
+            int goldRushCount = sender.GetBuffCount(Buffs.goldRushBuff);
+            if (goldRushCount > 0)
             {
-                CharacterBody cb = info.attacker.GetComponent<CharacterBody>();
-                if (cb)
-                {
-                    if (cb.baseNameToken == "MINER_NAME" && info.damageType.HasFlag(DamageType.ApplyMercExpose))
-                    {
-                        info.damageType = DamageType.Generic;
-                        isCleaving = true;
-                    }
-                }
+                args.attackSpeedMultAdd += 0.1f * goldRushCount;
+                args.baseMoveSpeedAdd += 0.15f * goldRushCount;
+                args.baseRegenAdd += 0.25f * goldRushCount;
             }
-
-            orig(self, info);
-
-            if (isCleaving && !info.rejected)
-            {
-                if (self.body) self.body.AddTimedBuff(Buffs.cleaveBuff, 2.5f * info.procCoefficient);
-            }
-        }
-
-        private void CharacterBody_RecalculateStats(On.RoR2.CharacterBody.orig_RecalculateStats orig, CharacterBody self)
-        {
-            orig(self);
-            if (self)
-            {
-                if (self.HasBuff(Buffs.goldRushBuff))
-                {
-                    int count = self.GetBuffCount(Buffs.goldRushBuff);
-                    self.attackSpeed += (count * 0.1f);
-                    self.moveSpeed += (count * 0.15f);
-                    self.regen += (count * 0.25f);
-                }
-
-                if (self.HasBuff(Buffs.cleaveBuff))
-                {
-                    int count = self.GetBuffCount(Buffs.cleaveBuff);
-                    self.armor -= (count * 3f);
-                }
-            }
-        }
-
-        private void ILHook()
-        {
-            /*IL.RoR2.CharacterBody.RecalculateStats += (il) =>
-            {
-                ILCursor c = new ILCursor(il);
-                c.GotoNext(
-                    x => x.MatchLdloc(50),
-                    x => x.MatchLdloc(51)
-                    );
-                //x => x.MatchLdloc(52),
-                //x => x.MatchDiv(),
-                //x => x.MatchMul()
-                //);
-                c.Index += 2;
-                c.Emit(OpCodes.Ldarg_0);
-                c.EmitDelegate<Func<CharacterBody, float>>((charBody) =>
-                {
-                    float output = 0f;
-                    if (charBody.HasBuff(goldRush))
-                    {
-                        output = 0.4f;
-                    }
-                    return output;
-                });
-                c.Emit(OpCodes.Add);
-            };
-
-            IL.RoR2.CharacterBody.RecalculateStats += (il) =>
-            {
-                ILCursor c = new ILCursor(il);
-                c.GotoNext(
-                    x => x.MatchMul(),
-                    x => x.MatchAdd(),
-                    x => x.MatchStloc(58)
-                    );
-                c.Index += 2;
-                c.Emit(OpCodes.Ldarg_0);
-                c.EmitDelegate<Func<CharacterBody, float>>((charBody) =>
-                {
-                    float output = 0f;
-                    if (charBody.HasBuff(goldRush))
-                    {
-                        output = charBody.GetBuffCount(goldRush) * 0.12f;
-                    }
-                    return output;
-                });
-                c.Emit(OpCodes.Add);
-            };
-
-            IL.RoR2.CharacterBody.RecalculateStats += (il) =>
-            {
-                ILCursor c = new ILCursor(il);
-                c.GotoNext(
-                    x => x.MatchMul(),
-                    x => x.MatchLdloc(43),
-                    x => x.MatchMul(),
-                    x => x.MatchStloc(47)
-                    );
-                c.Index += 3;
-                c.Emit(OpCodes.Ldarg_0);
-                c.EmitDelegate<Func<CharacterBody, float>>((charBody) =>
-                {
-                    float output = 0f;
-                    if (charBody.HasBuff(goldRush))
-                    {
-                        output = charBody.GetBuffCount(goldRush) * 1;
-                    }
-                    return output;
-                });
-                c.Emit(OpCodes.Add);
-            };*/
         }
 
         //classic
@@ -664,10 +602,10 @@ namespace DiggerPlugin {
             bodyComponent.bodyFlags = CharacterBody.BodyFlags.ImmuneToExecutes;
             bodyComponent.rootMotionInMainState = false;
             bodyComponent.mainRootSpeed = 0;
-            bodyComponent.baseMaxHealth = 120;
-            bodyComponent.levelMaxHealth = 48;
-            bodyComponent.baseRegen = 0.5f;
-            bodyComponent.levelRegen = 0.25f;
+            bodyComponent.baseMaxHealth = 140;
+            bodyComponent.levelMaxHealth = bodyComponent.baseMaxHealth * 0.3f;
+            bodyComponent.baseRegen = 1f;
+            bodyComponent.levelRegen = bodyComponent.baseRegen * 0.2f;
             bodyComponent.baseMaxShield = 0;
             bodyComponent.levelMaxShield = 0;
             bodyComponent.baseMoveSpeed = 7;
@@ -676,7 +614,7 @@ namespace DiggerPlugin {
             bodyComponent.baseJumpPower = 15;
             bodyComponent.levelJumpPower = 0;
             bodyComponent.baseDamage = 12;
-            bodyComponent.levelDamage = 2.4f;
+            bodyComponent.levelDamage = bodyComponent.baseDamage * 0.2f;
             bodyComponent.baseAttackSpeed = 1;
             bodyComponent.levelAttackSpeed = 0;
             bodyComponent.baseCrit = 1;
@@ -939,19 +877,8 @@ namespace DiggerPlugin {
 
         private void RegisterCharacter()
         {
-            string desc = "The Miner is a fast paced and highly mobile melee survivor who prioritizes getting long kill combos to build stacks of his passive.<color=#CCD3E0>" + Environment.NewLine + Environment.NewLine;
-            desc = desc + "< ! > Once you get a good number of stacks of Adrenaline, Gouge and Crush will be your best source of damage." + Environment.NewLine + Environment.NewLine;
-            desc = desc + "< ! > Note that charging Drill Charge only affects damage dealt. Aim at the ground or into enemies to deal concentrated damage." + Environment.NewLine + Environment.NewLine;
-            desc = desc + "< ! > You can tap Backblast to travel a short distance. Hold it to go further." + Environment.NewLine + Environment.NewLine;
-            desc = desc + "< ! > To the Stars when used low to the ground is great at dealing high amounts of damage to enemies with large hitboxes." + Environment.NewLine + Environment.NewLine;
-
+            string desc = characterDesc;
             string outro = characterOutro;
-
-            LanguageAPI.Add("MINER_NAME", characterName);
-            LanguageAPI.Add("MINER_DESCRIPTION", desc);
-            LanguageAPI.Add("MINER_SUBTITLE", characterSubtitle);
-            LanguageAPI.Add("MINER_LORE", characterLore);
-            LanguageAPI.Add("MINER_OUTRO_FLAVOR", outro);
 
             characterDisplay.AddComponent<NetworkIdentity>();
 
@@ -997,9 +924,6 @@ namespace DiggerPlugin {
 
         private void PassiveSetup()
         {
-            LanguageAPI.Add("MINER_PASSIVE_NAME", "Gold Rush");
-            LanguageAPI.Add("MINER_PASSIVE_DESCRIPTION", "Gain <style=cIsHealth>ADRENALINE</style> on receiving gold, increasing <style=cIsDamage>attack speed</style>, <style=cIsUtility>movement speed</style>, and <style=cIsHealing>health regen</style>. <style=cIsUtility>Any increase in gold refreshes all stacks.</style>");
-
             skillLocator.passiveSkill.enabled = true;
             skillLocator.passiveSkill.skillNameToken = "MINER_PASSIVE_NAME";
             skillLocator.passiveSkill.skillDescriptionToken = "MINER_PASSIVE_DESCRIPTION";
@@ -1009,13 +933,6 @@ namespace DiggerPlugin {
         private void PrimarySetup()
         {
             Modules.Content.AddEntityState<Gouge>(out bool _);
-
-            LanguageAPI.Add("KEYWORD_CLEAVING", "<style=cKeywordName>Cleaving</style><style=cSub>Applies a stacking debuff that lowers <style=cIsDamage>armor</style> by <style=cIsHealth>3 per stack</style>.</style>");
-
-            string desc = "<style=cIsUtility>Agile.</style> Wildly swing at nearby enemies for <style=cIsDamage>" + 100f * gougeDamage.Value + "% damage</style>, <style=cIsHealth>cleaving</style> their armor.";
-
-            LanguageAPI.Add("MINER_PRIMARY_GOUGE_NAME", "Gouge");
-            LanguageAPI.Add("MINER_PRIMARY_GOUGE_DESCRIPTION", desc);
 
             SkillDef mySkillDef = ScriptableObject.CreateInstance<SkillDef>();
             mySkillDef.activationState = new SerializableEntityStateType(typeof(Gouge));
@@ -1041,14 +958,10 @@ namespace DiggerPlugin {
                 "KEYWORD_AGILE",
                 "KEYWORD_CLEAVING"
             };
+            FixSkillName(mySkillDef);
 
             //alt
             Modules.Content.AddEntityState<Crush>(out bool _);
-
-            desc = "<style=cIsUtility>Agile.</style> Crush nearby enemies for <style=cIsDamage>" + 100f * crushDamage.Value + "% damage</style>. <style=cIsUtility>Range increases with attack speed</style>.";
-
-            LanguageAPI.Add("MINER_PRIMARY_CRUSH_NAME", "Crush");
-            LanguageAPI.Add("MINER_PRIMARY_CRUSH_DESCRIPTION", desc);
 
             SkillDef mySkillDef2 = ScriptableObject.CreateInstance<SkillDef>();
             mySkillDef2.activationState = new SerializableEntityStateType(typeof(Crush));
@@ -1073,6 +986,7 @@ namespace DiggerPlugin {
             mySkillDef2.keywordTokens = new string[] {
                 "KEYWORD_AGILE"
             };
+            FixSkillName(mySkillDef2);
 
             Modules.Skills.AddPrimarySkills(characterBodyPrefab, mySkillDef, mySkillDef2);
             Modules.Skills.AddUnlockablesToFamily(skillLocator.primary.skillFamily, null, Unlockables.crushUnlockableDef);
@@ -1082,11 +996,6 @@ namespace DiggerPlugin {
         {
             Modules.Content.AddEntityState<DrillChargeStart>(out bool _);
             Modules.Content.AddEntityState<DrillCharge>(out bool _);
-
-            string desc = "Charge up for 1 second, then dash into enemies for up to <style=cIsDamage>6x" + 100f * drillChargeDamage.Value + "% damage</style>. <style=cIsUtility>You cannot be hit during and following the dash.</style>";
-
-            LanguageAPI.Add("MINER_SECONDARY_CHARGE_NAME", "Drill Charge");
-            LanguageAPI.Add("MINER_SECONDARY_CHARGE_DESCRIPTION", desc);
 
             SkillDef mySkillDef = ScriptableObject.CreateInstance<SkillDef>();
             mySkillDef.activationState = new SerializableEntityStateType(typeof(DrillChargeStart));
@@ -1109,15 +1018,11 @@ namespace DiggerPlugin {
             mySkillDef.skillDescriptionToken = "MINER_SECONDARY_CHARGE_DESCRIPTION";
             mySkillDef.skillName = "MINER_SECONDARY_CHARGE_NAME";
             mySkillDef.skillNameToken = "MINER_SECONDARY_CHARGE_NAME";
+            FixSkillName(mySkillDef);
 
             //alt
             Modules.Content.AddEntityState<DrillBreakStart>(out bool _);
             Modules.Content.AddEntityState<DrillBreak>(out bool _);
-
-            desc = "Dash forward, exploding for <style=cIsDamage>2x" + 100f * drillBreakDamage.Value + "% damage</style> on contact with an enemy. <style=cIsUtility>You cannot be hit during and following the dash.</style>";
-
-            LanguageAPI.Add("MINER_SECONDARY_BREAK_NAME", "Crack Hammer");
-            LanguageAPI.Add("MINER_SECONDARY_BREAK_DESCRIPTION", desc);
 
             SkillDef mySkillDef2 = ScriptableObject.CreateInstance<SkillDef>();
             mySkillDef2.activationState = new SerializableEntityStateType(typeof(DrillBreakStart));
@@ -1140,6 +1045,7 @@ namespace DiggerPlugin {
             mySkillDef2.skillDescriptionToken = "MINER_SECONDARY_BREAK_DESCRIPTION";
             mySkillDef2.skillName = "MINER_SECONDARY_BREAK_NAME";
             mySkillDef2.skillNameToken = "MINER_SECONDARY_BREAK_NAME";
+            FixSkillName(mySkillDef2);
 
             Modules.Skills.AddSecondarySkills(characterBodyPrefab, mySkillDef, mySkillDef2);
             Modules.Skills.AddUnlockablesToFamily(skillLocator.secondary.skillFamily, null, Unlockables.crackHammerUnlockableDef);
@@ -1147,9 +1053,6 @@ namespace DiggerPlugin {
         private void UtilitySetup()
         {
             Modules.Content.AddEntityState<BackBlast>(out bool _);
-
-            LanguageAPI.Add("MINER_UTILITY_BACKBLAST_NAME", "Backblast");
-            LanguageAPI.Add("MINER_UTILITY_BACKBLAST_DESCRIPTION", "<style=cIsUtility>Stunning.</style> Blast backwards a variable distance, hitting all enemies in a large radius for <style=cIsDamage>" + 100f * BackBlast.damageCoefficient + "% damage</style>. <style=cIsUtility>You cannot be hit while dashing.</style>");
 
             SkillDef mySkillDef = ScriptableObject.CreateInstance<SkillDef>();
             mySkillDef.activationState = new SerializableEntityStateType(typeof(BackBlast));
@@ -1174,12 +1077,9 @@ namespace DiggerPlugin {
             mySkillDef.keywordTokens = new string[] {
                 "KEYWORD_STUNNING"
             };
+            FixSkillName(mySkillDef);
 
             Modules.Content.AddEntityState<CaveIn>(out bool _);
-
-            LanguageAPI.Add("MINER_UTILITY_CAVEIN_NAME", "Cave In");
-            LanguageAPI.Add("MINER_UTILITY_CAVEIN_DESCRIPTION", "<style=cIsUtility>Stunning.</style> Blast backwards a short distance, <style=cIsUtility>pulling</style> together all enemies in a large radius. You cannot be hit while dashing.");
-
             SkillDef mySkillDef2 = ScriptableObject.CreateInstance<SkillDef>();
             mySkillDef2.activationState = new SerializableEntityStateType(typeof(CaveIn));
             mySkillDef2.activationStateMachineName = "Weapon";
@@ -1203,6 +1103,7 @@ namespace DiggerPlugin {
             mySkillDef2.keywordTokens = new string[] {
                 "KEYWORD_STUNNING"
             };
+            FixSkillName(mySkillDef2);
 
             Modules.Skills.AddUtilitySkills(characterBodyPrefab, mySkillDef, mySkillDef2);
             Modules.Skills.AddUnlockablesToFamily(skillLocator.utility.skillFamily, null, Unlockables.caveInUnlockableDef);
@@ -1210,10 +1111,33 @@ namespace DiggerPlugin {
 
         private void SpecialSetup()
         {
-            Modules.Content.AddEntityState<ToTheStars>(out bool _);
+            Modules.Content.AddEntityState<ToTheStarsClassic>(out bool _);
 
-            LanguageAPI.Add("MINER_SPECIAL_TOTHESTARS_NAME", "To the Stars!");
-            LanguageAPI.Add("MINER_SPECIAL_TOTHESTARS_DESCRIPTION", "Jump into the air, shooting a wide spray of projectiles downwards for <style=cIsDamage>30x" + 100f * ToTheStars.damageCoefficient + "% damage</style> total.");
+            SkillDef mySkillDef2 = ScriptableObject.CreateInstance<SkillDef>();
+            mySkillDef2.activationState = new SerializableEntityStateType(typeof(ToTheStarsClassic));
+            mySkillDef2.activationStateMachineName = "Weapon";
+            mySkillDef2.baseMaxStock = 1;
+            mySkillDef2.baseRechargeInterval = 6f;
+            mySkillDef2.beginSkillCooldownOnSkillEnd = false;
+            mySkillDef2.canceledFromSprinting = false;
+            mySkillDef2.fullRestockOnAssign = true;
+            mySkillDef2.interruptPriority = InterruptPriority.PrioritySkill;
+            mySkillDef2.resetCooldownTimerOnUse = false;
+            mySkillDef2.isCombatSkill = true;
+            mySkillDef2.mustKeyPress = true;
+            mySkillDef2.cancelSprintingOnActivation = true;
+            mySkillDef2.rechargeStock = 1;
+            mySkillDef2.requiredStock = 1;
+            mySkillDef2.stockToConsume = 1;
+            mySkillDef2.icon = Assets.icon4;
+            mySkillDef2.skillDescriptionToken = "MINER_SPECIAL_TOTHESTARSCLASSIC_DESCRIPTION";
+            mySkillDef2.skillName = "MINER_SPECIAL_TOTHESTARSCLASSIC_NAME";
+            mySkillDef2.skillNameToken = "MINER_SPECIAL_TOTHESTARSCLASSIC_NAME";
+            DiggerPlugin.specialClassicSkillDef = mySkillDef2;
+            Modules.Skills.AddSpecialSkills(characterBodyPrefab, mySkillDef2);
+            FixSkillName(mySkillDef2);
+
+            Modules.Content.AddEntityState<ToTheStars>(out bool _);
 
             SkillDef mySkillDef = ScriptableObject.CreateInstance<SkillDef>();
             mySkillDef.activationState = new SerializableEntityStateType(typeof(ToTheStars));
@@ -1235,17 +1159,14 @@ namespace DiggerPlugin {
             mySkillDef.skillDescriptionToken = "MINER_SPECIAL_TOTHESTARS_DESCRIPTION";
             mySkillDef.skillName = "MINER_SPECIAL_TOTHESTARS_NAME";
             mySkillDef.skillNameToken = "MINER_SPECIAL_TOTHESTARS_NAME";
-
+            DiggerPlugin.specialSkillDef = mySkillDef;
             Modules.Skills.AddSpecialSkills(characterBodyPrefab, mySkillDef);
+            FixSkillName(mySkillDef);
         }
 
         private void ScepterSkillSetup()
         {
             Modules.Content.AddEntityState<FallingComet>(out bool _);
-
-            LanguageAPI.Add("MINER_SPECIAL_SCEPTERTOTHESTARS_NAME", "Falling Comet");
-            LanguageAPI.Add("MINER_SPECIAL_SCEPTERTOTHESTARS_DESCRIPTION", "Jump into the air, shooting a wide spray of explosive projectiles downwards for <style=cIsDamage>30x" + 100f * FallingComet.damageCoefficient + "% damage</style> total, then fall downwards creating a huge blast on impact that deals <style=cIsDamage>" + 100f * FallingComet.blastDamageCoefficient + "% damage</style> and <style=cIsDamage>ignites</style> enemies hit.");
-
             SkillDef mySkillDef = ScriptableObject.CreateInstance<SkillDef>();
             mySkillDef.activationState = new SerializableEntityStateType(typeof(FallingComet));
             mySkillDef.activationStateMachineName = "Weapon";
@@ -1265,9 +1186,118 @@ namespace DiggerPlugin {
             mySkillDef.icon = Assets.icon4S;
             mySkillDef.skillDescriptionToken = "MINER_SPECIAL_SCEPTERTOTHESTARS_DESCRIPTION";
             mySkillDef.skillName = "MINER_SPECIAL_SCEPTERTOTHESTARS_NAME";
-            mySkillDef.skillNameToken = "MINER_SPECIAL_SCEPTERTOTHESTARS_NAME";            
+            mySkillDef.skillNameToken = "MINER_SPECIAL_SCEPTERTOTHESTARS_NAME";
+            mySkillDef.keywordTokens = new string[] { "KEYWORD_IGNITE" };
+            FixSkillName(mySkillDef);
 
             scepterSpecialSkillDef = mySkillDef;
+
+            Modules.Content.AddEntityState<ToTheStarsClassicScepter>(out bool _);
+            SkillDef mySkillDef2 = ScriptableObject.CreateInstance<SkillDef>();
+            mySkillDef2.activationState = new SerializableEntityStateType(typeof(ToTheStarsClassicScepter));
+            mySkillDef2.activationStateMachineName = "Weapon";
+            mySkillDef2.baseMaxStock = 1;
+            mySkillDef2.baseRechargeInterval = 6f;
+            mySkillDef2.beginSkillCooldownOnSkillEnd = false;
+            mySkillDef2.canceledFromSprinting = false;
+            mySkillDef2.fullRestockOnAssign = true;
+            mySkillDef2.interruptPriority = InterruptPriority.PrioritySkill;
+            mySkillDef2.resetCooldownTimerOnUse = false;
+            mySkillDef2.isCombatSkill = true;
+            mySkillDef2.mustKeyPress = false;
+            mySkillDef2.cancelSprintingOnActivation = true;
+            mySkillDef2.rechargeStock = 1;
+            mySkillDef2.requiredStock = 1;
+            mySkillDef2.stockToConsume = 1;
+            mySkillDef2.icon = Assets.icon4S;
+            mySkillDef2.skillDescriptionToken = "MINER_SPECIAL_SCEPTERTOTHESTARSCLASSIC_DESCRIPTION";
+            mySkillDef2.skillName = "MINER_SPECIAL_SCEPTERTOTHESTARSCLASSIC_NAME";
+            mySkillDef2.skillNameToken = "MINER_SPECIAL_SCEPTERTOTHESTARSCLASSIC_NAME";
+            mySkillDef2.keywordTokens = new string[] { "KEYWORD_STUNNING" };
+            FixSkillName(mySkillDef2);
+
+            scepterSpecialClassicSkillDef = mySkillDef2;
+        }
+
+        private void SetupDamageTypes()
+        {
+            CleaveDamage = DamageAPI.ReserveDamageType();
+            On.RoR2.GlobalEventManager.OnHitEnemy += (orig, self, damageInfo, victim) =>
+            {
+                orig(self, damageInfo, victim);
+                if (NetworkServer.active)
+                {
+                    if (!damageInfo.rejected && damageInfo.procCoefficient > 0f)
+                    {
+                        CharacterBody victimBody = victim.GetComponent<CharacterBody>();
+                        if (victimBody)
+                        {
+                            if (damageInfo.HasModdedDamageType(CleaveDamage))
+                            {
+                                victimBody.AddTimedBuff(Buffs.cleaveBuff, 2.5f * damageInfo.procCoefficient);
+                            }
+                        }
+                    }
+                }
+            };
+            ToTheStarsClassicDamage = DamageAPI.ReserveDamageType();
+            On.RoR2.HealthComponent.TakeDamage += (orig, self, damageInfo) =>
+            {
+                if (NetworkServer.active)
+                {
+                    if (damageInfo.HasModdedDamageType(ToTheStarsClassicDamage))
+                    {
+                        damageInfo.rejected = true;
+                    }
+                }
+                orig(self, damageInfo);
+            };
+
+            On.RoR2.GlobalEventManager.OnHitAll += (orig, self, damageInfo, hitObject) =>
+            {
+                if (NetworkServer.active)
+                {
+                    if (damageInfo.HasModdedDamageType(ToTheStarsClassicDamage))
+                    {
+                        damageInfo.rejected = true;
+                        damageInfo.RemoveModdedDamageType(ToTheStarsClassicDamage); //Don't let this chain.
+
+                        //Create Explosion
+                        if (damageInfo.attacker)
+                        {
+                            float blastRadius = 6f;
+                            EffectManager.SpawnEffect(ToTheStarsClassicEffectPrefab, new EffectData
+                            {
+                                origin = damageInfo.position,
+                                scale = blastRadius
+                            }, true);
+                            BlastAttack blastAttack = new BlastAttack
+                            {
+                                position = damageInfo.position,
+                                baseDamage = damageInfo.damage,
+                                baseForce = 0f,
+                                radius = blastRadius,
+                                attacker = damageInfo.attacker,
+                                inflictor = damageInfo.attacker,
+                                teamIndex = TeamComponent.GetObjectTeam(damageInfo.attacker),
+                                crit = damageInfo.crit,
+                                procChainMask = damageInfo.procChainMask,
+                                procCoefficient = damageInfo.procCoefficient,
+                                damageColorIndex = damageInfo.damageColorIndex,
+                                falloffModel = BlastAttack.FalloffModel.None,
+                                damageType = damageInfo.damageType
+                            };
+                            blastAttack.Fire();
+                        }
+                    }
+                }
+                orig(self, damageInfo, hitObject);
+            };
+        }
+
+        public static void FixSkillName(SkillDef skillDef)
+        {
+            (skillDef as UnityEngine.Object).name = skillDef.skillName;
         }
     }
 }

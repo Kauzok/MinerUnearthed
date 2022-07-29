@@ -8,7 +8,7 @@ namespace EntityStates.Digger
     public class ToTheStars : BaseSkillState
     {
         public float baseDuration = 0.45f;
-        public static float damageCoefficient = 0.9f;
+        public static float damageCoefficient = 1.6f;   //was 0.9
 
         private float duration;
         public GameObject hitEffectPrefab = LegacyResourcesAPI.Load<GameObject>("prefabs/effects/impacteffects/MissileExplosionVFX");
@@ -34,7 +34,7 @@ namespace EntityStates.Digger
             }
 
             base.PlayAnimation("FullBody, Override", "ToTheStarsStart", "ToTheStars.playbackRate", 1f);
-            Util.PlayAttackSpeedSound(EntityStates.Commando.CombatDodge.dodgeSoundString, base.gameObject, 1.8f);
+            Util.PlayAttackSpeedSound("Play_commando_shift", base.gameObject, 1.8f);
         }
 
         public override void OnExit()
@@ -59,9 +59,9 @@ namespace EntityStates.Digger
                     aimVector = aimer,
                     minSpread = 0f,
                     maxSpread = base.characterBody.spreadBloomAngle,
-                    radius = 0.35f,
+                    radius = 0.5f,  //was 0.35
                     bulletCount = 1U,
-                    procCoefficient = .5f,
+                    procCoefficient = .7f,
                     damage = base.characterBody.damage * ToTheStars.damageCoefficient,
                     force = 3,
                     falloffModel = BulletAttack.FalloffModel.None,
@@ -76,12 +76,12 @@ namespace EntityStates.Digger
 
                 for (int j = 0; j < 3; j++)
                 {
-                    for (int i = 0; i <= 9; i++)
+                    for (int i = 0; i <= 4; i++)    //was 9
                     {
                         float theta = Random.Range(0.0f, 6.28f);
                         float x = Mathf.Cos(theta);
                         float z = Mathf.Sin(theta);
-                        float c = i * 0.3777f;
+                        float c = i * 0.7555f; //0.3777f * 10/5
                         c *= (1f / 12f);
                         aimer.x += c * x;
                         aimer.z += c * z;
