@@ -159,7 +159,8 @@ namespace DiggerPlugin {
 
             new Modules.ContentPacks().Initialize();
 
-            RoR2.RoR2Application.onLoad += LateSetup;
+            //RoR2.RoR2Application.onLoad += LateSetup;
+            RoR2.ContentManagement.ContentManager.onContentPacksAssigned += LateSetup; ;
 
             //RoR2.ContentManagement.ContentManager.onContentPacksAssigned += LateSetup;
 
@@ -210,7 +211,7 @@ namespace DiggerPlugin {
             ItemAPI.DoNotAutoIDRSFor("MinerBody");
         }
 
-        private void LateSetup() {//HG.ReadOnlyArray<RoR2.ContentManagement.ReadOnlyContentPack> obj) {
+        private void LateSetup(HG.ReadOnlyArray<RoR2.ContentManagement.ReadOnlyContentPack> obj) {
             ItemDisplays.SetItemDisplays();
         }
 

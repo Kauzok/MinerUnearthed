@@ -110,7 +110,7 @@ namespace DiggerPlugin
             //apply displays here
 
             itemDisplayRuleSet.keyAssetRuleGroups = itemDisplayRules.ToArray();
-            itemDisplayRuleSet.GenerateRuntimeValues();
+            //itemDisplayRuleSet.GenerateRuntimeValues();
         }
 
         private static void SetVanillaDisplays() {
