@@ -222,14 +222,11 @@ namespace DiggerPlugin {
             //scepter stuff- dll won't compile without a reference to TILER2 and ClassicItems
             if (BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("com.DestroyedClone.AncientScepter")) {
                 ancientScepterInstalled = true;
-                ScepterSkillSetup();
-                ScepterSetup();
             }
 
             if (BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("com.ThinkInvisible.ClassicItems"))
             {
                 classicItemsInstalled = true;
-                ScepterClassicSetup();
             }
 
             FixItemDisplays();
@@ -920,6 +917,13 @@ namespace DiggerPlugin {
             SecondarySetup();
             UtilitySetup();
             SpecialSetup();
+
+            if (ancientScepterInstalled || classicItemsInstalled)
+                ScepterSkillSetup();
+            if(ancientScepterInstalled)
+                ScepterSetup();
+            if (classicItemsInstalled)
+                ScepterClassicSetup();
         }
 
         private void PassiveSetup()
