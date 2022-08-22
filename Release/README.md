@@ -12,10 +12,10 @@
 [![](https://cdn.discordapp.com/attachments/747757793339244576/787552348523724830/minericon.png)]()
 
 join the discord to share feedback/bugs- https://discord.gg/HpQB9fC
-or ping/dm me- ~~@rob#2365~~ @TheTimesweeper#5727
+or ping/dm me- @TheTimesweeper#5727
 
 ## Overview
-Miner is a high speed melee character, who uses high mobility and invincibility fast-paced combat. 
+Miner is a high speed melee character, who uses high mobility and invincibility in fast-paced combat. 
 Sounds somewhat like Mercenary, but where Mercenary slips in and out, Miner rushes in and swings wildly like a crackhead.
 
 - His primaries, coupled with his passive `Gold Rush` encourage you to be offensive to build long kill combos.
@@ -37,25 +37,27 @@ Direseeker is a massive Elder Lemurian with currently a new extremely powerful f
 
 [![](https://cdn.discordapp.com/attachments/747757793339244576/783952180834992128/direIconRed.png)]()
 
-## Known Issues
-- Plague mask isn't green
-- timesweeper doesn't have enough time to implement new skins that we already have modeled
-- minecraft pickaxes missing
-
 ## Credits
 Gnome - Made the original Miner mod, a fantastic base to work off of  
 fuu - Made the Miner model  
 rob - coding, rewrite, polish  
-TheTimeSweeper - coding, adrenaline flame particles, various other help, maintaining  
+TheTimeSweeper - coding, adrenaline flame particles, maintaining
+Moffein - help fix for CUM2, maintaining   
 PapaZach - Skill icons  
 Jot - CSS animation  
 redacted - Grand Mastery skin  
 bruh - Swag model  
 Neik - Blacksmith concept  
-Ruxbieno - Direseeker logbook entry  
-Moffein - helped fix for CUM2  
+Ruxbieno - Direseeker logbook entry   
+Christian Gentry - Anvil model
 
 ## Changelog
+
+`1.8.4`
+- fixed missing diamond picks
+- fixed missing anvil
+  - couldn't find the original so I just downloaded a new one
+- fixed miner disappearing at certain camera angles
 
 `1.8.3`
 
