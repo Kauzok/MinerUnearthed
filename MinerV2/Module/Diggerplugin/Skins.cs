@@ -50,18 +50,6 @@ namespace DiggerPlugin
                 diamondPickR
             };
 
-            LanguageAPI.Add("MINERBODY_DEFAULT_SKIN_NAME", "Default");
-            LanguageAPI.Add("MINERBODY_MOLTEN_SKIN_NAME", "Molten");
-            LanguageAPI.Add("MINERBODY_TYPHOON_SKIN_NAME", "Conqueror");
-            LanguageAPI.Add("MINERBODY_PUPLE_SKIN_NAME", "Puple");
-            LanguageAPI.Add("MINERBODY_TUNDRA_SKIN_NAME", "Tundra");
-            LanguageAPI.Add("MINERBODY_BLACKSMITH_SKIN_NAME", "Blacksmith");
-            LanguageAPI.Add("MINERBODY_IRON_SKIN_NAME", "Iron");
-            LanguageAPI.Add("MINERBODY_GOLD_SKIN_NAME", "Gold");
-            LanguageAPI.Add("MINERBODY_DIAMOND_SKIN_NAME", "Diamond");
-            LanguageAPI.Add("MINERBODY_STEVE_SKIN_NAME", "Minecraft");
-            LanguageAPI.Add("MINERBODY_DRIP_SKIN_NAME", "Drip");
-
             LoadoutAPI.SkinDefInfo skinDefInfo = default(LoadoutAPI.SkinDefInfo);
             skinDefInfo.BaseSkins = Array.Empty<SkinDef>();
             skinDefInfo.MinionSkinReplacements = new SkinDef.MinionSkinReplacement[0];

@@ -31,9 +31,6 @@ namespace DiggerPlugin {
 
             CharacterBody bodyComponent = fatAcridPrefab.GetComponent<CharacterBody>();
 
-            LanguageAPI.Add("FATACRID_BODY_NAME", "Perro Grande");
-            LanguageAPI.Add("FATACRID_BODY_SUBTITLE", "(Forma Gigante)");
-
             bodyComponent.name = "FatAcridBody";
             bodyComponent.baseNameToken = "FATACRID_BODY_NAME";
             bodyComponent.subtitleNameToken = "FATACRID_BODY_SUBTITLE";
@@ -206,12 +203,6 @@ namespace DiggerPlugin {
 
             CreateProjectiles();
 
-            LanguageAPI.Add("DIRESEEKER_BODY_NAME", "Direseeker");
-            LanguageAPI.Add("DIRESEEKER_BODY_SUBTITLE", "Track and Kill");
-            //LanguageAPI.Add("DIRESEEKER_BODY_LORE", "Direseeker\n\nDireseeker is a giant Elder Lemurian that acts as a boss in the Stage 4 area Magma Barracks. Upon defeating it, the player will unlock the Miner character for future playthroughs. The path leading to Direseeker's location only appears in one of the three variants of the level, and even then Direseeker may or may not spawn with random chance. Completing the teleporter event will also prevent it from spawning.\nNote that in online co-op the boss may spawn for the Host, but not others, although they can still damage it.\nActivating the Artifact of Kin does not prevent it from appearing.\n\nCategories: Enemies | Bosses | Unlisted Enemies\n\nLanguages: Español");
-            LanguageAPI.Add("DIRESEEKER_BODY_LORE", "Legends tell of a monstrous beast that once roamed the underground barracks of Petrichor V.\n\nFeared by the bravest of survivors and the nastiest of monsters, the massive beast was unrivaled. It donned blood-red scales, tempered by hellfire. It had burning yellow eyes, with a glare so intense it made the largest of creatures stop dead in their tracks. It had smoldering breath, hot enough to melt metal in an instant.\n\nOnly once stopped by a survivor strong enough to slay Providence himself, it was believed that the beast had finally met its match.\n\n<style=cIsHealth>Until it showed its terrifying face once again.</style>");
-            LanguageAPI.Add("DIRESEEKER_BODY_OUTRO_FLAVOR", "..and so it left, in search of new prey.");
-
             //skills and states
             Modules.Content.AddEntityState<EntityStates.Direseeker.SpawnState>(out bool _);
             Modules.Content.AddEntityState<EntityStates.Direseeker.ChargeUltraFireball>(out bool _);
@@ -224,8 +215,8 @@ namespace DiggerPlugin {
                 CharacterBody bodyComponent = bodyPrefab.GetComponent<CharacterBody>();
 
                 bodyComponent.name = "DireseekerBody";
-                bodyComponent.baseNameToken = "DIRESEEKER_BODY_NAME";
-                bodyComponent.subtitleNameToken = "DIRESEEKER_BODY_SUBTITLE";
+                bodyComponent.baseNameToken = "DIGGERPLUGIN_DIRESEEKER_BODY_NAME";
+                bodyComponent.subtitleNameToken = "DIGGERPLUGIN_DIRESEEKER_BODY_SUBTITLE";
                 bodyComponent.baseMoveSpeed = 11f;
                 bodyComponent.baseMaxHealth = 2800f;
                 bodyComponent.levelMaxHealth = 840f;
@@ -471,8 +462,8 @@ namespace DiggerPlugin {
                 CharacterBody bodyComponent2 = survivorPrefab.GetComponent<CharacterBody>();
 
                 bodyComponent2.name = "DireseekerPlayerBody";
-                bodyComponent2.baseNameToken = "DIRESEEKER_BODY_NAME";
-                bodyComponent2.subtitleNameToken = "DIRESEEKER_BODY_SUBTITLE";
+                bodyComponent2.baseNameToken = "DIGGERPLUGIN_DIRESEEKER_BODY_NAME";
+                bodyComponent2.subtitleNameToken = "DIGGERPLUGIN_DIRESEEKER_BODY_SUBTITLE";
                 bodyComponent2.baseMoveSpeed = 11f;
                 bodyComponent2.baseMaxHealth = 2200f;
                 bodyComponent2.levelMaxHealth = 800f;
@@ -506,12 +497,12 @@ namespace DiggerPlugin {
                 
                 SurvivorDef survivorDef = ScriptableObject.CreateInstance<SurvivorDef>();
                 (survivorDef as ScriptableObject).name = "Direseeker";
-                survivorDef.displayNameToken = "DIRESEEKER_BODY_NAME";
+                survivorDef.displayNameToken = "DIGGERPLUGIN_DIRESEEKER_BODY_NAME";
                 survivorDef.descriptionToken = "MINER_DESCRIPTION";
                 survivorDef.primaryColor = Color.red;
                 survivorDef.bodyPrefab = survivorPrefab;
                 survivorDef.displayPrefab = displayPrefab;
-                survivorDef.outroFlavorToken = "DIRESEEKER_BODY_OUTRO_FLAVOR";
+                survivorDef.outroFlavorToken = "DIGGERPLUGIN_DIRESEEKER_BODY_OUTRO_FLAVOR";
                 survivorDef.hidden = false;
                 survivorDef.desiredSortPosition = 12f;
 
@@ -555,8 +546,6 @@ namespace DiggerPlugin {
 
             SkinnedMeshRenderer mainRenderer = Reflection.GetFieldValue<SkinnedMeshRenderer>(characterModel, "mainSkinnedMeshRenderer");
 
-            LanguageAPI.Add("DIRESEEKER_BODY_DEFAULT_SKIN_NAME", "Default");
-
             LoadoutAPI.SkinDefInfo skinDefInfo = default(LoadoutAPI.SkinDefInfo);
             skinDefInfo.BaseSkins = Array.Empty<SkinDef>();
             skinDefInfo.ProjectileGhostReplacements = new SkinDef.ProjectileGhostReplacement[0];
@@ -573,8 +562,8 @@ namespace DiggerPlugin {
                     mesh = mainRenderer.sharedMesh
                 }
             };*/
-            skinDefInfo.Name = "DIRESEEKER_BODY_DEFAULT_SKIN_NAME";
-            skinDefInfo.NameToken = "DIRESEEKER_BODY_DEFAULT_SKIN_NAME";
+            skinDefInfo.Name = "DIGGERPLUGIN_DIRESEEKER_BODY_DEFAULT_SKIN_NAME";
+            skinDefInfo.NameToken = "DIGGERPLUGIN_DIRESEEKER_BODY_DEFAULT_SKIN_NAME";
             skinDefInfo.RendererInfos = characterModel.baseRendererInfos;
             skinDefInfo.RootObject = model;
 

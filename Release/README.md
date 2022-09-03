@@ -57,6 +57,10 @@ Moffein - helped fix for CUM2
 
 ## Changelog
 
+`1.8.4`
+
+- Fully removed LanguageAPI depdendency. This should fix the mod not loading on light mod setups.
+
 `1.8.3`
 
 - Fixed missing Scepter skill icons.

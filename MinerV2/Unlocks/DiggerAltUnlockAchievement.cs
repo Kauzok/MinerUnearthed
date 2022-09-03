@@ -7,7 +7,7 @@ namespace DiggerPlugin.Achievements
     public class DiggerAltUnlockAchievement : GenericModdedUnlockable
 
     {
-        public override string AchievementTokenPrefix => "MINER_";
+        public override string AchievementTokenPrefix => "MINER_DIRESEEKER_";
         public override string PrerequisiteUnlockableIdentifier => "";
 
         public override string AchievementSpriteName => "texMinerAchievement";
