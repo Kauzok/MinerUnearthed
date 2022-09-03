@@ -32,7 +32,7 @@ namespace DiggerPlugin {
     [BepInDependency("com.TeamMoonstorm.Starstorm2", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("HIFU.Inferno", BepInDependency.DependencyFlags.SoftDependency)]
     [NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod, VersionStrictness.EveryoneNeedSameModVersion)]
-    [BepInPlugin(MODUID, "DiggerUnearthed", "1.8.4")]
+    [BepInPlugin(MODUID, "DiggerUnearthed", "1.8.5")]
     [R2APISubmoduleDependency(new string[]
     {
         "PrefabAPI",

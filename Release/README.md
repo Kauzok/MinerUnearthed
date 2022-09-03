@@ -50,8 +50,15 @@ bruh - Swag model
 Neik - Blacksmith concept  
 Ruxbieno - Direseeker logbook entry   
 Christian Gentry - Anvil model
+Edge-R - Chinese Translation
 
 ## Changelog
+
+`1.8.5`
+
+- Removed LanaguageAPI completely.
+- Added Chinese translation (Thanks Edge-R!)
+	- Unlock strings are missing since they were added after the translation was done.
 
 `1.8.4`
 - fixed missing diamond picks
