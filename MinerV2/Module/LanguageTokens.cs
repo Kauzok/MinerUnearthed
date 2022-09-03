@@ -24,6 +24,7 @@ namespace DiggerUnearthed.Module
         public static void RegisterLanguageTokens()
         {
             On.RoR2.Language.SetFolders += fixme;
+
             return;
         }
 

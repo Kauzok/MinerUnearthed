@@ -54,6 +54,10 @@ Edge-R - Chinese Translation
 
 ## Changelog
 
+`1.8.6`
+
+- Fixed Miner getting re-locked if you have Direseeker installed.
+
 `1.8.5`
 
 - Removed LanaguageAPI completely.

@@ -21,14 +21,6 @@
 	"MINER_MONSOONUNLOCKABLE_UNLOCKABLE_NAME" : "Miner: Mastery",
 	"MINER_MONSOONUNLOCKABLE_ACHIEVEMENT_DESC" : "As Miner, beat the game or obliterate on Monsoon.",
 	
-	"MINER_UNLOCKABLE_ACHIEVEMENT_NAME" : "Adrenaline Rush",
-	"MINER_UNLOCKABLE_UNLOCKABLE_NAME" : "Adrenaline Rush",
-	"MINER_UNLOCKABLE_ACHIEVEMENT_DESC" : "Open a Legendary Chest.",
-	
-	"MINER_DIRESEEKER_UNLOCKABLE_ACHIEVEMENT_NAME" : "Forged in Flames",
-	"MINER_DIRESEEKER_UNLOCKABLE_UNLOCKABLE_NAME" : "Forged in Flames",
-	"MINER_DIRESEEKER_UNLOCKABLE_ACHIEVEMENT_DESC" : "Defeat the unique guardian of Abyssal Depths.",
-	
 	"MINER_CRUSHUNLOCKABLE_ACHIEVEMENT_NAME" : "Miner: Pillaged Gold",
 	"MINER_CRUSHUNLOCKABLE_UNLOCKABLE_NAME" : "Miner: Pillaged Gold",
 	"MINER_CRUSHUNLOCKABLE_ACHIEVEMENT_DESC" : "As Miner, apply 12 stacks of cleave to the unique guardian of Gilded Coast.",

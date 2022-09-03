@@ -32,7 +32,7 @@ namespace DiggerPlugin {
     [BepInDependency("com.TeamMoonstorm.Starstorm2", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("HIFU.Inferno", BepInDependency.DependencyFlags.SoftDependency)]
     [NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod, VersionStrictness.EveryoneNeedSameModVersion)]
-    [BepInPlugin(MODUID, "DiggerUnearthed", "1.8.5")]
+    [BepInPlugin(MODUID, "DiggerUnearthed", "1.8.6")]
     [R2APISubmoduleDependency(new string[]
     {
         "PrefabAPI",
@@ -40,6 +40,7 @@ namespace DiggerPlugin {
         "SoundAPI",
         "UnlockableAPI",
         "DirectorAPI",
+        nameof(LanguageAPI),    //Needed for mastery
         nameof(RecalculateStatsAPI),
         nameof(DamageAPI)
     })]
