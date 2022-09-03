@@ -1,12 +1,12 @@
 ManifestFileVersion: 0
-CRC: 1165544900
+CRC: 3386397398
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 83358922894e4d1d1b49169a4875bfe6
+    Hash: eb6b0e2fb8fc758d2c86921d0abac352
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 8615316d04f527ccc888cdd43c6e8e6d
+    Hash: 6cef6aba01b6f387d2aa9705c4b14b76
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -27,7 +27,7 @@ ClassTypes:
   Script: {instanceID: 0}
 - Class: 54
   Script: {instanceID: 0}
-- Class: 64
+- Class: 65
   Script: {instanceID: 0}
 - Class: 74
   Script: {instanceID: 0}
@@ -121,6 +121,7 @@ Assets:
 - Assets/Miner/Animations/ImpactMask.mask
 - Assets/Miner/Animations/Jump.anim
 - Assets/Miner/Textures/texMinerGrandMasteryEmission.PNG
+- Assets/Miner/Materials/matBlacksmithHammer.mat
 - Assets/Miner/Animations/DrillChargeVertiEnd.anim
 - Assets/Miner/BackblastIcon.png
 - Assets/Miner/VFX/matMinerImpact.mat
@@ -150,6 +151,7 @@ Assets:
 - Assets/Miner/Animations/AscendNew.anim
 - Assets/Miner/Animations/ToTheStarsEnd.anim
 - Assets/Miner/Animations/DrillChargeHorizontal.anim
+- Assets/Miner/Textures/texAnvil.png
 - Assets/Miner/Animations/AimPitch.anim
 - Assets/Miner/Icons/texUtilityAchievement.png
 - Assets/Miner/Animations/Sprint.anim

@@ -32,7 +32,7 @@ namespace DiggerPlugin {
     [BepInDependency("com.TeamMoonstorm.Starstorm2", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("HIFU.Inferno", BepInDependency.DependencyFlags.SoftDependency)]
     [NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod, VersionStrictness.EveryoneNeedSameModVersion)]
-    [BepInPlugin(MODUID, "DiggerUnearthed", "1.8.1")]
+    [BepInPlugin(MODUID, "DiggerUnearthed", "1.8.4")]
     [R2APISubmoduleDependency(new string[]
     {
         "PrefabAPI",
@@ -401,7 +401,7 @@ namespace DiggerPlugin {
             RecalculateStatsAPI.GetStatCoefficients += RecalculateStatsAPI_GetStatCoefficients;
             On.RoR2.SceneDirector.Start += SceneDirector_Start;
 
-            On.RoR2.PingerController.AttemptPing += PingerController_AttemptPing;
+            //On.RoR2.PingerController.AttemptPing += PingerController_AttemptPing;
         }
 
         private void PingerController_AttemptPing(On.RoR2.PingerController.orig_AttemptPing orig, PingerController self, Ray aimRay, GameObject bodyObject) {
@@ -417,17 +417,15 @@ namespace DiggerPlugin {
             if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "dampcavesimple")
             {
                 GameObject hammer = Instantiate(Assets.blacksmithHammer);
-                hammer.transform.position = new Vector3(76, -143.5f, -526);
+                hammer.transform.position = new Vector3(76, -143.4f, -526);
                 hammer.transform.rotation = Quaternion.Euler(new Vector3(340, 340, 70));
                 hammer.transform.localScale = new Vector3(200, 200, 200);
 
                 GameObject anvil = Instantiate(Assets.blacksmithAnvil);
-                anvil.transform.position = new Vector3(76.8f, -142.5f, -530);
-                anvil.transform.rotation = Quaternion.Euler(new Vector3(10, 90, 0));
-                anvil.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+                anvil.transform.position = new Vector3(74, -142.7f, -531);
+                anvil.transform.localEulerAngles = new Vector3(293, 90, 270);
+                anvil.transform.localScale = new Vector3(0.7f, 0.7f, 0.7f);
             }
-
-
 
             orig(self);
         }

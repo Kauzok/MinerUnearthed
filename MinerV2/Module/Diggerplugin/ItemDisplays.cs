@@ -66,7 +66,7 @@ namespace DiggerPlugin
 
             //add item displays here
             SetVanillaDisplays();
-
+            
             try {
                 if (DiggerPlugin.ancientScepterInstalled)
                     fixFuckinScepterDisplay();
