@@ -41,18 +41,29 @@ Direseeker is a massive Elder Lemurian with currently a new extremely powerful f
 Gnome - Made the original Miner mod, a fantastic base to work off of  
 fuu - Made the Miner model  
 rob - coding, rewrite, polish  
-TheTimeSweeper - coding, adrenaline flame particles, maintaining
-Moffein - help fix for CUM2, maintaining   
+TheTimeSweeper - coding, adrenaline flame particles, maintaining  
+Moffein - help fix for CUM2, maintaining  
 PapaZach - Skill icons  
 Jot - CSS animation  
 redacted - Grand Mastery skin  
 bruh - Swag model  
 Neik - Blacksmith concept  
-Ruxbieno - Direseeker logbook entry   
+Ruxbieno - Direseeker logbook entry  
 Christian Gentry - Anvil model
 Edge-R - Chinese Translation
 
+## Future Plans
+- Gnome's Alt Special
+- Skills++ and other fun stuff
+- update skins
+- fix rig
+- help
+
 ## Changelog
+
+`1.8.7`
+
+- Fixed CSS animation
 
 `1.8.6`
 
@@ -326,7 +337,3 @@ Edge-R - Chinese Translation
 
 `1.0.0`
 - Initial release
-
-## Future Plans
-- Alt special
-- Skills++ support

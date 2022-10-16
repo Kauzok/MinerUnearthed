@@ -6495,7 +6495,7 @@ PrefabInstance:
     - target: {fileID: 4233096248618104617, guid: b4ad92eeb793e3840bec669519d17edb,
         type: 3}
       propertyPath: m_Name
-      value: mdlMiner (1)
+      value: mdlSkanPreview
       objectReference: {fileID: 0}
     - target: {fileID: 4548711894488057958, guid: b4ad92eeb793e3840bec669519d17edb,
         type: 3}
@@ -6991,7 +6991,12 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Mesh
       value: 
-      objectReference: {fileID: 4300000, guid: 1ada6bb18f1e05d44898ecd463006953, type: 2}
+      objectReference: {fileID: 4300000, guid: a36044a2145dd074fb38c5419fb2981b, type: 2}
+    - target: {fileID: 8141236502026419586, guid: b4ad92eeb793e3840bec669519d17edb,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 20b258547f10d274596b4dba43a7eca8, type: 2}
     - target: {fileID: 8149725214845664544, guid: b4ad92eeb793e3840bec669519d17edb,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.x

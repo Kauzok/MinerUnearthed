@@ -28,25 +28,13 @@ namespace DiggerPlugin.Achievements
                 DifficultyIndex difficultyIndex = runReport.ruleBook.FindDifficulty();
                 DifficultyDef runDifficulty = DifficultyCatalog.GetDifficultyDef(difficultyIndex);
 
-                DifficultyDef infernoDef = null;
-                if (DiggerPlugin.infernoPluginLoaded)
-                {
-                    infernoDef = GetInfernoDef();
-                }
-
-                if ((infernoDef != null && runDifficulty == infernoDef)
-                    || (runDifficulty.countsAsHardMode && runDifficulty.scalingValue >= RequiredDifficultyCoefficient)
-                    || (difficultyIndex >= DifficultyIndex.Eclipse1 && difficultyIndex <= DifficultyIndex.Eclipse8))
+                if ((runDifficulty.nameToken == "INFERNO_NAME") || 
+                    (runDifficulty.countsAsHardMode && runDifficulty.scalingValue >= RequiredDifficultyCoefficient) || 
+                    (difficultyIndex >= DifficultyIndex.Eclipse1 && difficultyIndex <= DifficultyIndex.Eclipse8))
                 {
                     Grant();
                 }
             }
-        }
-
-        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
-        private DifficultyDef GetInfernoDef()
-        {
-            return Inferno.Main.InfernoDiffDef;
         }
 
         public override BodyIndex LookUpRequiredBodyIndex()

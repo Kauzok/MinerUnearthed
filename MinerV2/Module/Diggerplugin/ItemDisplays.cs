@@ -211,6 +211,25 @@ namespace DiggerPlugin
             });
 
             itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
+                keyAsset = DLC1Content.Items.CritGlassesVoid,
+                displayRuleGroup = new DisplayRuleGroup {
+                    rules = new ItemDisplayRule[]
+                    {
+                        new ItemDisplayRule
+                        {
+                            ruleType = ItemDisplayRuleType.ParentedPrefab,
+                            followerPrefab = ItemDisplays.LoadDisplay("DisplayGlassesVoid"),
+                            childName = "Head",
+                            localPos = new Vector3(0, 0.0016f, -0.0014f),
+                            localAngles = new Vector3(0, 180, 0),
+                            localScale = new Vector3(0.003f, 0.003f, 0.001f),
+                            limbMask = LimbFlags.None
+                        }
+                    }
+                }
+            });
+
+            itemDisplayRules.Add(new ItemDisplayRuleSet.KeyAssetRuleGroup {
                 keyAsset = RoR2Content.Items.Syringe,
                 displayRuleGroup = new DisplayRuleGroup {
                     rules = new ItemDisplayRule[]

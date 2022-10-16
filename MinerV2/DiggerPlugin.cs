@@ -30,9 +30,8 @@ namespace DiggerPlugin {
     [BepInDependency("com.K1454.SupplyDrop", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("com.Skell.GoldenCoastPlus", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("com.TeamMoonstorm.Starstorm2", BepInDependency.DependencyFlags.SoftDependency)]
-    [BepInDependency("HIFU.Inferno", BepInDependency.DependencyFlags.SoftDependency)]
     [NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod, VersionStrictness.EveryoneNeedSameModVersion)]
-    [BepInPlugin(MODUID, "DiggerUnearthed", "1.8.6")]
+    [BepInPlugin(MODUID, "DiggerUnearthed", "1.8.7")]
     [R2APISubmoduleDependency(new string[]
     {
         "PrefabAPI",
@@ -76,8 +75,6 @@ namespace DiggerPlugin {
         public static PluginInfo pluginInfo;
         public static DiggerPlugin instance;
         public static BepInEx.Logging.ManualLogSource logger;
-
-        public static bool infernoPluginLoaded = false;
 
         public static GameObject characterBodyPrefab;
         // I do not know why I needed this hack
@@ -195,8 +192,6 @@ namespace DiggerPlugin {
             if (BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("com.TeamMoonstorm.Starstorm2")) {
                 starstormInstalled = true;
             }
-
-            infernoPluginLoaded = BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("HIFU.Inferno");
 
             //direseeker compat
             if (BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("com.rob.Direseeker")) {
