@@ -61,6 +61,10 @@ Edge-R - Chinese Translation
 
 ## Changelog
 
+`1.8.8`
+
+- Remembered to set CachedName field in SurvivorDef. Hopefully this will fix Eclipse progress not saving.
+
 `1.8.7`
 
 - Fixed CSS animation

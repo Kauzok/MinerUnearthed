@@ -31,7 +31,7 @@ namespace DiggerPlugin {
     [BepInDependency("com.Skell.GoldenCoastPlus", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("com.TeamMoonstorm.Starstorm2", BepInDependency.DependencyFlags.SoftDependency)]
     [NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod, VersionStrictness.EveryoneNeedSameModVersion)]
-    [BepInPlugin(MODUID, "DiggerUnearthed", "1.8.7")]
+    [BepInPlugin(MODUID, "DiggerUnearthed", "1.8.8")]
     [R2APISubmoduleDependency(new string[]
     {
         "PrefabAPI",
@@ -884,6 +884,7 @@ namespace DiggerPlugin {
             survivorDef.outroFlavorToken = "MINER_OUTRO_FLAVOR";
             survivorDef.hidden = false;
             survivorDef.desiredSortPosition = 9.1f;
+            survivorDef.cachedName = "Miner";
 
             SkillSetup();
 
