@@ -8,6 +8,9 @@ namespace DiggerPlugin.Achievements
 
     {
         public override string AchievementTokenPrefix => "MINER_";
+        public override string AchievementNameToken => "MINER_ALTUNLOCKABLE_ACHIEVEMENT_NAME";
+        public override string AchievementDescToken => "MINER_ALTUNLOCKABLE_ACHIEVEMENT_DESC";
+        public override string UnlockableNameToken => "MINER_ALTUNLOCKABLE_UNLOCKABLE_NAME";
         public override string PrerequisiteUnlockableIdentifier => "";
 
         public override string AchievementSpriteName => "texMinerAchievement";

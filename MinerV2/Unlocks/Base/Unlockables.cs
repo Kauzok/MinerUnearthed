@@ -21,18 +21,6 @@ namespace DiggerPlugin
         public static UnlockableDef blacksmithUnlockableDef;
 
         public static void RegisterUnlockables() {
-            if (DiggerPlugin.direseekerInstalled)
-            {
-                LanguageAPI.Add("MINER_UNLOCKABLE_ACHIEVEMENT_NAME", "Forged in Flames");
-                LanguageAPI.Add("MINER_UNLOCKABLE_ACHIEVEMENT_DESC", "Defeat the unique guardian of Abyssal Depths.");
-                LanguageAPI.Add("MINER_UNLOCKABLE_UNLOCKABLE_NAME", "Forged in Flames");
-            }
-            else
-            {
-                LanguageAPI.Add("MINER_UNLOCKABLE_ACHIEVEMENT_NAME", "Adrenaline Rush");
-                LanguageAPI.Add("MINER_UNLOCKABLE_ACHIEVEMENT_DESC", "Open a Legendary Chest.");
-                LanguageAPI.Add("MINER_UNLOCKABLE_UNLOCKABLE_NAME", "Adrenaline Rush");
-            }
 
             if (!DiggerPlugin.forceUnlock.Value) {
                 if (DiggerPlugin.direseekerInstalled) {
