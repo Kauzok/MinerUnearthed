@@ -13,9 +13,12 @@ namespace EntityStates.Digger
             //add stun
             bulletAttack.damageType |= DamageType.Stun1s;
 
+            float origRadius = bulletAttack.radius;
+            bulletAttack.radius = 4.5f;
             //Fire initial center shot
             bulletAttack.aimVector = Vector3.down;
             bulletAttack.Fire();
+            bulletAttack.radius = origRadius;
 
             //Fire the edges of the star
             forwardDirection.y = 0f;

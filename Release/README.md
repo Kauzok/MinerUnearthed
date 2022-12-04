@@ -85,8 +85,8 @@ JunJun_W - Chinese Translation
 	
 - To The Stars
 	- Improved ability to hit flying enemies.
-		- Increased internal BulletAttack radius from 0.7 -> 4.5
-			- The ability works by firing bullets directly downwards in a star pattern around Miner. Bigger radius = higher chance to hit flying enemies in the attack's path.
+		- Increased internal BulletAttack radius to cover most of the explosion radius
+			- The ability works by firing bullets directly downwards in a star pattern around Miner. Bigger radius = higher chance to hit flying enemies in the attack's path. One quirk of this method is that the explosion hitbox will be placed at the center of the hitbox that the bulletattack collides with.
 	- Now applies downwards force to enemies hit by the explosions.
 
 `1.8.8`

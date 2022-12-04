@@ -58,7 +58,7 @@ namespace EntityStates.Digger
                     aimVector = Vector3.down,
                     minSpread = 0f,
                     maxSpread = 0f,
-                    radius = 4.5f,
+                    radius = 3f,
                     bulletCount = 1U,
                     procCoefficient = 1f,
                     damage = base.characterBody.damage * ToTheStarsClassic.damageCoefficient,
@@ -98,9 +98,13 @@ namespace EntityStates.Digger
 
         public virtual void FireStar(BulletAttack bulletAttack, Vector3 forwardDirection)
         {
+            float origRadius = bulletAttack.radius;
+            bulletAttack.radius = 4.5f;
             //Fire initial center shot
             bulletAttack.aimVector = Vector3.down;
             bulletAttack.Fire();
+            bulletAttack.radius = origRadius;
+
 
             //Fire the edges of the star
             forwardDirection.y = 0f;

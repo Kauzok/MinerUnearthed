@@ -64,15 +64,14 @@ namespace EntityStates.Digger
             //succ
             if (NetworkServer.active)
             {
-                RootPulse();
+                RootPulse(theSpot);
             }
         }
 
         //Based on EntityStates.TreeBot.TreebotFlower.TreebotFlower2Projectile.RootPulse
-        private void RootPulse()
+        private void RootPulse(Vector3 position)
         {
             List<CharacterBody> rootedBodies = new List<CharacterBody>();
-            Vector3 position = base.transform.position;
             foreach (HurtBox hurtBox in new SphereSearch
             {
                 origin = position,
@@ -89,7 +88,7 @@ namespace EntityStates.Digger
                     Vector3 a2 = a / magnitude;
                     Rigidbody component = hurtBox.healthComponent.GetComponent<Rigidbody>();
                     float num = component ? component.mass : 1f;
-                    float num2 = magnitude - 6f;    //REX yankIdealDistance = 6f
+                    float num2 = magnitude;// - 6f;    //REX yankIdealDistance = 6f
                     float num3 = EntityStates.Treebot.TreebotFlower.TreebotFlower2Projectile.yankSuitabilityCurve.Evaluate(num);
                     Vector3 vector = component ? component.velocity : Vector3.zero;
                     if (HGMath.IsVectorNaN(vector))
