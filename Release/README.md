@@ -61,6 +61,10 @@ JunJun_W - Chinese Translation
 
 ## Changelog
 
+`1.9.3`
+
+- Updated Meteor Shower skill icon.
+
 `1.9.2`
 
 - Crack Hammer
