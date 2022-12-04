@@ -1153,7 +1153,7 @@ namespace DiggerPlugin {
             mySkillDef.rechargeStock = 1;
             mySkillDef.requiredStock = 1;
             mySkillDef.stockToConsume = 1;
-            mySkillDef.icon = Assets.icon4;
+            mySkillDef.icon = Assets.icon4Alt;
             mySkillDef.skillDescriptionToken = "MINER_SPECIAL_TOTHESTARS_DESCRIPTION";
             mySkillDef.skillName = "MINER_SPECIAL_TOTHESTARS_NAME";
             mySkillDef.skillNameToken = "MINER_SPECIAL_TOTHESTARS_NAME";
@@ -1181,7 +1181,7 @@ namespace DiggerPlugin {
             mySkillDef.rechargeStock = 1;
             mySkillDef.requiredStock = 1;
             mySkillDef.stockToConsume = 1;
-            mySkillDef.icon = Assets.icon4S;
+            mySkillDef.icon = Assets.icon4AltS;
             mySkillDef.skillDescriptionToken = "MINER_SPECIAL_SCEPTERTOTHESTARS_DESCRIPTION";
             mySkillDef.skillName = "MINER_SPECIAL_SCEPTERTOTHESTARS_NAME";
             mySkillDef.skillNameToken = "MINER_SPECIAL_SCEPTERTOTHESTARS_NAME";

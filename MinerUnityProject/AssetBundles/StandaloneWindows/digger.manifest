@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 664856118
+CRC: 1611897468
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 4513b71c5e8cccff7467c1ddddded04f
+    Hash: 4a4f0725ed95293c843aba2101d63785
   TypeTreeHash:
     serializedVersion: 2
     Hash: 4e179099b555ead876f2a05ea75838b4
@@ -181,6 +181,7 @@ Assets:
 - Assets/Miner/Animations/RestLoop.anim
 - Assets/Miner/Materials/matMinerIron.mat
 - Assets/Miner/Animations/C4Emote.anim
+- Assets/Miner/MeteorShowerIcon.png
 - Assets/Miner/Animations/DrillChargeUp.anim
 - Assets/Miner/Animations/DrillChargeDown.anim
 - Assets/Miner/Materials/matBlacksmith.mat
@@ -221,6 +222,7 @@ Assets:
 - Assets/Miner/Icons/texGrandMasteryAchievement.png
 - Assets/Miner/Textures/texMiner.png
 - Assets/Miner/Icons/texSecondaryAchievement.png
+- Assets/Miner/MeteorShowerScepterIcon.png
 - Assets/Miner/Animations/RunF.anim
 - Assets/Miner/Animations/RunR.anim
 - Assets/Miner/DrillChargeIcon.png

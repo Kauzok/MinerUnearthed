@@ -61,6 +61,10 @@ JunJun_W - Chinese Translation
 
 ## Changelog
 
+`1.9.1`
+
+- Added placeholder icon for Meteor Shower Special.
+
 `1.9.0`
 
 - Visuals

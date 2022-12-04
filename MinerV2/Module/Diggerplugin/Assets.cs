@@ -28,6 +28,8 @@ namespace DiggerPlugin
         public static Sprite icon3B;
         public static Sprite icon4;
         public static Sprite icon4S;
+        public static Sprite icon4Alt;
+        public static Sprite icon4AltS;
         public static Sprite icon4B;
 
         public static GameObject c4Model;
@@ -86,6 +88,9 @@ namespace DiggerPlugin
             icon4 = mainAssetBundle.LoadAsset<Sprite>("ToTheStarsIcon");
             icon4S = mainAssetBundle.LoadAsset<Sprite>("ToTheStarsScepterIcon");
             icon4B = mainAssetBundle.LoadAsset<Sprite>("TimedExplosiveIcon");
+
+            icon4Alt = mainAssetBundle.LoadAsset<Sprite>("MeteorShowerIcon");
+            icon4AltS = mainAssetBundle.LoadAsset<Sprite>("MeteorShowerScepterIcon");
 
             c4Model = mainAssetBundle.LoadAsset<GameObject>("MinerC4");
 
