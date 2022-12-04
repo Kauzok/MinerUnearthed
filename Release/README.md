@@ -52,7 +52,7 @@ Ruxbieno - Direseeker logbook entry
 Christian Gentry - Anvil model
 JunJun_W - Chinese Translation
 
-## Future Plans
+## Future Plans 
 - Gnome's Alt Special
 - Skills++ and other fun stuff
 - update skins
@@ -63,9 +63,26 @@ JunJun_W - Chinese Translation
 
 `1.9.0`
 
-- Miner's visor now glows by default, like in RoR1.
-- Textures are no longer grainy.
-- Changed Blacksmith colors to be closer to the Starstorm sprite.
+- Visuals
+	- Miner's visor now glows by default, like in RoR1.
+	- Textures are no longer grainy.
+	- Changed Blacksmith colors to be closer to the Starstorm sprite.
+	
+- Crack Hammer
+	- Increased hitbox size
+	- Increased blast radius from 10m -> 12m
+	- Increased damage from 2x200% -> 2x240%.
+	- Removed chargeup since it didn't actually do anything.
+	- Increased shorthop velocity on hit from 12 -> 24
+	
+- Cave In
+	- Now uses the same input behavior as Backblast. (Hold the button to go further.)
+	
+- To The Stars
+	- Improved ability to hit flying enemies.
+		- Increased internal BulletAttack radius from 0.7 -> 4.5
+			- The ability works by firing bullets directly downwards in a star pattern around Miner. Bigger radius = higher chance to hit flying enemies in the attack's path.
+	- Now applies downwards force to enemies hit by the explosions.
 
 `1.8.8`
 

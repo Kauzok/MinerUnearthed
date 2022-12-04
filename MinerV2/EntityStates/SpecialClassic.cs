@@ -58,7 +58,7 @@ namespace EntityStates.Digger
                     aimVector = Vector3.down,
                     minSpread = 0f,
                     maxSpread = 0f,
-                    radius = 0.7f,
+                    radius = 4.5f,
                     bulletCount = 1U,
                     procCoefficient = 1f,
                     damage = base.characterBody.damage * ToTheStarsClassic.damageCoefficient,

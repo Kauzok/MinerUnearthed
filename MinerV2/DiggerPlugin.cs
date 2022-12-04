@@ -1283,7 +1283,8 @@ namespace DiggerPlugin {
                                 procCoefficient = damageInfo.procCoefficient,
                                 damageColorIndex = damageInfo.damageColorIndex,
                                 falloffModel = BlastAttack.FalloffModel.None,
-                                damageType = damageInfo.damageType
+                                damageType = damageInfo.damageType,
+                                bonusForce = 2000f * Vector3.down
                             };
                             blastAttack.Fire();
                         }

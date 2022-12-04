@@ -22,7 +22,7 @@
 	"MINER_SECONDARY_CHARGE_DESCRIPTION" : "充能并冲向敌人，最多造成<style=cIsDamage>6x180%伤害</style>。<style=cIsUtility>在此期间不能被击中。</style>",
 	
 	"MINER_SECONDARY_BREAK_NAME" : "破坏锤",
-	"MINER_SECONDARY_BREAK_DESCRIPTION" : "向前冲刺，在与敌人接触时，爆炸造成<style=cIsDamage>2x200%伤害</style>。<style=cIsUtility>在此期间不能被击中。</style>",
+	"MINER_SECONDARY_BREAK_DESCRIPTION" : "向前冲刺，在与敌人接触时，爆炸造成<style=cIsDamage>2x240%伤害</style>。<style=cIsUtility>在此期间不能被击中。</style>",
 	
 	"MINER_UTILITY_BACKBLAST_NAME" : "后撤步",
 	"MINER_UTILITY_BACKBLAST_DESCRIPTION" : "<style=cIsDamage>眩晕</style>。向后爆炸，击中附近的敌人，造成<style=cIsDamage>600%伤害</style>。按住后距离更远。<style=cIsUtility>在此期间不能被击中。</style>",

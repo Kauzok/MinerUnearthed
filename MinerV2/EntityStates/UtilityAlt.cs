@@ -8,7 +8,7 @@ namespace EntityStates.Digger
     public class CaveIn : BaseSkillState
     {
         public static float damageCoefficient = 0f;
-        public float baseDuration = 0.15f;
+        public float baseDuration = 0.35f;
         public static float blastRadius = 25f;
         public static float succForce = 7f;
 
@@ -75,8 +75,8 @@ namespace EntityStates.Digger
                                 if (charb)
                                 {
                                     Vector3 pushForce = (theSpot - charb.corePosition) * CaveIn.succForce;
-                                    var motor = charb.GetComponent<CharacterMotor>();
-                                    var rb = charb.GetComponent<Rigidbody>();
+                                    var motor = charb.characterMotor;
+                                    var rb = charb.rigidbody;
 
                                     float mass = 1;
                                     if (motor) mass = motor.mass;
@@ -150,7 +150,7 @@ namespace EntityStates.Digger
         public override void FixedUpdate()
         {
             base.FixedUpdate();
-            if ((base.fixedAge >= this.duration && base.isAuthority))
+            if ((base.fixedAge >= this.duration && base.isAuthority) || (!base.IsKeyDownAuthority()))
             {
                 this.outer.SetNextStateToMain();
                 return;

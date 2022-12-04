@@ -15,7 +15,8 @@ namespace EntityStates.Digger
 
         protected bool ShouldKeepChargingAuthority()
         {
-            return (base.fixedAge < chargeDuration) && base.IsKeyDownAuthority() && (charge * (.8f + (.2f * base.attackSpeedStat)) <= 38f);
+            //return (base.fixedAge < chargeDuration) && base.IsKeyDownAuthority() && (charge * (.8f + (.2f * base.attackSpeedStat)) <= 38f);
+            return false;
         }
 
         protected EntityState GetNextStateAuthority()
@@ -97,7 +98,7 @@ namespace EntityStates.Digger
 
     public class DrillBreak : BaseSkillState
     {
-        public static float damageCoefficient = 2f;
+        public static float damageCoefficient = 2.4f;
         public float baseDuration = 0.5f;
 
         private float duration;
@@ -127,7 +128,7 @@ namespace EntityStates.Digger
 
             if (modelTransform)
             {
-                hitBoxGroup = Array.Find<HitBoxGroup>(modelTransform.GetComponents<HitBoxGroup>(), (HitBoxGroup element) => element.groupName == "Charge");
+                hitBoxGroup = Array.Find<HitBoxGroup>(modelTransform.GetComponents<HitBoxGroup>(), (HitBoxGroup element) => element.groupName == "Crush");
             }
 
             this.attack = new OverlapAttack();
@@ -196,11 +197,11 @@ namespace EntityStates.Digger
 
                     if (base.characterMotor && !base.characterMotor.isGrounded)
                     {
-                        base.SmallHop(base.characterMotor, 12f);
+                        base.SmallHop(base.characterMotor, 24f);
                     }
 
                     BlastAttack blastAttack = new BlastAttack();
-                    blastAttack.radius = 10f;
+                    blastAttack.radius = 12f;
                     blastAttack.procCoefficient = 1f;
                     blastAttack.position = base.characterBody.corePosition;
                     blastAttack.attacker = base.gameObject;
