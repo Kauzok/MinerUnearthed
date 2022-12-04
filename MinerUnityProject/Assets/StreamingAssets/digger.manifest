@@ -1,0 +1,231 @@
+ManifestFileVersion: 0
+CRC: 3975191973
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 4a21976e17a14aee135c39757ad45fc9
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 4e179099b555ead876f2a05ea75838b4
+HashAppended: 0
+ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 4
+  Script: {instanceID: 0}
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 23
+  Script: {instanceID: 0}
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 33
+  Script: {instanceID: 0}
+- Class: 43
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+- Class: 54
+  Script: {instanceID: 0}
+- Class: 65
+  Script: {instanceID: 0}
+- Class: 74
+  Script: {instanceID: 0}
+- Class: 90
+  Script: {instanceID: 0}
+- Class: 91
+  Script: {instanceID: 0}
+- Class: 95
+  Script: {instanceID: 0}
+- Class: 114
+  Script: {fileID: 11500000, guid: 67079b849227b734694872d8810229b8, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: db294d07add6b364f99a346939dd2a8a, type: 3}
+- Class: 115
+  Script: {instanceID: 0}
+- Class: 135
+  Script: {instanceID: 0}
+- Class: 136
+  Script: {instanceID: 0}
+- Class: 137
+  Script: {instanceID: 0}
+- Class: 144
+  Script: {instanceID: 0}
+- Class: 198
+  Script: {instanceID: 0}
+- Class: 199
+  Script: {instanceID: 0}
+- Class: 213
+  Script: {instanceID: 0}
+- Class: 319
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers: []
+Assets:
+- Assets/Miner/Direseeker/matDireseeker.mat
+- Assets/Miner/MinerSwing.prefab
+- Assets/Miner/Textures/texMinerEmission.png
+- Assets/Miner/GoldRushIcon.png
+- Assets/Miner/Animations/DrillChargeShort.anim
+- Assets/Miner/VFX/matDrillCharge.mat
+- Assets/Miner/CrushIcon.png
+- Assets/Miner/Textures/texDripMinerEmission.png
+- Assets/Miner/Animations/DrillBreak.anim
+- Assets/Miner/Textures/texBlacksmithEmission.png
+- Assets/Miner/Animations/RunL.anim
+- Assets/Miner/Materials/matMiner.mat
+- Assets/Miner/Animations/IdleArenaline.anim
+- Assets/Miner/Animations/Rest.anim
+- Assets/Miner/Animations/CaveIn.anim
+- Assets/Miner/Materials/matDiamondPick.mat
+- Assets/Miner/Animations/Crush.anim
+- Assets/Miner/Mesh/TundraMesh.mesh
+- Assets/Miner/Mesh/SteveMesh.mesh
+- Assets/Miner/Animations/animMiner.controller
+- Assets/Miner/MinerSwingAlt.prefab
+- Assets/Miner/Materials/matMinerGold.mat
+- Assets/Miner/Animations/Taunt.anim
+- Assets/Miner/VFX/matFireParticle.mat
+- Assets/Miner/Animations/Swing1.anim
+- Assets/Miner/Animations/DrillChargeHoriEnd.anim
+- Assets/Miner/Animations/DrillChargeStart.anim
+- Assets/Miner/Textures/texMinerTundraEmission.png
+- Assets/Miner/Direseeker/DireHorn.prefab
+- Assets/Miner/Mesh/meshMinerGM.mesh
+- Assets/Miner/Animations/Crush 1.anim
+- Assets/Miner/Textures/texMinerMolten.png
+- Assets/Miner/VFX/matMinerImpact2.mat
+- Assets/Miner/Direseeker/texDireseeker.png
+- Assets/Miner/Materials/matAnvil.mat
+- Assets/Miner/Icons/texIconGoldRush.png
+- Assets/Miner/Animations/animMinerMenu.controller
+- Assets/Miner/CaveInIcon.png
+- Assets/Miner/ImpactMinerSwing.prefab
+- Assets/Miner/Mesh/MinerMesh.mesh
+- Assets/Miner/Animations/IdleIn.anim
+- Assets/Miner/VFX/matMinerSwing.mat
+- Assets/Miner/Icons/texMinerAchievement.png
+- Assets/Miner/ToTheStarsIcon.png
+- Assets/Miner/MinerDisplay.prefab
+- Assets/Miner/Animations/IdleInAdrenaline.anim
+- Assets/Miner/Animations/DrillChargeVertical.anim
+- Assets/Miner/Icons/texTundraAchievement.png
+- Assets/Miner/Animations/LightImpact.anim
+- Assets/Miner/Direseeker/texDireseekerEmission.png
+- Assets/Miner/Materials/matMinerGM.mat
+- Assets/Miner/Animations/Ascend.anim
+- Assets/Miner/Materials/matMinerTundra.mat
+- Assets/Miner/Textures/texMinerSteveEmission.png
+- Assets/Miner/VFX/texMinerLighting.png
+- Assets/Miner/VFX/texMinerSwing.png
+- Assets/Miner/Icons/texMoltenAchievement.png
+- Assets/Miner/Animations/ToTheStarsStart.anim
+- Assets/Miner/Animations/ImpactMask.mask
+- Assets/Miner/Animations/Jump.anim
+- Assets/Miner/Textures/texMinerGrandMasteryEmission.PNG
+- Assets/Miner/Materials/matBlacksmithHammer.mat
+- Assets/Miner/Animations/DrillChargeVertiEnd.anim
+- Assets/Miner/BackblastIcon.png
+- Assets/Miner/VFX/matMinerImpact.mat
+- Assets/Miner/DrillBreakIcon.png
+- Assets/Miner/Animations/SprintAdrenaline.anim
+- Assets/Miner/Textures/texMinerGoldEmission.png
+- Assets/Miner/VFX/texMinerSlash.png
+- Assets/Miner/Icons/texPupleAchievement.png
+- Assets/Miner/Textures/texMinerTundra.png
+- Assets/Miner/Animations/AimYaw.anim
+- Assets/Miner/Textures/texMinerMoltenEmission.png
+- Assets/Miner/VFX/texMinerImpact.png
+- Assets/Miner/Animations/MenuIdle.anim
+- Assets/Miner/Animations/Swing4.anim
+- Assets/Miner/Mesh/FireParticle.mesh
+- Assets/Miner/Materials/matMinerDiamond.mat
+- Assets/Miner/Animations/Backblast.anim
+- Assets/Miner/Animations/MenuIdleIn.anim
+- Assets/Miner/Direseeker/DireHornBroken.prefab
+- Assets/Miner/Animations/BackblastDown.anim
+- Assets/Miner/MinerSwingEmpowered.prefab
+- Assets/Miner/Animations/FallingCometStart.anim
+- Assets/Miner/Animations/Idle.anim
+- Assets/Miner/MinerSwingaltAlt.prefab
+- Assets/Miner/Textures/texDripMiner.png
+- Assets/Miner/BlacksmithAnvil.prefab
+- Assets/Miner/Animations/AscendNew.anim
+- Assets/Miner/Animations/ToTheStarsEnd.anim
+- Assets/Miner/Animations/DrillChargeHorizontal.anim
+- Assets/Miner/Textures/texAnvil.png
+- Assets/Miner/Animations/AimPitch.anim
+- Assets/Miner/Icons/texUtilityAchievement.png
+- Assets/Miner/Animations/Sprint.anim
+- Assets/Miner/VFX/texMinerHitSpark.png
+- Assets/Miner/Animations/Flip.anim
+- Assets/Miner/Animations/DrillChargeF.anim
+- Assets/Miner/Materials/matMinerSteve.mat
+- Assets/Miner/Textures/texMinerGold.png
+- Assets/Miner/texMinerIcon.png
+- Assets/Miner/BlacksmithHammer.prefab
+- Assets/Miner/Icons/psdIconGoldRush.psd
+- Assets/Miner/VFX/matMinerHitSpark.mat
+- Assets/Miner/Textures/texMinerSteve.png
+- Assets/Miner/VFX/matMinerShockwave.mat
+- Assets/Miner/Direseeker/FBX/DireHornBroken.fbx
+- Assets/Miner/Animations/DescendNew.anim
+- Assets/Miner/Animations/FallingCometEnd.anim
+- Assets/Miner/Icons/texBlacksmithAchievement.png
+- Assets/Miner/Animations/animMinerTest.controller
+- Assets/Miner/Animations/AimMask.mask
+- Assets/Miner/VFX/matMinerSpark.mat
+- Assets/Miner/Animations/GestureMask.mask
+- Assets/Miner/Mesh/BlacksmithMesh.mesh
+- Assets/Miner/Mesh/DripMesh.mesh
+- Assets/Miner/Textures/texMinerPupleEmission.png
+- Assets/Miner/Animations/RestLoop.anim
+- Assets/Miner/Materials/matMinerIron.mat
+- Assets/Miner/Animations/C4Emote.anim
+- Assets/Miner/Animations/DrillChargeUp.anim
+- Assets/Miner/Animations/DrillChargeDown.anim
+- Assets/Miner/Materials/matBlacksmith.mat
+- Assets/Miner/Icons/texDripSkin.png
+- Assets/Miner/VFX/texMinerSpark.png
+- Assets/Miner/VFX/MinerSwingMesh.asset
+- Assets/Miner/ToTheStarsScepterIcon.png
+- Assets/Miner/Materials/matC4.mat
+- Assets/Miner/Icons/texPrimaryAchievement.png
+- Assets/Miner/ImpactMinerHeavy.prefab
+- Assets/Miner/Animations/GestureMask2.mask
+- Assets/Miner/Animations/Descend.anim
+- Assets/Miner/Textures/texDiamondPick.png
+- Assets/Miner/Textures/texMinerPuple.png
+- Assets/Miner/Direseeker/texDireseekerIcon.png
+- Assets/Miner/VFX/texMinerShockwave.png
+- Assets/Miner/ImpactMinerSlash.prefab
+- Assets/Miner/Textures/texMinerIron.png
+- Assets/Miner/Materials/texMinerGrandMastery.PNG
+- Assets/Miner/VFX/matComet.mat
+- Assets/Miner/VFX/matMinerSlash.mat
+- Assets/Miner/Textures/texMinerDiamondEmission.png
+- Assets/Miner/GougeIcon.png
+- Assets/Miner/Materials/matMinerPuple.mat
+- Assets/Miner/Animations/DrillChargeShortEnd.anim
+- Assets/Miner/Direseeker/texDireseekerPlayerIcon.png
+- Assets/Miner/Direseeker/DireseekerRageFlame.prefab
+- Assets/Miner/VFX/matMinerSwingEmpowered.mat
+- Assets/Miner/Animations/Swing2.anim
+- Assets/Miner/TimedExplosiveIcon.png
+- Assets/Miner/Textures/texBlacksmith.png
+- Assets/Miner/Textures/texMinerDiamond.png
+- Assets/Miner/Animations/BackblastUp.anim
+- Assets/Miner/Animations/RunB.anim
+- Assets/Miner/mdlMiner.prefab
+- Assets/Miner/Materials/matDripMiner.mat
+- Assets/Miner/Animations/Swing3.anim
+- Assets/Miner/Icons/texGrandMasteryAchievement.png
+- Assets/Miner/Textures/texMiner.png
+- Assets/Miner/Icons/texSecondaryAchievement.png
+- Assets/Miner/Animations/RunF.anim
+- Assets/Miner/Animations/RunR.anim
+- Assets/Miner/DrillChargeIcon.png
+- Assets/Miner/Materials/matMinerMolten.mat
+- Assets/Miner/Direseeker/DireseekerBurstFlame.prefab
+- Assets/Miner/MinerC4.prefab
+- Assets/Miner/Direseeker/FBX/DireHorn.fbx
+Dependencies: []

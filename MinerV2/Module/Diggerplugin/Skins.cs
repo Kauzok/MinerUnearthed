@@ -86,7 +86,7 @@ namespace DiggerPlugin
                 material.SetColor("_Color", Color.white);
                 material.SetTexture("_MainTex", Assets.mainAssetBundle.LoadAsset<Material>("matMiner").GetTexture("_MainTex"));
                 material.SetColor("_EmColor", new Color(244f / 255f, 243f / 255f, 183f / 255f));
-                material.SetFloat("_EmPower", 2f);
+                material.SetFloat("_EmPower", 1f);
                 material.SetTexture("_EmTex", Assets.mainAssetBundle.LoadAsset<Material>("matMiner").GetTexture("_EmissionMap"));
                 material.SetFloat("_NormalStrength", 0);
                 //material.SetTexture("_NormalTex", Assets.mainAssetBundle.LoadAsset<Material>("matMiner").GetTexture("_BumpMap"));
@@ -207,7 +207,7 @@ namespace DiggerPlugin
                 material = UnityEngine.Object.Instantiate<Material>(material);
                 material.SetTexture("_MainTex", Assets.mainAssetBundle.LoadAsset<Material>("matMinerGM").GetTexture("_MainTex"));
                 material.SetColor("_EmColor", new Color(244f / 255f, 243f / 255f, 183f / 255f));
-                material.SetFloat("_EmPower", 2f);
+                material.SetFloat("_EmPower", 1f);
                 material.SetTexture("_EmTex", Assets.mainAssetBundle.LoadAsset<Material>("matMinerGM").GetTexture("_EmissionMap"));
 
                 array[0].defaultMaterial = material;
@@ -293,7 +293,7 @@ namespace DiggerPlugin
                 material = UnityEngine.Object.Instantiate<Material>(material);
                 material.SetTexture("_MainTex", Assets.mainAssetBundle.LoadAsset<Material>("matMinerTundra").GetTexture("_MainTex"));
                 material.SetColor("_EmColor", new Color(244f / 255f, 140f / 255f, 140f / 255f));
-                material.SetFloat("_EmPower", 2f);
+                material.SetFloat("_EmPower", 1f);
                 material.SetTexture("_EmTex", Assets.mainAssetBundle.LoadAsset<Material>("matMinerTundra").GetTexture("_EmissionMap"));
 
                 array[0].defaultMaterial = material;
@@ -336,7 +336,7 @@ namespace DiggerPlugin
                 material = UnityEngine.Object.Instantiate<Material>(material);
                 material.SetTexture("_MainTex", Assets.mainAssetBundle.LoadAsset<Material>("matBlacksmith").GetTexture("_MainTex"));
                 material.SetColor("_EmColor", new Color(244f / 255f, 243f / 255f, 183f / 255f));
-                material.SetFloat("_EmPower", 2f);
+                material.SetFloat("_EmPower", 1f);
                 material.SetTexture("_EmTex", Assets.mainAssetBundle.LoadAsset<Material>("matBlacksmith").GetTexture("_EmissionMap"));
 
                 array[0].defaultMaterial = material;
@@ -378,7 +378,7 @@ namespace DiggerPlugin
                 material = UnityEngine.Object.Instantiate<Material>(material);
                 material.SetTexture("_MainTex", Assets.mainAssetBundle.LoadAsset<Material>("matMinerIron").GetTexture("_MainTex"));
                 material.SetColor("_EmColor", new Color(244f / 255f, 140f / 255f, 140f / 255f));
-                material.SetFloat("_EmPower", 2f);
+                material.SetFloat("_EmPower", 1f);
 
                 array[0].defaultMaterial = material;
             }
@@ -543,7 +543,7 @@ namespace DiggerPlugin
                 material = UnityEngine.Object.Instantiate<Material>(material);
                 material.SetTexture("_MainTex", Assets.mainAssetBundle.LoadAsset<Material>("matMinerSteve").GetTexture("_MainTex"));
                 material.SetColor("_EmColor", new Color(244f / 255f, 243f / 255f, 183f / 255f));
-                material.SetFloat("_EmPower", 2f);
+                material.SetFloat("_EmPower", 1f);
                 material.SetTexture("_EmTex", Assets.mainAssetBundle.LoadAsset<Material>("matMinerSteve").GetTexture("_EmissionMap"));
 
                 array[0].defaultMaterial = material;

@@ -1,0 +1,7 @@
+ManifestFileVersion: 0
+CRC: 2589737800
+AssetBundleManifest:
+  AssetBundleInfos:
+    Info_0:
+      Name: digger
+      Dependencies: {}

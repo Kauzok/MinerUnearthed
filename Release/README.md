@@ -64,7 +64,8 @@ JunJun_W - Chinese Translation
 `1.9.0`
 
 - Miner's visor now glows by default, like in RoR1.
-	- This makes the Blacksmith skin look a LOT better.
+- Textures are no longer grainy.
+- Changed Blacksmith colors to be closer to the Starstorm sprite.
 
 `1.8.8`
 
