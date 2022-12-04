@@ -9,8 +9,15 @@ namespace EntityStates.Digger
     public class DiggerMain : GenericCharacterMain {
 
         //public static float passiveStyleCoefficient = 0.4f;
+
+        private float origEmision;
+        private Color origColor;
+
         public static float maxEmission = 25f;
-        public static float minEmission = 0f;
+        //public static float minEmission = 2f;
+
+        //public static Color minEmissionColor = new Color(244f / 255f, 243f / 255f, 183f / 255f);
+        //public static Color maxEmissionColor = new Color(255f / 255f, 80f / 255f, 80f / 255f);
 
         private float adrenalineGainBuffer;
         private bool isMainSkin;
@@ -48,6 +55,11 @@ namespace EntityStates.Digger
                 if (modelTransform)
                 {
                     this.bodyMat = modelTransform.GetComponent<CharacterModel>().baseRendererInfos[0].defaultMaterial;
+                    if (this.bodyMat)
+                    {
+                        origColor = this.bodyMat.GetColor("_EmColor");
+                        origEmision = this.bodyMat.GetFloat("_EmPower");
+                    }
                 }
 
                 if (base.characterBody.skinIndex == 0) this.isMainSkin = true;
@@ -198,8 +210,10 @@ namespace EntityStates.Digger
         {
             if (this.isMainSkin && this.bodyMat)
             {
-                float emValue = Util.Remap(this.adrenalineSmooth, 0, this.adrenalineCap, DiggerMain.minEmission, DiggerMain.maxEmission);
-                Color emColor = Color.white;
+                float buffPercent = Mathf.Min(1f, this.adrenalineSmooth / this.adrenalineCap);//(float)base.characterBody.GetBuffCount(DiggerPlugin.Buffs.goldRushBuff)
+
+                /*float emValue = Util.Remap(this.adrenalineSmooth, 0, this.adrenalineCap, DiggerMain.minEmission, DiggerMain.maxEmission);
+                Color emColor = minEmissionColor;
 
                 if (this.adrenalineSmooth <= 0.5f * this.adrenalineCap)
                 {
@@ -214,7 +228,10 @@ namespace EntityStates.Digger
                 }
 
                 this.bodyMat.SetFloat("_EmPower", emValue);
-                this.bodyMat.SetColor("_EmColor", emColor);
+                this.bodyMat.SetColor("_EmColor", emColor);*/
+                Color maxEmissionColor = new Color(1f, origColor.g * 0.4f, origColor.b * 0.4f);
+                this.bodyMat.SetFloat("_EmPower", Mathf.Lerp(origEmision, DiggerMain.maxEmission, buffPercent));
+                this.bodyMat.SetColor("_EmColor", Color.Lerp(origColor, maxEmissionColor, buffPercent));
             }
         }
 

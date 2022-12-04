@@ -50,7 +50,7 @@ bruh - Swag model
 Neik - Blacksmith concept  
 Ruxbieno - Direseeker logbook entry  
 Christian Gentry - Anvil model
-Edge-R - Chinese Translation
+JunJun_W - Chinese Translation
 
 ## Future Plans
 - Gnome's Alt Special
@@ -60,6 +60,11 @@ Edge-R - Chinese Translation
 - help
 
 ## Changelog
+
+`1.9.0`
+
+- Miner's visor now glows by default, like in RoR1.
+	- This makes the Blacksmith skin look a LOT better.
 
 `1.8.8`
 
