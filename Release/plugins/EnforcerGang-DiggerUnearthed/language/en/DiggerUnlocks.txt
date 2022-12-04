@@ -13,6 +13,14 @@
 	"MINERBODY_STEVE_SKIN_NAME" : "Minecraft",
 	"MINERBODY_DRIP_SKIN_NAME" : "Drip",
 	
+	"MINER_UNLOCKABLE_ACHIEVEMENT_NAME" : "Adrenaline Rush",
+	"MINER_UNLOCKABLE_UNLOCKABLE_NAME" : "Adrenaline Rush",
+	"MINER_UNLOCKABLE_ACHIEVEMENT_DESC" : "Open a Legendary Chest.",
+	
+	"MINER_ALTUNLOCKABLE_ACHIEVEMENT_NAME" : "Forged in Flames",
+	"MINER_ALTUNLOCKABLE_UNLOCKABLE_NAME" : "Forged in Flames",
+	"MINER_ALTUNLOCKABLE_ACHIEVEMENT_DESC" : "Defeat the unique guardian of Abyssal Depths.",
+	
 	"MINER_TYPHOONUNLOCKABLE_ACHIEVEMENT_NAME" : "Miner: Grand Mastery",
 	"MINER_TYPHOONUNLOCKABLE_UNLOCKABLE_NAME" : "Miner: Grand Mastery",
 	"MINER_TYPHOONUNLOCKABLE_ACHIEVEMENT_DESC" : "As Miner, beat the game or obliterate on Typhoon or Eclipse.\n<color=#8888>(Typhoon difficulty requires Starstorm 2)</color>",

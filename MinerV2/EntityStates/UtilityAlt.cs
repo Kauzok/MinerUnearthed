@@ -1,12 +1,14 @@
 ﻿using RoR2;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 using UnityEngine.Networking;
 
 namespace EntityStates.Digger
 {
     public class CaveIn : BaseSkillState
     {
+        public static GameObject effectPrefab = Addressables.LoadAssetAsync<GameObject>("RoR2/Base/Bandit2/Bandit2SmokeBomb.prefab").WaitForCompletion();
         public static float damageCoefficient = 0f;
         public float baseDuration = 0.35f;
         public static float blastRadius = 25f;
@@ -54,58 +56,68 @@ namespace EntityStates.Digger
                 effectData.origin = theSpot;
                 effectData.scale = 15;
 
-                EffectManager.SpawnEffect(DiggerPlugin.DiggerPlugin.backblastEffect, effectData, false);
+                EffectManager.SpawnEffect(CaveIn.effectPrefab, effectData, false);
 
                 base.characterMotor.velocity = -80 * aimRay.direction;
 
             }
             //succ
             if (NetworkServer.active)
+            {
+                RootPulse();
+            }
+        }
+
+        //Based on EntityStates.TreeBot.TreebotFlower.TreebotFlower2Projectile.RootPulse
+        private void RootPulse()
+        {
+            List<CharacterBody> rootedBodies = new List<CharacterBody>();
+            Vector3 position = base.transform.position;
+            foreach (HurtBox hurtBox in new SphereSearch
+            {
+                origin = position,
+                radius = CaveIn.blastRadius,
+                mask = LayerIndex.entityPrecise.mask
+            }.RefreshCandidates().FilterCandidatesByHurtBoxTeam(TeamMask.GetEnemyTeams(base.GetTeam())).OrderCandidatesByDistance().FilterCandidatesByDistinctHurtBoxEntities().GetHurtBoxes())
+            {
+                CharacterBody body = hurtBox.healthComponent.body;
+                if (!rootedBodies.Contains(body))
                 {
-                    Collider[] array = Physics.OverlapSphere(theSpot, CaveIn.blastRadius, LayerIndex.defaultLayer.mask);
-                    for (int i = 0; i < array.Length; i++)
+                    rootedBodies.Add(body);
+                    Vector3 a = hurtBox.transform.position - position;
+                    float magnitude = a.magnitude;
+                    Vector3 a2 = a / magnitude;
+                    Rigidbody component = hurtBox.healthComponent.GetComponent<Rigidbody>();
+                    float num = component ? component.mass : 1f;
+                    float num2 = magnitude - 6f;    //REX yankIdealDistance = 6f
+                    float num3 = EntityStates.Treebot.TreebotFlower.TreebotFlower2Projectile.yankSuitabilityCurve.Evaluate(num);
+                    Vector3 vector = component ? component.velocity : Vector3.zero;
+                    if (HGMath.IsVectorNaN(vector))
                     {
-                        HealthComponent healthComponent = array[i].GetComponent<HealthComponent>();
-                        if (healthComponent)
-                        {
-                            TeamComponent component2 = healthComponent.GetComponent<TeamComponent>();
-                            if (component2.teamIndex != TeamIndex.Player)
-                            {
-                                var charb = healthComponent.body;
-                                if (charb)
-                                {
-                                    Vector3 pushForce = (theSpot - charb.corePosition) * CaveIn.succForce;
-                                    var motor = charb.characterMotor;
-                                    var rb = charb.rigidbody;
-
-                                    float mass = 1;
-                                    if (motor) mass = motor.mass;
-                                    else if (rb) mass = rb.mass;
-                                    if (mass < 100) mass = 100;
-
-                                    pushForce *= mass;
-
-                                    DamageInfo info = new DamageInfo
-                                    {
-                                        attacker = base.gameObject,
-                                        inflictor = base.gameObject,
-                                        damage = 0,
-                                        damageColorIndex = DamageColorIndex.Default,
-                                        damageType = DamageType.Generic,
-                                        crit = false,
-                                        dotIndex = DotController.DotIndex.None,
-                                        force = pushForce,
-                                        position = base.transform.position,
-                                        procChainMask = default(ProcChainMask),
-                                        procCoefficient = 0
-                                    };
-
-                                    charb.healthComponent.TakeDamageForce(info, true, true);
-                                }
-                            }
-                        }
+                        vector = Vector3.zero;
                     }
+                    Vector3 a3 = -vector;
+                    if (num2 > 0f)
+                    {
+                        a3 = a2 * -Trajectory.CalculateInitialYSpeedForHeight(num2, -body.acceleration);
+                    }
+                    Vector3 force = a3 * (num * num3);
+                    DamageInfo damageInfo = new DamageInfo
+                    {
+                        attacker = base.gameObject,
+                        inflictor = base.gameObject,
+                        crit = false,
+                        damage = 0f,
+                        damageColorIndex = DamageColorIndex.Default,
+                        damageType = DamageType.NonLethal | DamageType.Silent,
+                        force = force,
+                        position = hurtBox.transform.position,
+                        procChainMask = default,
+                        procCoefficient = 0f
+                    };
+                    hurtBox.healthComponent.TakeDamage(damageInfo);
                 }
+            }
         }
 
         public override void OnExit()

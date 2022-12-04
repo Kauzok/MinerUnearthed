@@ -67,6 +67,9 @@ JunJun_W - Chinese Translation
 	- Miner's visor now glows by default, like in RoR1.
 	- Textures are no longer grainy.
 	- Changed Blacksmith colors to be closer to the Starstorm sprite.
+
+- Language files now contain all tokens.
+	- Removed LanaguageAPI dependency.
 	
 - Crack Hammer
 	- Increased hitbox size
@@ -77,6 +80,8 @@ JunJun_W - Chinese Translation
 	
 - Cave In
 	- Now uses the same input behavior as Backblast. (Hold the button to go further.)
+	- Rewrote enemy pull code. Should be way more consistent now.
+	- Changed VFX to make it more clear that the skill doesn't actually deal damage.
 	
 - To The Stars
 	- Improved ability to hit flying enemies.
