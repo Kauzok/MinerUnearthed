@@ -61,6 +61,11 @@ JunJun_W - Chinese Translation
 
 ## Changelog
 
+`1.9.2`
+
+- Crack Hammer
+	- Reduced shorthop velocity from 24 -> 18 so that it doesn't launch you out of reach of enemies.
+
 `1.9.1`
 
 - Added placeholder icon for Meteor Shower Special.

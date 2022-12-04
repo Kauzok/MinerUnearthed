@@ -31,7 +31,7 @@ namespace DiggerPlugin {
     [BepInDependency("com.Skell.GoldenCoastPlus", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("com.TeamMoonstorm.Starstorm2", BepInDependency.DependencyFlags.SoftDependency)]
     [NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod, VersionStrictness.EveryoneNeedSameModVersion)]
-    [BepInPlugin(MODUID, "DiggerUnearthed", "1.9.0")]
+    [BepInPlugin(MODUID, "DiggerUnearthed", "1.9.2")]
     [R2APISubmoduleDependency(new string[]
     {
         "PrefabAPI",

@@ -197,7 +197,7 @@ namespace EntityStates.Digger
 
                     if (base.characterMotor && !base.characterMotor.isGrounded)
                     {
-                        base.SmallHop(base.characterMotor, 24f);
+                        base.SmallHop(base.characterMotor, 18f);
                     }
 
                     BlastAttack blastAttack = new BlastAttack();
