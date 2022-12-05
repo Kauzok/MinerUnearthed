@@ -61,6 +61,11 @@ JunJun_W - Chinese Translation
 
 ## Changelog
 
+`1.9.4`
+
+- Cave In
+	- Fixed error spam when hitting the Sky Meadow rocks.
+
 `1.9.3`
 
 - Updated Meteor Shower skill icon.

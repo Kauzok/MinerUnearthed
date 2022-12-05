@@ -47,7 +47,7 @@ namespace EntityStates.Digger
                 blastAttack.baseDamage = base.characterBody.damage * CaveIn.damageCoefficient;
                 blastAttack.falloffModel = BlastAttack.FalloffModel.None;
                 blastAttack.baseForce = 0f;
-                blastAttack.teamIndex = TeamComponent.GetObjectTeam(blastAttack.attacker);
+                blastAttack.teamIndex = base.GetTeam();
                 blastAttack.damageType = DamageType.Stun1s;
                 blastAttack.attackerFiltering = AttackerFiltering.NeverHitSelf;
                 blastAttack.Fire();
@@ -80,7 +80,7 @@ namespace EntityStates.Digger
             }.RefreshCandidates().FilterCandidatesByHurtBoxTeam(TeamMask.GetEnemyTeams(base.GetTeam())).OrderCandidatesByDistance().FilterCandidatesByDistinctHurtBoxEntities().GetHurtBoxes())
             {
                 CharacterBody body = hurtBox.healthComponent.body;
-                if (!rootedBodies.Contains(body))
+                if (body && !rootedBodies.Contains(body) && !HGMath.IsVectorNaN(hurtBox.transform.position))//Why is this NaN check need here but not in the original code?
                 {
                     rootedBodies.Add(body);
                     Vector3 a = hurtBox.transform.position - position;
@@ -91,30 +91,37 @@ namespace EntityStates.Digger
                     float num2 = magnitude;// - 6f;    //REX yankIdealDistance = 6f
                     float num3 = EntityStates.Treebot.TreebotFlower.TreebotFlower2Projectile.yankSuitabilityCurve.Evaluate(num);
                     Vector3 vector = component ? component.velocity : Vector3.zero;
+
                     if (HGMath.IsVectorNaN(vector))
                     {
                         vector = Vector3.zero;
                     }
+
                     Vector3 a3 = -vector;
                     if (num2 > 0f)
                     {
                         a3 = a2 * -Trajectory.CalculateInitialYSpeedForHeight(num2, -body.acceleration);
                     }
                     Vector3 force = a3 * (num * num3);
-                    DamageInfo damageInfo = new DamageInfo
+
+                    //Why is this NaN check need here but not in the original code?
+                    if (!HGMath.IsVectorNaN(force))
                     {
-                        attacker = base.gameObject,
-                        inflictor = base.gameObject,
-                        crit = false,
-                        damage = 0f,
-                        damageColorIndex = DamageColorIndex.Default,
-                        damageType = DamageType.NonLethal | DamageType.Silent,
-                        force = force,
-                        position = hurtBox.transform.position,
-                        procChainMask = default,
-                        procCoefficient = 0f
-                    };
-                    hurtBox.healthComponent.TakeDamage(damageInfo);
+                        DamageInfo damageInfo = new DamageInfo
+                        {
+                            attacker = base.gameObject,
+                            inflictor = base.gameObject,
+                            crit = false,
+                            damage = 0f,
+                            damageColorIndex = DamageColorIndex.Default,
+                            damageType = DamageType.NonLethal | DamageType.Silent,
+                            force = force,
+                            position = hurtBox.transform.position,
+                            procChainMask = default,
+                            procCoefficient = 0f
+                        };
+                        hurtBox.healthComponent.TakeDamageForce(damageInfo, true, false);
+                    }
                 }
             }
         }
@@ -125,32 +132,6 @@ namespace EntityStates.Digger
             {
                 base.characterBody.RemoveBuff(RoR2Content.Buffs.HiddenInvincibility);
                 base.characterBody.AddTimedBuff(RoR2Content.Buffs.HiddenInvincibility, 0.5f);
-
-                //no succ
-                Ray aimRay = base.GetAimRay();
-                Vector3 theSpot = aimRay.origin + 2 * aimRay.direction;
-
-                Collider[] array = Physics.OverlapSphere(theSpot, CaveIn.blastRadius + 8f, LayerIndex.defaultLayer.mask);
-                for (int i = 0; i < array.Length; i++)
-                {
-                    HealthComponent healthComponent = array[i].GetComponent<HealthComponent>();
-                    if (healthComponent)
-                    {
-                        TeamComponent component2 = healthComponent.GetComponent<TeamComponent>();
-                        if (component2.teamIndex != TeamIndex.Player)
-                        {
-                            var charb = healthComponent.body;
-                            if (charb)
-                            {
-                                var motor = charb.characterMotor;
-                                var rb = charb.rigidbody;
-
-                                if (motor) motor.velocity *= 0.1f;
-                                if (rb) rb.velocity *= 0.1f;
-                            }
-                        }
-                    }
-                }
             }
 
             base.characterMotor.velocity *= 0.1f;
