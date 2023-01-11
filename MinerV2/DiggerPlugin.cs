@@ -31,12 +31,11 @@ namespace DiggerPlugin {
     [BepInDependency("com.Skell.GoldenCoastPlus", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("com.TeamMoonstorm.Starstorm2", BepInDependency.DependencyFlags.SoftDependency)]
     [NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod, VersionStrictness.EveryoneNeedSameModVersion)]
-    [BepInPlugin(MODUID, "DiggerUnearthed", "1.9.4")]
+    [BepInPlugin(MODUID, "DiggerUnearthed", "1.9.5")]
     [R2APISubmoduleDependency(new string[]
     {
         "PrefabAPI",
         "LoadoutAPI",
-        "SoundAPI",
         "UnlockableAPI",
         "DirectorAPI",
         nameof(RecalculateStatsAPI),
@@ -47,7 +46,6 @@ namespace DiggerPlugin {
     {
         public const string MODUID = "com.rob.DiggerUnearthed";
 
-        public static PluginInfo pluginInfo;
         public static DiggerPlugin instance;
         public static BepInEx.Logging.ManualLogSource logger;
 
@@ -119,7 +117,7 @@ namespace DiggerPlugin {
         private void Awake()
         {
             SetupModCompat();
-            pluginInfo = Info;
+            Files.PluginInfo = Info;
             ConfigShit();
             SetupDamageTypes();
             LanguageTokens.RegisterLanguageTokens();
@@ -127,6 +125,8 @@ namespace DiggerPlugin {
 
         private void Start() {
             Logger.LogInfo("[Initializing Miner]");
+
+            SoundBanks.Init();
 
             instance = this;
             logger = base.Logger;

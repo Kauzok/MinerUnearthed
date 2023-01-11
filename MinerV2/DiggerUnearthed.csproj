@@ -5,14 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="digger" />
-    <None Remove="DiggerBank.bnk" />
     <None Remove="DiggerV2.bnk" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Include="digger" />
-    <EmbeddedResource Include="DiggerBank.bnk" />
   </ItemGroup>
 
   <ItemGroup>

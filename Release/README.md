@@ -61,6 +61,12 @@ JunJun_W - Chinese Translation
 
 ## Changelog
 
+`1.9.5`
+
+- AssetBundle/Soundbank are no longer embedded in the DLL to reduce RAM usage.
+- Updated skill icons (Thanks PapaZach!)
+- Added RU translation from Адский Шкед
+
 `1.9.4`
 
 - Cave In

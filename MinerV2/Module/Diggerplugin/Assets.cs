@@ -5,6 +5,7 @@ using System.IO;
 using UnityEngine.Networking;
 using RoR2;
 using System.Collections.Generic;
+using DiggerUnearthed.Module;
 
 namespace DiggerPlugin
 {
@@ -55,17 +56,7 @@ namespace DiggerPlugin
         {
             if (mainAssetBundle == null)
             {
-                using (var assetStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("DiggerUnearthed.digger"))
-                {
-                    mainAssetBundle = AssetBundle.LoadFromStream(assetStream);
-                }
-            }
-
-            using (Stream manifestResourceStream2 = Assembly.GetExecutingAssembly().GetManifestResourceStream("DiggerUnearthed.DiggerBank.bnk"))
-            {
-                byte[] array = new byte[manifestResourceStream2.Length];
-                manifestResourceStream2.Read(array, 0, array.Length);
-                SoundAPI.SoundBanks.Add(array);
+                mainAssetBundle = AssetBundle.LoadFromFile(Files.GetPathToFile("AssetBundles", "digger"));
             }
 
             blacksmithHammer = mainAssetBundle.LoadAsset<GameObject>("BlacksmithHammer");

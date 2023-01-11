@@ -17,7 +17,7 @@ namespace DiggerUnearthed.Module
         {
             get
             {
-                return System.IO.Path.GetDirectoryName(DiggerPlugin.DiggerPlugin.pluginInfo.Location);
+                return System.IO.Path.GetDirectoryName(Files.PluginInfo.Location);
             }
         }
 
