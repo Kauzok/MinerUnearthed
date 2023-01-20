@@ -30,8 +30,8 @@
         "MINER_MONSOONUNLOCKABLE_UNLOCKABLE_NAME" : "Гірник: Майстерність",
         "MINER_MONSOONUNLOCKABLE_ACHIEVEMENT_DESC" : "За Гірника, пройдіть гру або зітріть себе на складності Мусон.",
         
-        "MINER_CRUSHUNLOCKABLE_ACHIEVEMENT_NAME" : "Гірник: Пограбоване золото",
-        "MINER_CRUSHUNLOCKABLE_UNLOCKABLE_NAME" : "Гірник: Пограбоване золото",
+        "MINER_CRUSHUNLOCKABLE_ACHIEVEMENT_NAME" : "Гірник: Награбоване золото",
+        "MINER_CRUSHUNLOCKABLE_UNLOCKABLE_NAME" : "Гірник: Награбоване золото",
         "MINER_CRUSHUNLOCKABLE_ACHIEVEMENT_DESC" : "За Гірника, накладіть 12 ефектів розщеплення на унікального вартового Позолоченого берега.",
         
         "MINER_CRACKUNLOCKABLE_ACHIEVEMENT_NAME" : "Гірник: Наркоман",
