@@ -51,7 +51,7 @@ Neik - Blacksmith concept
 Ruxbieno - Direseeker logbook entry  
 Christian Gentry - Anvil model
 JunJun_W - Chinese Translation
-Адский Шкед - Russian Translation
+Адский Шкед and Hexxedude - Russian Translation
 
 ## Future Plans 
 - Gnome's Alt Special
@@ -61,6 +61,10 @@ JunJun_W - Chinese Translation
 - help
 
 ## Changelog
+
+`1.9.6`
+
+- Updated RU Lang.
 
 `1.9.5`
 
