@@ -49,9 +49,12 @@ redacted - Grand Mastery skin
 bruh - Swag model  
 Neik - Blacksmith concept  
 Ruxbieno - Direseeker logbook entry  
-Christian Gentry - Anvil model
-JunJun_W - Chinese Translation
-Адский Шкед and Hexxedude - Russian Translation
+Christian Gentry - Anvil model  
+JunJun_W - Chinese Translation  
+Адский Шкед - Russian Translation  
+Damglador - Ukrainian Translation  
+Donitodorito - Portuguese Translation
+Juhnter - Spanish Translation
 
 ## Future Plans 
 - Gnome's Alt Special
@@ -62,9 +65,13 @@ JunJun_W - Chinese Translation
 
 ## Changelog
 
-`1.9.6`
+`1.9.7`
+- forgot spanish translation in last update, sorry Juhnter!
 
-- Updated RU Lang.
+`1.9.6`
+- added UA translation from Damglador
+- added pt-BR translation from Donitodorito
+- been a while since I touched this so let me (Timesweeper) know if I fucked something up
 
 `1.9.5`
 
