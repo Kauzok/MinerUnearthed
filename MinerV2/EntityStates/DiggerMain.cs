@@ -47,7 +47,8 @@ namespace EntityStates.Digger
             this.adrenalineGainBuffer = 0.3f;
             this.moneyTracker = (int)base.characterBody.master.money;
             this.gotJunkie = false;
-            this.localUser = LocalUserManager.readOnlyLocalUsersList[0];
+            this.localUser = null;
+            if (LocalUserManager.readOnlyLocalUsersList.Count > 0) this.localUser = LocalUserManager.readOnlyLocalUsersList[0];
 
             if (base.characterBody)
             {
@@ -81,7 +82,7 @@ namespace EntityStates.Digger
         {
             base.Update();
 
-            if (base.isAuthority && base.characterMotor.isGrounded)
+            if (base.isAuthority && base.characterMotor.isGrounded && this.localUser != null)
             {
                 if (!this.localUser.isUIFocused)
                 {

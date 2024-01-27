@@ -65,6 +65,12 @@ Juhnter - Spanish Translation
 
 ## Changelog
 
+`1.9.9`
+
+- Fixed broken anims on dedicated servers.
+- Direseeker
+	- Now disabled by default. (Existing configs unchanged)
+
 `1.9.8`
 
 - Updated RU tl (Thanks hexxedude!)

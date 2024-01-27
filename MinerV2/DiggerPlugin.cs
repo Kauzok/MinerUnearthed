@@ -31,7 +31,7 @@ namespace DiggerPlugin {
     [BepInDependency("com.Skell.GoldenCoastPlus", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("com.TeamMoonstorm.Starstorm2", BepInDependency.DependencyFlags.SoftDependency)]
     [NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod, VersionStrictness.EveryoneNeedSameModVersion)]
-    [BepInPlugin(MODUID, "DiggerUnearthed", "1.9.5")]
+    [BepInPlugin(MODUID, "DiggerUnearthed", "1.9.9")]
     [R2APISubmoduleDependency(new string[]
     {
         "PrefabAPI",
@@ -272,7 +272,7 @@ namespace DiggerPlugin {
             enableDireseeker =
                 base.Config.Bind<bool>("01 - General Settings", 
                                        "Enable Direseeker", 
-                                       true, 
+                                       false, 
                                        "Enables the new boss");
             enableDireseekerSurvivor = 
                 base.Config.Bind<bool>("01 - General Settings",
