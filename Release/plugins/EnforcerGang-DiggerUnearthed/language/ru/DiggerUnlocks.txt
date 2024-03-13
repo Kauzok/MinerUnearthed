@@ -43,7 +43,7 @@
 	
 	"MINER_PUPLEUNLOCKABLE_ACHIEVEMENT_NAME" : "Шахтёр: четыре клавиши",
 	"MINER_PUPLEUNLOCKABLE_UNLOCKABLE_NAME" : "Шахтёр: четыре клавиши",
-	"MINER_PUPLEUNLOCKABLE_ACHIEVEMENT_DESC" : "Играя за Шахтёра, разгадайте секрет откладки Г-Н-О-М'а.",
+	"MINER_PUPLEUNLOCKABLE_ACHIEVEMENT_DESC" : "Играя за Шахтёра, разгадайте секрет откладки Г-Н-О-Ма.",
 	
 	"MINER_TUNDRAUNLOCKABLE_ACHIEVEMENT_NAME" : "Шахтёр: обморожение",
 	"MINER_TUNDRAUNLOCKABLE_UNLOCKABLE_NAME" : "Шахтёр: обморожение",
