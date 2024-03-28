@@ -53,12 +53,12 @@ bruh - Swag model
 Neik - Blacksmith concept  
 Ruxbieno - Direseeker logbook entry  
 Christian Gentry - Anvil model  
-marklecard - mod icon
+lecard - mod icon
 
 ## Translation Credits
 
 JunJun_W - Chinese Translation  
-Адский Шкед, Hexxedude, marklecard - Russian Translation  
+Адский Шкед, Hexxedude, lecard - Russian Translation  
 Damglador - Ukrainian Translation  
 Donitodorito - Portuguese Translation
 Juhnter - Spanish Translation

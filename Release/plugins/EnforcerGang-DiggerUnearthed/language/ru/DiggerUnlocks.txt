@@ -23,11 +23,11 @@
 	
 	"MINER_TYPHOONUNLOCKABLE_ACHIEVEMENT_NAME" : "Шахтёр: великое мастерство",
 	"MINER_TYPHOONUNLOCKABLE_UNLOCKABLE_NAME" : "Шахтёр: великое мастерство",
-	"MINER_TYPHOONUNLOCKABLE_ACHIEVEMENT_DESC" : "Играя за Шахтёра, пройдите игру или уничтожьтесь на сложности «Тайфун».\n<color=#8888>(Сложность «Тайфун» доступна с модом Starstorm 2)</color>",
+	"MINER_TYPHOONUNLOCKABLE_ACHIEVEMENT_DESC" : "Играя за Шахтёра, пройдите игру или уничтожьтесь на уровне сложности «Тайфун».\n<color=#8888>(Уровень сложности «Тайфун» доступен с модом Starstorm 2)</color>",
 	
 	"MINER_MONSOONUNLOCKABLE_ACHIEVEMENT_NAME" : "Шахтёр: мастерство",
 	"MINER_MONSOONUNLOCKABLE_UNLOCKABLE_NAME" : "Шахтёр: мастерство",
-	"MINER_MONSOONUNLOCKABLE_ACHIEVEMENT_DESC" : "Играя за Шахтёра, пройдите игру или уничтожьтесь на сложности «Сезон дождей».",
+	"MINER_MONSOONUNLOCKABLE_ACHIEVEMENT_DESC" : "Играя за Шахтёра, пройдите игру или уничтожьтесь на уровне сложности «Сезон дождей».",
 	
 	"MINER_CRUSHUNLOCKABLE_ACHIEVEMENT_NAME" : "Шахтёр: награбленное золото",
 	"MINER_CRUSHUNLOCKABLE_UNLOCKABLE_NAME" : "Шахтёр: награбленное золото",

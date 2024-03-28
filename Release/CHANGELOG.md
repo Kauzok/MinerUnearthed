@@ -1,6 +1,6 @@
-1.9.11`
+`1.9.11` to `1.9.12`
 
-- Updated RU TL and mod icon (Thanks marklecard!)
+- Updated RU TL and mod icon (Thanks lecard!)
 
 `1.9.10`
 
