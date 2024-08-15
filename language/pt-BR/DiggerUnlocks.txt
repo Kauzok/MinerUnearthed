@@ -35,7 +35,7 @@
 	
 	"MINER_CRACKUNLOCKABLE_ACHIEVEMENT_NAME" : "Minerador: Viciado",
 	"MINER_CRACKUNLOCKABLE_UNLOCKABLE_NAME" : "Minerador: Viciado",
-	"MINER_CRACKUNLOCKABLE_ACHIEVEMENT_DESC" : "Como Minerador, ganhe 50 unidades de Adrenalina.",
+	"MINER_CRACKUNLOCKABLE_ACHIEVEMENT_DESC" : "Como Minerador, ganhe 50 cargas de Adrenalina.",
 	
 	"MINER_CAVEINUNLOCKABLE_ACHIEVEMENT_NAME" : "Minerador: Compactado",
 	"MINER_CAVEINUNLOCKABLE_UNLOCKABLE_NAME" : "Minerador: Compactado",
@@ -47,7 +47,7 @@
 	
 	"MINER_TUNDRAUNLOCKABLE_ACHIEVEMENT_NAME" : "Minerador: Congelado",
 	"MINER_TUNDRAUNLOCKABLE_UNLOCKABLE_NAME" : "Minerador: Congelado",
-	"MINER_TUNDRAUNLOCKABLE_ACHIEVEMENT_DESC" : "Como Minerador, chegue no Ponto de encontro Delta in menos de 8 minutos.",
+	"MINER_TUNDRAUNLOCKABLE_ACHIEVEMENT_DESC" : "Como Minerador, chegue no Ponto de encontro Delta em menos de 8 minutos.",
 	
 	"MINER_BLACKSMITHUNLOCKABLE_ACHIEVEMENT_NAME" : "Minerador: Afiado",
 	"MINER_BLACKSMITHUNLOCKABLE_UNLOCKABLE_NAME" : "Minerador: Afiado",
