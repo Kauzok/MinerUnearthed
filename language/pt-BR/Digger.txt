@@ -9,7 +9,7 @@
 	
 	"MINER_PASSIVE_NAME" : "Corrida do Ouro",
 	"MINER_PASSIVE_DESCRIPTION" : "Ganhe <style=cIsHealth>ADRENALINA</style> ao receber ouro, aumentando sua <style=cIsDamage>velocidade de ataque</style>, <style=cIsUtility>velocidade de movimento</style>, e <style=cIsHealing>regeneração de saúde</style>.",
-	"KEYWORD_CLEAVING" : "<style=cKeywordName>Lascar</style><style=cSub>Aplica uma penalidade acumulativa, reduzindo a <style=cIsDamage>armadura</style> em <style=cIsHealth>3 por acúmulo</style>.</style>",
+	"KEYWORD_CLEAVING" : "<style=cKeywordName>Lascando</style><style=cSub>Aplica uma penalidade acumulativa, reduzindo a <style=cIsDamage>armadura</style> em <style=cIsHealth>3 por acúmulo</style>.</style>",
 	
 	"MINER_PRIMARY_GOUGE_NAME" : "Ranhura",
 	"MINER_PRIMARY_GOUGE_DESCRIPTION" : "<style=cIsUtility>Ágil.</style> Golpeie selvagemente inimigos próximos, causando <style=cIsDamage>270% de dano</style>, <style=cIsHealth>lascando</style> suas armaduras.",
